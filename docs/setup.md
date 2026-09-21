@@ -4,7 +4,7 @@ Use Python 3.10+ and install the tools below in the same environment. CI uses Py
 
 | Tool | Pinned executable version | Official installation source |
 |---|---|---|
-| Terraform | 1.9.8; configuration >=1.9,<2 | https://developer.hashicorp.com/terraform/install |
+| Terraform | 1.9.8; both root configurations require exactly 1.9.8 | https://developer.hashicorp.com/terraform/install |
 | AWS provider | 6.65.0 in both lock files; constraint ~>6.0 | https://registry.terraform.io/providers/hashicorp/aws/latest |
 | TFLint | 0.59.1, AWS ruleset 0.40.0 | https://github.com/terraform-linters/tflint/releases |
 | Checkov | 3.2.471 | https://www.checkov.io/2.Basics/Installing%20Checkov.html |
@@ -12,6 +12,24 @@ Use Python 3.10+ and install the tools below in the same environment. CI uses Py
 | Conftest | 0.60.0 | https://github.com/open-policy-agent/conftest/releases |
 
 Executable versions preserve the tested Phase 1 toolchain; they are not claims to be latest. Provider locks were generated from verified provider packages, not invented. Both roots use the same compatible provider selection. Commit both lock files. Review upgrades and resulting checks deliberately; never hardcode Checkov passing counts.
+
+Both provider locks include verified `h1` hashes for `linux_amd64` (hosted CI)
+and `windows_amd64` (local development). Keep read-only initialization enabled.
+When deliberately updating the provider or adding a platform, generate hashes
+with Terraform rather than copying or inventing a checksum:
+
+```sh
+terraform -chdir=terraform get
+terraform -chdir=terraform providers lock -platform=linux_amd64 -platform=windows_amd64
+terraform -chdir=bootstrap/aws-plan-role providers lock -platform=linux_amd64 -platform=windows_amd64
+```
+
+The offline runner requests JSON validation diagnostics. Recognized diagnostic
+summaries and the provider checksum error are printed in CI; arbitrary messages,
+source snippets, expressions and values remain in ignored private logs and are
+not uploaded. Unrecognized diagnostics fail the gate and report that their text
+was withheld. See [validation-hosted.md](validation-hosted.md) for the reproduced
+cross-platform lock failure and verification procedure.
 
 ```sh
 python3 -m venv .venv
