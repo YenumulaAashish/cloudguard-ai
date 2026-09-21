@@ -1,0 +1,38 @@
+name: CloudGuard validation tools
+description: Install the pinned local/CI toolchain without AWS credentials
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v7.0.0
+      with:
+        python-version: '3.12'
+    - uses: hashicorp/setup-terraform@v4.0.1
+      with:
+        terraform_version: 1.9.8
+        terraform_wrapper: false
+    - uses: terraform-linters/setup-tflint@v6.3.1
+      with:
+        tflint_version: v0.59.1
+    - uses: open-policy-agent/setup-opa@v2.4.0
+      with:
+        version: 1.0.1
+    - name: Install Checkov and AWS lint plugin
+      shell: bash
+      run: |
+        set -euo pipefail
+        python -m pip install checkov==3.2.471
+        tflint --init --config="$GITHUB_WORKSPACE/.tflint.hcl"
+    - name: Install checksum-verified Conftest
+      shell: bash
+      env:
+        CONFTEST_VERSION: 0.60.0
+      run: |
+        set -euo pipefail
+        cd "$RUNNER_TEMP"
+        base="https://github.com/open-policy-agent/conftest/releases/download/v${CONFTEST_VERSION}"
+        archive="conftest_${CONFTEST_VERSION}_Linux_x86_64.tar.gz"
+        curl -fsSLO "$base/$archive"
+        curl -fsSLO "$base/checksums.txt"
+        grep " $archive$" checksums.txt | sha256sum --check --strict
+        tar -xzf "$archive" conftest
+        sudo install conftest /usr/local/bin/conftest

@@ -1,0 +1,92 @@
+{
+  "_comment": "Synthetic deterministic policy fixture; NOT a real Terraform plan.",
+  "format_version": "1.2",
+  "planned_values": {
+    "root_module": {
+      "resources": [
+        {
+          "address": "aws_security_group.test",
+          "mode": "managed",
+          "type": "aws_security_group",
+          "name": "test",
+          "values": {
+            "tags": {
+              "Project": "cloudguard-ai",
+              "Environment": "test",
+              "ManagedBy": "Terraform"
+            },
+            "ingress": [
+              {
+                "protocol": "tcp",
+                "from_port": 22,
+                "to_port": 22,
+                "cidr_blocks": [
+                  "10.42.0.0/16"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "address": "aws_s3_bucket.test",
+          "mode": "managed",
+          "type": "aws_s3_bucket",
+          "name": "test",
+          "values": {
+            "bucket": "fixture-bucket",
+            "tags": {
+              "Project": "cloudguard-ai",
+              "Environment": "test",
+              "ManagedBy": "Terraform"
+            }
+          }
+        },
+        {
+          "address": "aws_s3_bucket_public_access_block.test",
+          "mode": "managed",
+          "type": "aws_s3_bucket_public_access_block",
+          "name": "test",
+          "values": {
+            "bucket": "fixture-bucket",
+            "block_public_acls": true,
+            "block_public_policy": true,
+            "ignore_public_acls": true,
+            "restrict_public_buckets": true
+          }
+        },
+        {
+          "address": "aws_s3_bucket_server_side_encryption_configuration.test",
+          "mode": "managed",
+          "type": "aws_s3_bucket_server_side_encryption_configuration",
+          "name": "test",
+          "values": {
+            "bucket": "fixture-bucket",
+            "rule": [
+              {
+                "apply_server_side_encryption_by_default": [
+                  {
+                    "sse_algorithm": "AES256"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "address": "aws_iam_policy.test",
+          "mode": "managed",
+          "type": "aws_iam_policy",
+          "name": "test",
+          "values": {
+            "tags": {
+              "Project": "cloudguard-ai",
+              "Environment": "test",
+              "ManagedBy": "Terraform"
+            },
+            "policy": "{\"Version\": \"2012-10-17\", \"Statement\": [{\"Effect\": \"Allow\", \"Action\": [\"s3:GetObject\"], \"Resource\": \"arn:aws:s3:::fixture-bucket/*\"}]}"
+          }
+        }
+      ]
+    }
+  }
+}

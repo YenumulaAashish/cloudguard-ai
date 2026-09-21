@@ -1,0 +1,7 @@
+project_name      = "cloudguard-ai"
+environment       = "dev"
+aws_region        = "ap-south-1"
+bucket_name       = "replace-with-your-unique-sandbox-bucket"
+allowed_ssh_cidrs = []
+enable_ec2        = false
+required_tags     = { Owner = "engineering-capstone" }

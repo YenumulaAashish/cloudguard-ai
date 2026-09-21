@@ -1,0 +1,9 @@
+# Enable required code-owner reviews in the GitHub main-branch ruleset.
+/.github/ @YenumulaAashish
+/security/ @YenumulaAashish
+/scripts/ @YenumulaAashish
+/policies/ @YenumulaAashish
+/bootstrap/ @YenumulaAashish
+/terraform/ @YenumulaAashish
+/Makefile @YenumulaAashish
+/.checkov.yml @YenumulaAashish

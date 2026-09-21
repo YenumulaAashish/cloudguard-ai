@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "exceptions": [
+    {
+      "rule_id": "CKV2_AWS_11",
+      "resource": "module.network.aws_vpc.this",
+      "rationale": "No workloads or paid monitoring.",
+      "review_trigger": "Before workloads or drift experiments."
+    },
+    {
+      "rule_id": "CKV_AWS_145",
+      "resource": "module.storage.aws_s3_bucket.this",
+      "rationale": "Explicit SSE-S3 AES256 meets the sandbox baseline.",
+      "review_trigger": "Before sensitive data or KMS governance requirements."
+    },
+    {
+      "rule_id": "CKV_AWS_18",
+      "resource": "module.storage.aws_s3_bucket.this",
+      "rationale": "Empty sandbox has no access-log destination.",
+      "review_trigger": "Before applications or real data."
+    },
+    {
+      "rule_id": "CKV_AWS_144",
+      "resource": "module.storage.aws_s3_bucket.this",
+      "rationale": "No cross-region recovery requirement.",
+      "review_trigger": "When recovery requirements are defined."
+    },
+    {
+      "rule_id": "CKV2_AWS_62",
+      "resource": "module.storage.aws_s3_bucket.this",
+      "rationale": "No event consumer exists.",
+      "review_trigger": "When adding an event consumer."
+    },
+    {
+      "rule_id": "CKV2_AWS_5",
+      "resource": "module.security.aws_security_group.this",
+      "rationale": "Compute is excluded; security group is deliberately unattached.",
+      "review_trigger": "Before compute is authorized."
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+name: Authenticated Terraform plan
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: aws-plan-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  plan:
+    if: >-
+      github.repository == 'YenumulaAashish/cloudguard-ai' &&
+      vars.AWS_PLAN_ENABLED == 'true' && vars.AWS_PLAN_ROLE_ARN != '' &&
+      ((github.event_name == 'pull_request' &&
+        github.event.pull_request.head.repo.full_name == github.repository) ||
+       (github.event_name != 'pull_request' && github.ref == 'refs/heads/main'))
+    environment: aws-plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      CLOUDGUARD_SCOPE: authenticated-plan
+      AWS_REGION: ap-south-1
+      AWS_DEFAULT_REGION: ap-south-1
+      TF_VAR_aws_region: ap-south-1
+      TF_VAR_bucket_name: ${{ vars.AWS_SANDBOX_BUCKET_NAME }}
+      TFLINT_AWS: '1'
+      TF_IN_AUTOMATION: 'true'
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-tools
+      - name: Validate configuration before requesting credentials
+        env:
+          PLAN_ROLE: ${{ vars.AWS_PLAN_ROLE_ARN }}
+        run: |
+          python -c 'import os,re; assert re.fullmatch(r"arn:aws:iam::[0-9]{12}:role/[A-Za-z0-9+=,.@_/-]+", os.environ["PLAN_ROLE"]); assert re.fullmatch(r"[a-z0-9][a-z0-9-]{1,61}[a-z0-9]", os.environ["TF_VAR_bucket_name"])'
+      - name: Offline preflight gates
+        run: python scripts/run-offline.py
+      - name: Assume protected read-only AWS plan role
+        uses: aws-actions/configure-aws-credentials@v6.3.0
+        with:
+          role-to-assume: ${{ vars.AWS_PLAN_ROLE_ARN }}
+          aws-region: ap-south-1
+          audience: sts.amazonaws.com
+          role-session-name: cloudguard-plan-${{ github.run_id }}
+          role-duration-seconds: 900
+          unset-current-credentials: true
+          mask-aws-account-id: true
+      - name: Real plan, JSON export and policy gate
+        run: python scripts/aws-plan.py --reuse-offline
+      - name: Generate sanitized evidence on failure too
+        if: always()
+        env:
+          CI_JOB_STATUS: ${{ job.status }}
+        run: python scripts/generate-evidence.py
+      - name: Upload sanitized evidence only
+        if: always()
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: plan-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 3
+          if-no-files-found: warn
+          path: |
+            reports/phase2/summary.json
+            reports/phase2/summary.md
+            reports/phase2/checks.json
+            reports/phase2/checkov.json
+            reports/phase2/checkov-exceptions.json
+            reports/phase2/policy-tests.json
+            reports/phase2/ci-safety.json
+            reports/phase2/plan-summary.json
+            reports/phase2/plan-policy.json
+      - name: Remove generated plans from runner
+        if: always()
+        run: python scripts/clean.py

@@ -1,0 +1,6 @@
+framework:
+  - terraform
+compact: true
+soft-fail: false
+# Use bundled checks without downloading platform guidance metadata.
+skip-download: true
