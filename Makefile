@@ -1,6 +1,6 @@
 .PHONY: init fmt validate lint security policy-test test plan clean
 init:
-	terraform -chdir=terraform init -backend=false -input=false
+	terraform -chdir=terraform init -backend=false -input=false -lockfile=readonly
 fmt:
 	terraform fmt -recursive terraform
 validate:
