@@ -35,3 +35,13 @@ and writes `reports/private/phase3/normalized-findings.json` by default. It does
 not change the Phase 2 evidence schema or gate status. Unlike sanitized summaries,
 normalized findings retain selected source messages and paths and must remain
 private; no workflow uploads them. See [Phase 3.1](phase3-normalization.md).
+
+## Phase 3.3 private advisory analysis
+
+`python scripts/analyze-security.py` verifies matching normalized/risk reports
+and writes advisory JSON plus optional Markdown under `reports/private/phase3/`.
+Verified deterministic context is copied unchanged; provider advice cannot change
+gate decisions or exception/risk state. Original messages, paths and metadata
+are omitted, but retained identity fields and advice remain private. No workflow
+uploads these reports. Offline mode uses templates and no credentials or network.
+See [Phase 3.3](phase3-analysis.md) for data minimization, validation and limitations.

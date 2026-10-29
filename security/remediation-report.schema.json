@@ -1,0 +1,442 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CloudGuard-AI private advisory remediation report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "generated_by",
+    "analysis_mode",
+    "provider",
+    "informational_only",
+    "trust_rule",
+    "advisory_notice",
+    "terraform_examples_advisory",
+    "deterministic_context",
+    "findings"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "generated_by": {
+      "const": "cloudguard-ai"
+    },
+    "analysis_mode": {
+      "enum": [
+        "offline",
+        "ai"
+      ]
+    },
+    "provider": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]{1,64}$"
+    },
+    "informational_only": {
+      "const": true
+    },
+    "trust_rule": {
+      "const": "Deterministic tools decide. AI explains."
+    },
+    "advisory_notice": {
+      "const": "AI-generated remediation is advisory and does not override policy enforcement or risk scoring."
+    },
+    "terraform_examples_advisory": {
+      "const": true
+    },
+    "deterministic_context": {
+      "$ref": "#/$defs/deterministic_context"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/finding"
+      }
+    }
+  },
+  "$defs": {
+    "analysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "summary",
+        "why_it_matters",
+        "potential_impact",
+        "recommended_action",
+        "terraform_example",
+        "verification_steps",
+        "confidence"
+      ],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 12000
+        },
+        "why_it_matters": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 12000
+        },
+        "potential_impact": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 12000
+        },
+        "recommended_action": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 12000
+        },
+        "terraform_example": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 12000
+        },
+        "verification_steps": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 12000
+          }
+        },
+        "confidence": {
+          "enum": [
+            "LOW",
+            "MEDIUM",
+            "HIGH"
+          ]
+        }
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "finding_id",
+        "source",
+        "control_id",
+        "resource",
+        "status",
+        "severity",
+        "exception",
+        "risk",
+        "analysis"
+      ],
+      "properties": {
+        "finding_id": {
+          "type": "string",
+          "pattern": "^finding-[0-9]{6,}$"
+        },
+        "source": {
+          "enum": [
+            "checkov",
+            "conftest"
+          ]
+        },
+        "control_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "resource": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "severity": {
+          "enum": [
+            "CRITICAL",
+            "HIGH",
+            "MEDIUM",
+            "LOW",
+            "INFO",
+            "UNKNOWN"
+          ]
+        },
+        "exception": {
+          "type": "boolean"
+        },
+        "risk": {
+          "$ref": "#/$defs/risk"
+        },
+        "analysis": {
+          "$ref": "#/$defs/analysis"
+        }
+      }
+    },
+    "provider_response": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "findings"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "findings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "finding_id",
+              "analysis"
+            ],
+            "properties": {
+              "finding_id": {
+                "type": "string",
+                "pattern": "^finding-[0-9]{6,}$"
+              },
+              "analysis": {
+                "$ref": "#/$defs/analysis"
+              }
+            }
+          }
+        }
+      }
+    },
+    "deterministic_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_schema_version",
+        "schema_version",
+        "risk_model_version",
+        "risk_model_sha256",
+        "overall",
+        "summary",
+        "gate_decision"
+      ],
+      "properties": {
+        "input_schema_version": {
+          "const": "1.0"
+        },
+        "schema_version": {
+          "const": "1.0"
+        },
+        "risk_model_version": {
+          "const": "1.0"
+        },
+        "risk_model_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "overall": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "score",
+            "category",
+            "requires_review"
+          ],
+          "properties": {
+            "score": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "category": {
+              "enum": [
+                "NONE",
+                "LOW",
+                "MEDIUM",
+                "HIGH",
+                "CRITICAL"
+              ]
+            },
+            "requires_review": {
+              "type": "boolean"
+            }
+          }
+        },
+        "summary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "total",
+            "none",
+            "low",
+            "medium",
+            "high",
+            "critical",
+            "failed",
+            "warning",
+            "approved_exceptions",
+            "unapproved_skips",
+            "passed",
+            "unknown_status",
+            "unknown_severity",
+            "requires_review",
+            "exception_conflicts"
+          ],
+          "properties": {
+            "total": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "none": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "low": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "medium": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "high": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "critical": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "failed": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "warning": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "approved_exceptions": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "unapproved_skips": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "passed": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "unknown_status": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "unknown_severity": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "requires_review": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "exception_conflicts": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "gate_decision": {
+          "const": "NOT_EVALUATED"
+        }
+      }
+    },
+    "risk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "score",
+        "category",
+        "status_class",
+        "severity_known",
+        "exception_applied",
+        "exception_conflict",
+        "requires_review",
+        "factors"
+      ],
+      "properties": {
+        "score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "category": {
+          "enum": [
+            "NONE",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL"
+          ]
+        },
+        "status_class": {
+          "enum": [
+            "failed",
+            "warning",
+            "approved_exception",
+            "unapproved_skip",
+            "passed",
+            "unknown"
+          ]
+        },
+        "severity_known": {
+          "type": "boolean"
+        },
+        "exception_applied": {
+          "type": "boolean"
+        },
+        "exception_conflict": {
+          "type": "boolean"
+        },
+        "requires_review": {
+          "type": "boolean"
+        },
+        "factors": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "value",
+              "reason"
+            ],
+            "properties": {
+              "name": {
+                "enum": [
+                  "base_severity",
+                  "control_adjustment",
+                  "bounded_base",
+                  "status_multiplier",
+                  "status_floor"
+                ]
+              },
+              "value": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

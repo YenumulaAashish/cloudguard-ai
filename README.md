@@ -85,4 +85,22 @@ python scripts/score-risk.py --input reports/private/phase3/normalized-findings.
 
 Output defaults to `reports/private/phase3/risk-report.json`; existing files are
 never overwritten or uploaded by CI. See [model, schema, commands and limitations](docs/phase3-risk.md).
-Phase 3.3 AI functionality remains future work.
+Phase 3.3 builds advisory explanations on these immutable results.
+
+## Phase 3.3: advisory security explanation and remediation
+
+**Deterministic tools decide. AI explains.** An optional standard-library analyzer
+verifies matching normalized/risk reports and adds validated private advice.
+Offline mode uses honest deterministic templates; a provider interface supports
+future adapters. No live AI provider is configured, and requested AI mode fails
+clearly. **AI-generated remediation is advisory and does not override policy
+enforcement or risk scoring.**
+
+```sh
+python scripts/analyze-security.py --findings reports/private/phase3/normalized-findings-phase32.json --risk reports/private/phase3/risk-report.json --mode offline
+```
+
+Output defaults to `reports/private/phase3/remediation-report.json`, with optional
+`--markdown PATH`. Existing files are never overwritten or uploaded by CI.
+See [trust boundary, provider contract, schema and limitations](docs/phase3-analysis.md).
+No automated Terraform remediation or Phase 3.4 is implemented.
