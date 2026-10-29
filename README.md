@@ -103,4 +103,30 @@ python scripts/analyze-security.py --findings reports/private/phase3/normalized-
 Output defaults to `reports/private/phase3/remediation-report.json`, with optional
 `--markdown PATH`. Existing files are never overwritten or uploaded by CI.
 See [trust boundary, provider contract, schema and limitations](docs/phase3-analysis.md).
-No automated Terraform remediation or Phase 3.4 is implemented.
+No automated Terraform remediation is implemented.
+
+## Phase 3.4: sanitized PR security reporting
+
+**Deterministic tools decide. AI explains. PR reporting informs.** The reporter
+validates matching private Phase 3 reports and emits bounded aggregate JSON and
+Markdown. Gate statuses come from current matching evidence or remain UNKNOWN;
+LOW risk never implies policy PASS. Offline CI produces sanitized artifacts with
+unchanged read-only permissions. Automatic PR comments are not implemented.
+
+```sh
+python scripts/render-pr-summary.py --findings reports/private/phase3/normalized-findings-phase33-final.json --risk reports/private/phase3/risk-report-phase33-final.json --remediation reports/private/phase3/remediation-final.json --current-evidence --output reports/sanitized/pr-summary.json --markdown reports/sanitized/pr-summary.md
+```
+
+See [privacy, gate authority, CLI and publication boundary](docs/phase3-pr-reporting.md).
+Generated reports remain uncommitted. A PR report is informational and does not
+replace CI security gate conclusions.
+
+| Phase | Status |
+|---|---|
+| 3.1 Finding normalization | COMPLETE |
+| 3.2 Deterministic risk prioritization | COMPLETE |
+| 3.3 Advisory security analysis | COMPLETE |
+| 3.4 Sanitized PR security reporting | COMPLETE |
+| 3.5 Integration/evidence | NOT YET COMPLETE |
+
+Phase 3 as a whole is not yet complete.

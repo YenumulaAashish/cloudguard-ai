@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CloudGuard-AI bounded sanitized PR summary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "generated_by", "informational_only", "policy", "findings", "risk", "advisory"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "generated_by": {"const": "cloudguard-ai"},
+    "informational_only": {"const": true},
+    "policy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["checkov", "opa_conftest", "exception_contract", "policy_tests"],
+      "properties": {
+        "checkov": {"$ref": "#/$defs/gate"},
+        "opa_conftest": {"$ref": "#/$defs/gate"},
+        "exception_contract": {"$ref": "#/$defs/gate"},
+        "policy_tests": {"$ref": "#/$defs/gate"}
+      }
+    },
+    "findings": {
+      "type": "object", "additionalProperties": false,
+      "required": ["total", "failed", "approved_exceptions"],
+      "properties": {
+        "total": {"$ref": "#/$defs/count"},
+        "failed": {"$ref": "#/$defs/count"},
+        "approved_exceptions": {"$ref": "#/$defs/count"}
+      }
+    },
+    "risk": {
+      "type": "object", "additionalProperties": false,
+      "required": ["score", "category", "requires_review"],
+      "properties": {
+        "score": {"type": "integer", "minimum": 0, "maximum": 100},
+        "category": {"enum": ["NONE", "LOW", "MEDIUM", "HIGH", "CRITICAL"]},
+        "requires_review": {"type": "boolean"}
+      }
+    },
+    "advisory": {
+      "type": "object", "additionalProperties": false,
+      "required": ["mode", "findings_reviewed"],
+      "properties": {
+        "mode": {"enum": ["offline", "ai", "NOT_RUN"]},
+        "findings_reviewed": {"$ref": "#/$defs/count"}
+      }
+    }
+  },
+  "$defs": {
+    "gate": {"enum": ["PASS", "FAIL", "UNKNOWN"]},
+    "count": {"type": "integer", "minimum": 0, "maximum": 1000000}
+  }
+}

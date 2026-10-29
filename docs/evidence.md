@@ -45,3 +45,19 @@ gate decisions or exception/risk state. Original messages, paths and metadata
 are omitted, but retained identity fields and advice remain private. No workflow
 uploads these reports. Offline mode uses templates and no credentials or network.
 See [Phase 3.3](phase3-analysis.md) for data minimization, validation and limitations.
+
+## Phase 3.4 bounded PR summaries
+
+`python scripts/render-pr-summary.py` emits only schema-approved aggregate fields
+to ignored `reports/sanitized/`, outside private storage. It validates matching
+normalized/risk/advisory reports before rendering. `--current-evidence` reads
+current Phase 2 run/fingerprint records and binds source findings to raw scan
+output; absent, stale or unrelated evidence becomes UNKNOWN. OPA/Conftest fixture
+tests are shown separately from real-plan policy evaluation.
+
+Offline CI uploads only the exact `pr-summary.json` and `pr-summary.md` files in
+a separate three-day artifact. Phase 3 private intermediates are never uploaded.
+There is no automatic comment publisher, write-token escalation or gate-result
+override. JSON/Markdown reproduction, schema checks, leakage tests and workflow
+regression tests run locally; runtime reports remain uncommitted. See
+[Phase 3.4](phase3-pr-reporting.md) for the publication trust boundary.
