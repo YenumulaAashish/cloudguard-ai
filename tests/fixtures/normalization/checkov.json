@@ -1,0 +1,27 @@
+{
+  "check_type": "terraform",
+  "summary": {"passed": 0, "failed": 1, "skipped": 1, "parsing_errors": 0},
+  "results": {
+    "passed_checks": [],
+    "failed_checks": [{
+      "check_id": "CKV_AWS_18",
+      "resource": "aws_s3_bucket.example",
+      "check_name": "Ensure the S3 bucket has access logging enabled",
+      "check_result": {"result": "FAILED"},
+      "severity": "HIGH",
+      "file_path": "/main.tf",
+      "file_line_range": [10, 16],
+      "code_block": [[10, "NEVER_EXPORT_SOURCE"]],
+      "entity_tags": {"private": "NEVER_EXPORT_TAG"}
+    }],
+    "skipped_checks": [{
+      "check_id": "CKV_AWS_18",
+      "resource": "module.storage.aws_s3_bucket.this",
+      "check_name": "Ensure the S3 bucket has access logging enabled",
+      "check_result": {"result": "SKIPPED", "suppress_comment": "NEVER_EXPORT_COMMENT"},
+      "severity": null,
+      "file_line_range": null
+    }],
+    "parsing_errors": []
+  }
+}

@@ -1,0 +1,13 @@
+[
+  {
+    "filename": "tests/fixtures/insecure/public-ssh.json",
+    "namespace": "main",
+    "successes": 12,
+    "failures": [
+      {
+        "msg": "SSH: aws_security_group.test exposes SSH to the world",
+        "metadata": {"query": "data.main.deny"}
+      }
+    ]
+  }
+]

@@ -27,3 +27,11 @@ Sanitization builds new objects from explicit allowed fields; it does not rely o
 Workflows upload an explicit list of sanitized files with **three-day retention**, including on failed runs. They never upload `reports/**` or the working directory. No raw-plan debug upload is enabled. `make clean` removes the generated binary/JSON plan only, not state; ignored private logs remain available locally for authorized debugging. CI's ephemeral runner is discarded after the job.
 
 A PASS offline summary means offline gates passed; it does not mean AWS authentication or a real plan ran. The authenticated workflow's overall evidence requires both plan generation and plan policy evaluation. GitHub job failure/cancellation also prevents an overall PASS. Hosted execution and IAM permission verification must be reported separately.
+
+## Phase 3.1 private findings
+
+`python scripts/normalize-findings.py` reads existing full Checkov/Conftest JSON
+and writes `reports/private/phase3/normalized-findings.json` by default. It does
+not change the Phase 2 evidence schema or gate status. Unlike sanitized summaries,
+normalized findings retain selected source messages and paths and must remain
+private; no workflow uploads them. See [Phase 3.1](phase3-normalization.md).

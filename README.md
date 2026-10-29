@@ -53,3 +53,21 @@ make plan-policy
 The plan runner handles Terraform exit 0 and 2 as successful planning, rejects exit 1, exports JSON, and runs Conftest. It does not deploy. CI skips authenticated planning for forks and until the required variables/environment exist. The plan role has selected metadata-read permissions, not deployment permissions.
 
 Raw plans and logs stay in ignored private local paths. CI uploads only named sanitized evidence files for three days. See [evidence](docs/evidence.md), [policy contract](docs/policies.md), [architecture/research traceability](docs/architecture.md), and [validation](docs/validation.md).
+
+## Phase 3.1: finding normalization
+
+A deterministic standard-library Python adapter converts existing full Checkov
+and Conftest JSON reports into schema 1.0 findings. It preserves failed/skipped
+status and the six-pair exception annotation; missing severity remains UNKNOWN.
+Existing security gates remain authoritative. No AI or additional Terraform
+detection is introduced.
+
+```sh
+python scripts/normalize-findings.py --checkov reports/private/checkov-raw.json
+```
+
+Output defaults to the ignored private file
+`reports/private/phase3/normalized-findings.json`; existing files are never
+overwritten. It is not uploaded by CI. See [schema, commands, limitations and
+Phase 3.2 handoff](docs/phase3-normalization.md). Existing Python test discovery
+includes the new normalizer tests.
