@@ -1,0 +1,351 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CloudGuard-AI private informational risk report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "generated_by",
+    "input_schema_version",
+    "risk_model_version",
+    "risk_model_sha256",
+    "informational_only",
+    "gate_decision",
+    "sources",
+    "overall",
+    "summary",
+    "findings"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "generated_by": {
+      "const": "cloudguard-ai"
+    },
+    "input_schema_version": {
+      "const": "1.0"
+    },
+    "risk_model_version": {
+      "const": "1.0"
+    },
+    "risk_model_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "informational_only": {
+      "const": true
+    },
+    "gate_decision": {
+      "const": "NOT_EVALUATED"
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "checkov",
+          "conftest"
+        ]
+      }
+    },
+    "overall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "score",
+        "category",
+        "requires_review"
+      ],
+      "properties": {
+        "score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "category": {
+          "enum": [
+            "NONE",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL"
+          ]
+        },
+        "requires_review": {
+          "type": "boolean"
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total",
+        "none",
+        "low",
+        "medium",
+        "high",
+        "critical",
+        "failed",
+        "warning",
+        "approved_exceptions",
+        "unapproved_skips",
+        "passed",
+        "unknown_status",
+        "unknown_severity",
+        "requires_review",
+        "exception_conflicts"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "none": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "low": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "medium": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "high": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "critical": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "warning": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "approved_exceptions": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unapproved_skips": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "passed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unknown_status": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unknown_severity": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "requires_review": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "exception_conflicts": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/finding"
+      }
+    }
+  },
+  "$defs": {
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "source",
+        "control_id",
+        "resource",
+        "status",
+        "severity",
+        "message",
+        "file",
+        "line",
+        "line_end",
+        "exception",
+        "metadata",
+        "risk"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "source": {
+          "enum": [
+            "checkov",
+            "conftest"
+          ]
+        },
+        "control_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "resource": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "severity": {
+          "enum": [
+            "CRITICAL",
+            "HIGH",
+            "MEDIUM",
+            "LOW",
+            "INFO",
+            "UNKNOWN"
+          ]
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "file": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "line": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "line_end": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "exception": {
+          "type": "boolean"
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "risk": {
+          "$ref": "#/$defs/risk"
+        }
+      }
+    },
+    "risk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "score",
+        "category",
+        "status_class",
+        "severity_known",
+        "exception_applied",
+        "exception_conflict",
+        "requires_review",
+        "factors"
+      ],
+      "properties": {
+        "score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "category": {
+          "enum": [
+            "NONE",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL"
+          ]
+        },
+        "status_class": {
+          "enum": [
+            "failed",
+            "warning",
+            "approved_exception",
+            "unapproved_skip",
+            "passed",
+            "unknown"
+          ]
+        },
+        "severity_known": {
+          "type": "boolean"
+        },
+        "exception_applied": {
+          "type": "boolean"
+        },
+        "exception_conflict": {
+          "type": "boolean"
+        },
+        "requires_review": {
+          "type": "boolean"
+        },
+        "factors": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "value",
+              "reason"
+            ],
+            "properties": {
+              "name": {
+                "enum": [
+                  "base_severity",
+                  "control_adjustment",
+                  "bounded_base",
+                  "status_multiplier",
+                  "status_floor"
+                ]
+              },
+              "value": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

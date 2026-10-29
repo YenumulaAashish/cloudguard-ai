@@ -1,0 +1,30 @@
+{
+  "risk_model_version": "1.0",
+  "severity_weights": {
+    "INFO": 10,
+    "LOW": 25,
+    "MEDIUM": 50,
+    "HIGH": 75,
+    "CRITICAL": 95,
+    "UNKNOWN": 50
+  },
+  "category_minimums": {"NONE": 0, "LOW": 1, "MEDIUM": 30, "HIGH": 60, "CRITICAL": 85},
+  "status_multipliers": {
+    "failed": [1, 1],
+    "warning": [1, 2],
+    "approved_exception": [1, 4],
+    "unapproved_skip": [1, 1],
+    "passed": [0, 1],
+    "unknown": [1, 1]
+  },
+  "unknown_status_floor": 50,
+  "control_adjustments": [
+    {"source": "conftest", "control_id": "SSH", "category": "public_exposure", "value": 10},
+    {"source": "conftest", "control_id": "S3_PUBLIC", "category": "public_exposure", "value": 10},
+    {"source": "conftest", "control_id": "IAM", "category": "iam_privilege", "value": 10},
+    {"source": "conftest", "control_id": "S3_ENCRYPTION", "category": "encryption", "value": 5},
+    {"source": "checkov", "control_id": "CKV_AWS_24", "category": "public_exposure", "value": 10},
+    {"source": "checkov", "control_id": "CKV_AWS_25", "category": "public_exposure", "value": 10},
+    {"source": "checkov", "control_id": "CKV_AWS_277", "category": "public_exposure", "value": 10}
+  ]
+}

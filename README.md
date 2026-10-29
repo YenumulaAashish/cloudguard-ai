@@ -71,3 +71,18 @@ Output defaults to the ignored private file
 overwritten. It is not uploaded by CI. See [schema, commands, limitations and
 Phase 3.2 handoff](docs/phase3-normalization.md). Existing Python test discovery
 includes the new normalizer tests.
+
+## Phase 3.2: deterministic risk scoring
+
+A separate standard-library engine prioritizes Phase 3.1 findings on an explicit
+0-100 scale, with versioned weights, status/exception treatment and explainable
+factors. Overall risk is the highest individual priority. UNKNOWN severity stays
+visible. **Risk scoring does not override policy enforcement.**
+
+```sh
+python scripts/score-risk.py --input reports/private/phase3/normalized-findings.json
+```
+
+Output defaults to `reports/private/phase3/risk-report.json`; existing files are
+never overwritten or uploaded by CI. See [model, schema, commands and limitations](docs/phase3-risk.md).
+Phase 3.3 AI functionality remains future work.
