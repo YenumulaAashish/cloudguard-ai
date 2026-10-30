@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "analyzer",
+    "analysis_scope",
+    "findings",
+    "summary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "analyzer": {
+      "const": "cloudguard-iam"
+    },
+    "analysis_scope": {
+      "const": "structural_only"
+    },
+    "findings": {
+      "type": "array",
+      "maxItems": 20000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "control_id",
+          "resource",
+          "policy_kind",
+          "statement_index",
+          "status",
+          "severity",
+          "conditioned",
+          "requires_review",
+          "message"
+        ],
+        "properties": {
+          "control_id": {
+            "enum": [
+              "CGA_IAM_001",
+              "CGA_IAM_002",
+              "CGA_IAM_003",
+              "CGA_IAM_004",
+              "CGA_IAM_005",
+              "CGA_IAM_006",
+              "CGA_IAM_007",
+              "CGA_IAM_008",
+              "CGA_IAM_009",
+              "CGA_IAM_010"
+            ]
+          },
+          "resource": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "policy_kind": {
+            "enum": [
+              "trust",
+              "permissions"
+            ]
+          },
+          "statement_index": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 255
+          },
+          "status": {
+            "enum": [
+              "FINDING",
+              "UNKNOWN"
+            ]
+          },
+          "severity": {
+            "enum": [
+              "CRITICAL",
+              "HIGH",
+              "MEDIUM",
+              "UNKNOWN"
+            ]
+          },
+          "conditioned": {
+            "type": "boolean"
+          },
+          "requires_review": {
+            "const": true
+          },
+          "message": {
+            "enum": [
+              "Full administrator-shaped Allow; effective access requires review",
+              "Global wildcard Allow action",
+              "Service or partial wildcard Allow action",
+              "Allow uses wildcard resources; some actions require this scope",
+              "IAM privilege-management capability; escalation is not established",
+              "PassRole with wildcard resource; exploitation is not established",
+              "Resource-scoped PassRole capability",
+              "Trust Allow includes an unrestricted principal",
+              "Federated trust lacks a nonempty Condition; external restrictions are unknown",
+              "Unsupported or unresolved IAM context requires review"
+            ]
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total",
+        "critical",
+        "high",
+        "medium",
+        "low",
+        "info",
+        "unknown"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20000
+        },
+        "critical": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20000
+        },
+        "high": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20000
+        },
+        "medium": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20000
+        },
+        "low": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20000
+        },
+        "info": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20000
+        },
+        "unknown": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20000
+        }
+      }
+    }
+  }
+}

@@ -117,3 +117,33 @@ attestation, and assumes a trusted workspace.
 Hosted runner behavior, artifact upload service, PR UI rendering, OIDC exchange,
 AWS authentication and real AWS planning: **NOT RUN / REQUIRES HOSTED VERIFICATION**.
 Live AI: **NOT RUN / OUT OF SCOPE**. Phase 4 is not implemented.
+
+## Phase 4.1 local validation: 2026-10-30
+
+The IAM analyzer adds no dependencies, workflow changes, AWS access, live AI or
+Terraform execution. It analyzes synthetic supplied plan JSON, not live AWS state.
+The existing toolchain and provider mirror are reused. Source policies, exceptions,
+Phase 3 schemas, risk model and production runner remain unchanged.
+
+New IAM unit tests: 61 PASS. Complete Python suite: 279 PASS (218 existing + 61).
+Standalone CLI schema validation and two-run byte-identical reproduction: PASS.
+Normalized-schema/risk compatibility: PASS, including UNKNOWN warning handling.
+No-network/execution, inert malicious input, private boundaries, no-overwrite,
+unknowns, Deny, Conditions, bounds and schema-tampering regressions: PASS.
+
+See [IAM analyzer](phase4-iam.md) for controls, limits and structural-analysis
+limitations. No effective-permissions or confirmed-escalation claim is made.
+Runtime IAM reports remain ignored under reports/private and are not staged.
+
+Final-source offline regression: PASS. Terraform formatting and backend-free
+init/validation for both roots: PASS. AWS TFLint: PASS. Checkov: 30 passed,
+0 failed, 6 skipped, 0 parsing errors. Exception contract: PASS (6 expected,
+6 observed, 0 missing, 0 unexpected). OPA: 35 PASS. Conftest: 6 fixtures PASS.
+Destructive-command guard: PASS. Integrated offline runner: PASS.
+Two fresh Phase 3 CLI runs: PASS, all seven outputs byte-identical both to each
+other and to the Phase 3.5 baseline. Risk 13 / LOW / requires_review true,
+six approved exceptions, zero failed findings and real-plan policy UNKNOWN remain
+unchanged. The final source fingerprint matches the offline evidence context.
+
+Phase 4.1 is locally validated; hosted CI, OIDC, AWS authentication, real AWS
+plans and live AI were NOT RUN. Phase 4 remains IN PROGRESS; 4.2–4.5 not started.

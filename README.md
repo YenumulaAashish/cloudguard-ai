@@ -129,7 +129,7 @@ replace CI security gate conclusions.
 | 3.4 Sanitized PR security reporting | COMPLETE |
 | 3.5 Integration/evidence | COMPLETE |
 
-**PHASE 3 — COMPLETE** for the locally validated offline scope. Phase 4 has not started.
+**PHASE 3 — COMPLETE** for the locally validated offline scope. Phase 4 is in progress.
 
 ## Phase 3.5: integrated execution and evidence
 
@@ -153,3 +153,26 @@ All Phase 3 outputs reproduce byte-for-byte. Real-plan policy remains UNKNOWN;
 hosted execution, OIDC, AWS planning and live AI are not verified.
 See [integration and closure](docs/phase3-integration.md) and
 [validation evidence](docs/evidence.md) for failure behavior and limitations.
+
+## Phase 4: advanced cloud security
+
+Phases 1, 2 and 3 are COMPLETE. Phase 4 is IN PROGRESS.
+
+| Sub-phase | Status |
+|---|---|
+| 4.1 Deterministic IAM analyzer | COMPLETE |
+| 4.2 Network exposure | NOT STARTED |
+| 4.3 S3/data protection | NOT STARTED |
+| 4.4 Security graph | NOT STARTED |
+| 4.5 Posture integration | NOT STARTED |
+
+The offline IAM analyzer reads supplied Terraform plan JSON, identifies bounded
+structural permissions/trust risks and preserves unsupported or unknown context
+for review. It makes no AWS, AI or network calls. It does not resolve effective
+permissions or modify the existing policy gates and risk model.
+
+```sh
+python scripts/analyze-iam.py --plan tests/fixtures/iam/admin.json --output reports/private/phase4/iam-report.json
+```
+
+See [IAM input, controls, CLI, compatibility and limitations](docs/phase4-iam.md).
