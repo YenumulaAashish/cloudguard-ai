@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "analyzer",
+    "analysis_scope",
+    "findings",
+    "summary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "analyzer": {
+      "const": "cloudguard-network"
+    },
+    "analysis_scope": {
+      "const": "rule_configuration_only"
+    },
+    "findings": {
+      "type": "array",
+      "maxItems": 20000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "control_id",
+          "resource",
+          "direction",
+          "rule_index",
+          "address_family",
+          "protocol",
+          "from_port",
+          "to_port",
+          "service_port",
+          "status",
+          "severity",
+          "requires_review",
+          "message"
+        ],
+        "properties": {
+          "control_id": {
+            "enum": [
+              "CGA_NET_001",
+              "CGA_NET_002",
+              "CGA_NET_003",
+              "CGA_NET_004",
+              "CGA_NET_005",
+              "CGA_NET_006",
+              "CGA_NET_007",
+              "CGA_NET_008",
+              "CGA_NET_009"
+            ]
+          },
+          "resource": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "direction": {
+            "enum": [
+              "ingress",
+              "egress",
+              "UNKNOWN"
+            ]
+          },
+          "rule_index": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 255
+          },
+          "address_family": {
+            "enum": [
+              "IPv4",
+              "IPv6",
+              "UNKNOWN"
+            ]
+          },
+          "protocol": {
+            "enum": [
+              "tcp",
+              "udp",
+              "icmp",
+              "icmpv6",
+              "all",
+              "UNKNOWN"
+            ]
+          },
+          "from_port": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": -1,
+            "maximum": 65535
+          },
+          "to_port": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": -1,
+            "maximum": 65535
+          },
+          "service_port": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": -1,
+            "maximum": 65535
+          },
+          "status": {
+            "enum": [
+              "FINDING",
+              "UNKNOWN"
+            ]
+          },
+          "severity": {
+            "enum": [
+              "CRITICAL",
+              "HIGH",
+              "MEDIUM",
+              "LOW",
+              "UNKNOWN"
+            ]
+          },
+          "requires_review": {
+            "const": true
+          },
+          "message": {
+            "enum": [
+              "Ingress allows all protocols from all addresses in the indicated family",
+              "Ingress includes TCP port 22 from all addresses in the indicated family",
+              "Ingress includes TCP port 3389 from all addresses in the indicated family",
+              "Ingress includes the indicated common database TCP port from all addresses",
+              "Ingress includes the indicated management TCP port from all addresses",
+              "Ingress allows a public TCP/UDP range of at least 1024 ports",
+              "Ingress allows public ICMP; TCP service exposure is not inferred",
+              "Egress allows all protocols to all addresses in the indicated family",
+              "Unsupported or unresolved network context requires review"
+            ]
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total",
+        "critical",
+        "high",
+        "medium",
+        "low",
+        "info",
+        "unknown"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20000
+        },
+        "critical": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20000
+        },
+        "high": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20000
+        },
+        "medium": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20000
+        },
+        "low": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20000
+        },
+        "info": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20000
+        },
+        "unknown": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20000
+        }
+      }
+    }
+  }
+}

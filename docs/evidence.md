@@ -147,3 +147,32 @@ unchanged. The final source fingerprint matches the offline evidence context.
 
 Phase 4.1 is locally validated; hosted CI, OIDC, AWS authentication, real AWS
 plans and live AI were NOT RUN. Phase 4 remains IN PROGRESS; 4.2–4.5 not started.
+
+## Phase 4.2 local validation: 2026-10-30
+
+New network tests: 88 PASS. Complete Python suite: 367 PASS, 0 skips (279 existing
+plus 88 new). Existing IAM tests: 61 PASS. Network schemas, normalized/risk adapter,
+malformed/unknown input, direction/false-positive, bounds, inert injection,
+no-execution/network and private no-overwrite regressions: PASS.
+
+Terraform formatting and backend-free init/validation for both roots: PASS.
+AWS TFLint: PASS. Checkov: 30 passed, 0 failed, 6 skipped, 0 parsing errors.
+Exception contract: PASS (6 expected, 6 observed, 0 missing, 0 unexpected).
+OPA: 35 PASS. Conftest: 6 fixtures PASS. Destructive-command guard and integrated
+offline runner: PASS. Current evidence matches the final source fingerprint.
+
+Two Phase 3 CLI runs: PASS. All seven files match each other and the Phase 3.5
+baseline byte-for-byte. Risk 13 / LOW / requires_review true, six approved
+exceptions, zero failed findings and real-plan OPA/Conftest UNKNOWN remain intact.
+Two network CLI reports are byte-identical. IAM CLI output matches the Phase 4.1
+baseline byte-for-byte after extraction of its unchanged plan projection into a
+shared helper. IAM controls, schema and risk behavior are unchanged.
+
+No dependencies or workflow changes were added. Terraform used cached providers
+with checkpoint/metadata lookup disabled. No AWS, deployment, live AI, hosted
+workflow trigger, PR comment or external policy lookup was performed. Hosted
+execution, OIDC, AWS authentication, real plans and reachability: NOT RUN.
+Runtime network/IAM reports remain ignored private files, not committed artifacts.
+Privacy, staged-file and secret review passed. See [network analyzer](phase4-network.md)
+for exact controls and limits. Phase 4.2 is locally complete; Phase 4 remains
+IN PROGRESS and 4.3–4.5 remain NOT STARTED.

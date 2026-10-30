@@ -161,7 +161,7 @@ Phases 1, 2 and 3 are COMPLETE. Phase 4 is IN PROGRESS.
 | Sub-phase | Status |
 |---|---|
 | 4.1 Deterministic IAM analyzer | COMPLETE |
-| 4.2 Network exposure | NOT STARTED |
+| 4.2 Network exposure | COMPLETE |
 | 4.3 S3/data protection | NOT STARTED |
 | 4.4 Security graph | NOT STARTED |
 | 4.5 Posture integration | NOT STARTED |
@@ -176,3 +176,12 @@ python scripts/analyze-iam.py --plan tests/fixtures/iam/admin.json --output repo
 ```
 
 See [IAM input, controls, CLI, compatibility and limitations](docs/phase4-iam.md).
+
+The Phase 4.2 offline network component analyzes supplied security-group plan
+rules without claiming runtime reachability. It supports inline, legacy and modern
+rule resources, preserves UNKNOWN context, and provides a Phase 3-compatible
+adapter. See [network controls, CLI and limits](docs/phase4-network.md).
+
+```sh
+python scripts/analyze-network.py --plan tests/fixtures/network/public-ssh.json --output reports/private/phase4/network-report.json
+```

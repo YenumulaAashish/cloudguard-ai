@@ -1,0 +1,26 @@
+{
+  "format_version": "1.2",
+  "planned_values": {
+    "root_module": {
+      "resources": [
+        {
+          "address": "aws_security_group.fixture",
+          "type": "aws_security_group",
+          "values": {
+            "ingress": [
+              {
+                "protocol": "tcp",
+                "from_port": 22,
+                "to_port": 22,
+                "cidr_blocks": [
+                  "10.42.0.0/16"
+                ]
+              }
+            ],
+            "egress": []
+          }
+        }
+      ]
+    }
+  }
+}
