@@ -11,9 +11,14 @@ concurrency:
   cancel-in-progress: true
 jobs:
   offline:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
     env:
+      CHECKPOINT_DISABLE: '1'
+      AWS_EC2_METADATA_DISABLED: 'true'
       TFLINT_AWS: '1'
       AWS_REGION: ap-south-1
       TF_IN_AUTOMATION: 'true'
@@ -22,8 +27,12 @@ jobs:
         with:
           persist-credentials: false
       - uses: ./.github/actions/setup-tools
+      - name: Verify reviewed credential-free CI contract
+        run: python scripts/verify-hosted-ci.py
       - name: Terraform, lint, security, exception and policy gates
         run: python scripts/run-offline.py
+      - name: Validate Phase 4 synthetic integration privately
+        run: python scripts/verify-phase4-fixtures.py
       - name: Generate evidence even on gate failure
         if: always()
         env:

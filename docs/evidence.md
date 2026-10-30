@@ -287,3 +287,46 @@ authentication, real plans and runtime security: NOT RUN.
 Phases 4.1–4.5 are COMPLETE for the locally validated offline scope. PHASE 4 is
 COMPLETE; PHASE 5 remains NOT STARTED. See [closure contract](phase4-posture-integration.md)
 for the exact authority, uncertainty, privacy, bounds and atomicity limitations.
+
+## Phase 5.1: local CI preparation validation, 2026-10-30
+
+LOCAL VALIDATION: PASS. New CI-security tests: 69 PASS. Complete Python suite:
+647 PASS, 0 skips (578 existing + 69). IAM 61, network 88, data 81, graph 80 and
+posture 50 existing tests remain PASS. Reviewed YAML/source/tool contract, fork
+boundary, read-only permissions, checkout safety, no-deployment, exact artifacts,
+malformed/inert YAML, bounded diagnostics and false-hosted-claim regressions: PASS.
+
+Terraform formatting and both roots' backend-free init/validate: PASS. AWS TFLint:
+PASS. Checkov: 30 passed, 0 failed, 6 skipped, 0 parsing errors. Exception contract:
+PASS (6 expected, 6 observed, 0 missing, 0 unexpected). OPA: 35 PASS. Conftest:
+6 fixtures PASS. Existing destructive guard and integrated offline runner: PASS.
+Final source fingerprint matches the current evidence context.
+
+Fresh Phase 3 runs match all seven outputs byte-for-byte, retaining risk 13 / LOW /
+requires_review true, six approved exceptions, zero failed findings and real-plan
+policy UNKNOWN. Fresh IAM/network/data/graph reports match prior baselines.
+The exact new synthetic Phase 4 CI command passed locally. All three smoke-bundle
+files match two other smoke runs and the Phase 4.5 baseline byte-for-byte. No
+Phase 4 artifact upload was added. The version-1 Phase 4 receipt's historical
+Phase 5 marker is preserved; README records the current roadmap.
+
+Only the offline workflow changed: explicit ubuntu-24.04/bash, checkpoint/metadata
+disabled, reviewed-contract verification and ephemeral Phase 4 fixture validation.
+The authenticated-plan workflow, setup-tools, action tags, tool/provider pins,
+private/sanitized artifact boundaries and three-day retention remain unchanged.
+No dependencies were added or installed. Local Python: 3.12.0. Version tags,
+Python patch selection, OS images and transitive dependencies retain documented
+supply-chain/reproducibility limitations. No remote action SHA was guessed.
+
+Privacy, reviewed staging and secret checks passed. Runtime reports, raw plans,
+topology and private graph/posture files were not staged. No AWS/API access,
+deployment, live AI, PR comments, hosted triggers or Git push was performed.
+Terraform used cached providers with checkpoint/metadata lookup disabled.
+
+GITHUB-HOSTED EXECUTION: NOT RUN / PENDING USER PUSH. Local workflow parsing and
+security tests do not verify hosted action availability, Linux installation,
+artifact service behavior, execution timing, OIDC or AWS authentication. For
+5.1-only hosted verification, leave AWS_PLAN_ENABLED disabled and inspect the
+offline run after a user-controlled push. See [hosted CI contract](phase5-hosted-ci.md).
+Phase 5.1 implementation and local CI-security validation are COMPLETE; hosted
+execution remains pending. Phase 5 is IN PROGRESS; 5.2–5.5 remain NOT STARTED.

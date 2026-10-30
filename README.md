@@ -156,7 +156,7 @@ See [integration and closure](docs/phase3-integration.md) and
 
 ## Phase 4: advanced cloud security
 
-Phases 1, 2, 3 and 4 are COMPLETE for the locally validated offline scope. Phase 5 is NOT STARTED.
+Phases 1, 2, 3 and 4 are COMPLETE for the locally validated offline scope. Phase 5 is IN PROGRESS.
 
 | Sub-phase | Status |
 |---|---|
@@ -206,7 +206,7 @@ python scripts/build-security-graph.py --plan tests/fixtures/graph/connected.jso
 
 ## Phase 4 closure: posture integration
 
-**PHASE 4 — COMPLETE. PHASE 5 — NOT STARTED.**
+**PHASE 4 — COMPLETE. PHASE 5 — IN PROGRESS.**
 
 The offline integrator validates four explicit analyzer/graph reports, checks
 cross-report consistency, preserves findings and summarizes highest-known severity
@@ -223,3 +223,29 @@ posture does not replace Phase 3 policy or risk authority. Completion covers loc
 offline implementation, not production readiness or deployed AWS security.
 See [posture contract, CLI, limits and closure](docs/phase4-posture-integration.md)
 and [executed evidence](docs/evidence.md). Hosted Phase 4 integration remains NOT RUN.
+
+## Phase 5: production and portfolio release
+
+**Phase 5 — IN PROGRESS.**
+
+| Sub-phase | Status |
+|---|---|
+| 5.1 Hosted CI and GitHub Actions verification | COMPLETE LOCALLY / HOSTED EXECUTION PENDING |
+| 5.2 AWS OIDC and real Terraform plan validation | NOT STARTED |
+| 5.3 Phase 4 sanitized PR reporting | NOT STARTED |
+| 5.4 Release hardening and security documentation | NOT STARTED |
+| 5.5 Portfolio demo and final release | NOT STARTED |
+
+The credential-free workflow retains read-only permissions, exact sanitized
+artifact paths and all deterministic gates. A local reviewed-contract verifier
+and explicit synthetic Phase 4 smoke check now exercise hosted prerequisites.
+
+```sh
+python scripts/verify-hosted-ci.py
+python scripts/verify-phase4-fixtures.py
+```
+
+**GitHub-hosted execution: NOT RUN / PENDING USER PUSH.** Local YAML/security
+validation does not prove a hosted run, AWS authentication or real planning.
+No Phase 4 artifact publication is added. See [CI contract, supply-chain limits
+and user handoff](docs/phase5-hosted-ci.md).
