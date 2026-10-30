@@ -129,7 +129,7 @@ replace CI security gate conclusions.
 | 3.4 Sanitized PR security reporting | COMPLETE |
 | 3.5 Integration/evidence | COMPLETE |
 
-**PHASE 3 — COMPLETE** for the locally validated offline scope. Phase 4 is in progress.
+**PHASE 3 — COMPLETE** for the locally validated offline scope. Phase 4 is complete for the locally validated offline scope.
 
 ## Phase 3.5: integrated execution and evidence
 
@@ -156,7 +156,7 @@ See [integration and closure](docs/phase3-integration.md) and
 
 ## Phase 4: advanced cloud security
 
-Phases 1, 2 and 3 are COMPLETE. Phase 4 is IN PROGRESS.
+Phases 1, 2, 3 and 4 are COMPLETE for the locally validated offline scope. Phase 5 is NOT STARTED.
 
 | Sub-phase | Status |
 |---|---|
@@ -164,7 +164,7 @@ Phases 1, 2 and 3 are COMPLETE. Phase 4 is IN PROGRESS.
 | 4.2 Network exposure | COMPLETE |
 | 4.3 S3/data protection | COMPLETE |
 | 4.4 Security graph | COMPLETE |
-| 4.5 Posture integration | NOT STARTED |
+| 4.5 Posture integration | COMPLETE |
 
 The offline IAM analyzer reads supplied Terraform plan JSON, identifies bounded
 structural permissions/trust risks and preserves unsupported or unknown context
@@ -203,3 +203,23 @@ inferring exploitability. See [graph contract and CLI](docs/phase4-security-grap
 ```sh
 python scripts/build-security-graph.py --plan tests/fixtures/graph/connected.json --output reports/private/phase4/security-graph.json
 ```
+
+## Phase 4 closure: posture integration
+
+**PHASE 4 — COMPLETE. PHASE 5 — NOT STARTED.**
+
+The offline integrator validates four explicit analyzer/graph reports, checks
+cross-report consistency, preserves findings and summarizes highest-known severity
+with UNKNOWN/review tracked separately. It publishes one private posture file,
+a bounded sanitized summary and a completion receipt written last.
+
+```sh
+python scripts/run-phase4.py --iam-report IAM.json --network-report NETWORK.json --data-report DATA.json --graph-report GRAPH.json
+```
+
+Prior report formats remain unchanged. Private SHA-256 report fingerprints identify
+canonical content; same-plan, freshness and authenticity remain UNKNOWN. Phase 4
+posture does not replace Phase 3 policy or risk authority. Completion covers local
+offline implementation, not production readiness or deployed AWS security.
+See [posture contract, CLI, limits and closure](docs/phase4-posture-integration.md)
+and [executed evidence](docs/evidence.md). Hosted Phase 4 integration remains NOT RUN.

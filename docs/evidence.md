@@ -244,3 +244,46 @@ NOT RUN. Associations prove exact-address matching only, not report freshness or
 exploitability. See [graph contract](phase4-security-graph.md) for supported facts
 and limits. Phase 4.4 is locally complete; Phase 4 remains IN PROGRESS and
 Phase 4.5 remains NOT STARTED.
+
+## Phase 4.5 and Phase 4 closure: local validation 2026-10-30
+
+New posture/integration tests: 50 PASS. Complete Python suite: 578 PASS, 0 skips
+(528 existing + 50). IAM 61, network 88, data 81 and graph 80 existing tests remain
+PASS. All three new schemas, cross-report consistency, UNKNOWN preservation,
+no-score authority boundaries, canonical fingerprints, leakage canaries,
+completion-last ordering, no-overwrite and write/rename/readback cleanup: PASS.
+Two integrated CLI runs produce all three files byte-identically.
+
+Terraform formatting and workload/bootstrap backend-free init/validate: PASS.
+AWS TFLint: PASS. Checkov: 30 passed, 0 failed, 6 skipped, 0 parsing errors.
+Exception contract: PASS (6 expected, 6 observed, 0 missing, 0 unexpected).
+OPA: 35 PASS. Conftest: 6 fixtures PASS. Destructive guard and integrated offline
+runner: PASS. Final source fingerprint matches the current evidence context.
+
+Two fresh Phase 3 runs match all seven baseline files byte-for-byte, retaining
+risk 13 / LOW / requires_review true, six approved exceptions, zero failed findings
+and real-plan policy UNKNOWN. Fresh IAM/network/data/graph CLI outputs match their
+previous baselines byte-for-byte. All prior components, schemas, risk model,
+policies, exceptions and workflows are unchanged. No dependencies were added.
+
+The synthetic connected fixture produces highest-known category CRITICAL with
+review required; this is separate from Phase 3 risk and policy gates. Context,
+freshness and authenticity remain UNKNOWN. Canonical report SHA-256 records are
+private content identifiers, not common-plan proof or a signed attestation.
+Runtime posture/graph/analyzer reports remain ignored and were not staged.
+Privacy, reviewed staging and secret checks passed. No real private plans or
+reports are committed.
+
+The completion receipt records only actual integration validations, not fabricated
+upstream regression passes. This section records the separately executed regression
+suite. Summary publication alone is incomplete; consumers require the final receipt
+and validated bundle. Hard interruption can leave partial output, as documented.
+
+AWS/API/network lookups, deployment, live AI, PR comments, hosted triggers and Git
+pushes were not performed. Terraform used cached providers with checkpoint/metadata
+lookup disabled. Hosted Phase 4 integration, artifact services, OIDC, AWS
+authentication, real plans and runtime security: NOT RUN.
+
+Phases 4.1–4.5 are COMPLETE for the locally validated offline scope. PHASE 4 is
+COMPLETE; PHASE 5 remains NOT STARTED. See [closure contract](phase4-posture-integration.md)
+for the exact authority, uncertainty, privacy, bounds and atomicity limitations.

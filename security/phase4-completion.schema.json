@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "phase",
+    "status",
+    "informational_only",
+    "components",
+    "phase5_status",
+    "context_status",
+    "validation",
+    "execution_mode"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "phase": {
+      "const": "4"
+    },
+    "status": {
+      "const": "COMPLETE"
+    },
+    "informational_only": {
+      "const": true
+    },
+    "components": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "4.1",
+        "4.2",
+        "4.3",
+        "4.4",
+        "4.5"
+      ],
+      "properties": {
+        "4.1": {
+          "const": "COMPLETE"
+        },
+        "4.2": {
+          "const": "COMPLETE"
+        },
+        "4.3": {
+          "const": "COMPLETE"
+        },
+        "4.4": {
+          "const": "COMPLETE"
+        },
+        "4.5": {
+          "const": "COMPLETE"
+        }
+      }
+    },
+    "phase5_status": {
+      "const": "NOT_STARTED"
+    },
+    "context_status": {
+      "const": "UNKNOWN"
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_schemas",
+        "cross_report_consistency",
+        "output_schemas",
+        "byte_reproduction"
+      ],
+      "properties": {
+        "input_schemas": {
+          "const": "PASS"
+        },
+        "cross_report_consistency": {
+          "const": "PASS"
+        },
+        "output_schemas": {
+          "const": "PASS"
+        },
+        "byte_reproduction": {
+          "const": "PASS"
+        }
+      }
+    },
+    "execution_mode": {
+      "const": "offline"
+    }
+  }
+}

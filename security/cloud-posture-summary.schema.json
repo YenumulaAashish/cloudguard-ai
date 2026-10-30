@@ -1,0 +1,310 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "integrator",
+    "informational_only",
+    "phase",
+    "completion_requirement",
+    "context_status",
+    "domains",
+    "graph",
+    "overall"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "integrator": {
+      "const": "cloudguard-posture"
+    },
+    "informational_only": {
+      "const": true
+    },
+    "phase": {
+      "const": "4"
+    },
+    "completion_requirement": {
+      "const": "VALID_RECEIPT_REQUIRED"
+    },
+    "context_status": {
+      "const": "UNKNOWN"
+    },
+    "domains": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "iam",
+        "network",
+        "data"
+      ],
+      "properties": {
+        "iam": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "finding_count",
+            "severity_counts",
+            "category",
+            "unknown_context_count",
+            "requires_review"
+          ],
+          "properties": {
+            "finding_count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4096
+            },
+            "severity_counts": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "low",
+                "medium",
+                "high",
+                "critical",
+                "unknown"
+              ],
+              "properties": {
+                "low": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "medium": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "high": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "critical": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "unknown": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                }
+              }
+            },
+            "category": {
+              "enum": [
+                "NONE",
+                "LOW",
+                "MEDIUM",
+                "HIGH",
+                "CRITICAL",
+                "UNKNOWN"
+              ]
+            },
+            "unknown_context_count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2048
+            },
+            "requires_review": {
+              "type": "boolean"
+            }
+          }
+        },
+        "network": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "finding_count",
+            "severity_counts",
+            "category",
+            "unknown_context_count",
+            "requires_review"
+          ],
+          "properties": {
+            "finding_count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4096
+            },
+            "severity_counts": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "low",
+                "medium",
+                "high",
+                "critical",
+                "unknown"
+              ],
+              "properties": {
+                "low": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "medium": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "high": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "critical": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "unknown": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                }
+              }
+            },
+            "category": {
+              "enum": [
+                "NONE",
+                "LOW",
+                "MEDIUM",
+                "HIGH",
+                "CRITICAL",
+                "UNKNOWN"
+              ]
+            },
+            "unknown_context_count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2048
+            },
+            "requires_review": {
+              "type": "boolean"
+            }
+          }
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "finding_count",
+            "severity_counts",
+            "category",
+            "unknown_context_count",
+            "requires_review"
+          ],
+          "properties": {
+            "finding_count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4096
+            },
+            "severity_counts": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "low",
+                "medium",
+                "high",
+                "critical",
+                "unknown"
+              ],
+              "properties": {
+                "low": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "medium": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "high": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "critical": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "unknown": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                }
+              }
+            },
+            "category": {
+              "enum": [
+                "NONE",
+                "LOW",
+                "MEDIUM",
+                "HIGH",
+                "CRITICAL",
+                "UNKNOWN"
+              ]
+            },
+            "unknown_context_count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2048
+            },
+            "requires_review": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "graph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unresolved_count",
+        "requires_review"
+      ],
+      "properties": {
+        "unresolved_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8192
+        },
+        "requires_review": {
+          "type": "boolean"
+        }
+      }
+    },
+    "overall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "category",
+        "requires_review"
+      ],
+      "properties": {
+        "category": {
+          "enum": [
+            "NONE",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL",
+            "UNKNOWN"
+          ]
+        },
+        "requires_review": {
+          "const": true
+        }
+      }
+    }
+  }
+}

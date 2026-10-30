@@ -1,0 +1,876 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "integrator",
+    "informational_only",
+    "analysis_context",
+    "domains",
+    "overall",
+    "findings",
+    "data_checks",
+    "unresolved",
+    "finding_associations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "integrator": {
+      "const": "cloudguard-posture"
+    },
+    "informational_only": {
+      "const": true
+    },
+    "analysis_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "same_plan",
+        "freshness",
+        "authenticity",
+        "fingerprint_algorithm",
+        "fingerprint_basis",
+        "report_fingerprints"
+      ],
+      "properties": {
+        "same_plan": {
+          "const": "UNKNOWN"
+        },
+        "freshness": {
+          "const": "UNKNOWN"
+        },
+        "authenticity": {
+          "const": "UNKNOWN"
+        },
+        "fingerprint_algorithm": {
+          "const": "SHA-256"
+        },
+        "fingerprint_basis": {
+          "const": "canonical-report-json"
+        },
+        "report_fingerprints": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "iam",
+            "network",
+            "data",
+            "graph"
+          ],
+          "properties": {
+            "iam": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "network": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "data": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "graph": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        }
+      }
+    },
+    "domains": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "iam",
+        "network",
+        "data",
+        "graph"
+      ],
+      "properties": {
+        "iam": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "finding_count",
+            "severity_counts",
+            "category",
+            "unknown_context_count",
+            "requires_review"
+          ],
+          "properties": {
+            "finding_count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4096
+            },
+            "severity_counts": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "low",
+                "medium",
+                "high",
+                "critical",
+                "unknown"
+              ],
+              "properties": {
+                "low": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "medium": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "high": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "critical": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "unknown": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                }
+              }
+            },
+            "category": {
+              "enum": [
+                "NONE",
+                "LOW",
+                "MEDIUM",
+                "HIGH",
+                "CRITICAL",
+                "UNKNOWN"
+              ]
+            },
+            "unknown_context_count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2048
+            },
+            "requires_review": {
+              "type": "boolean"
+            }
+          }
+        },
+        "network": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "finding_count",
+            "severity_counts",
+            "category",
+            "unknown_context_count",
+            "requires_review"
+          ],
+          "properties": {
+            "finding_count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4096
+            },
+            "severity_counts": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "low",
+                "medium",
+                "high",
+                "critical",
+                "unknown"
+              ],
+              "properties": {
+                "low": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "medium": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "high": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "critical": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "unknown": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                }
+              }
+            },
+            "category": {
+              "enum": [
+                "NONE",
+                "LOW",
+                "MEDIUM",
+                "HIGH",
+                "CRITICAL",
+                "UNKNOWN"
+              ]
+            },
+            "unknown_context_count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2048
+            },
+            "requires_review": {
+              "type": "boolean"
+            }
+          }
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "finding_count",
+            "severity_counts",
+            "category",
+            "unknown_context_count",
+            "requires_review"
+          ],
+          "properties": {
+            "finding_count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4096
+            },
+            "severity_counts": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "low",
+                "medium",
+                "high",
+                "critical",
+                "unknown"
+              ],
+              "properties": {
+                "low": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "medium": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "high": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "critical": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                },
+                "unknown": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4096
+                }
+              }
+            },
+            "category": {
+              "enum": [
+                "NONE",
+                "LOW",
+                "MEDIUM",
+                "HIGH",
+                "CRITICAL",
+                "UNKNOWN"
+              ]
+            },
+            "unknown_context_count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2048
+            },
+            "requires_review": {
+              "type": "boolean"
+            }
+          }
+        },
+        "graph": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "nodes",
+            "edges",
+            "unresolved",
+            "finding_associations",
+            "requires_review"
+          ],
+          "properties": {
+            "nodes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 8192
+            },
+            "edges": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 8192
+            },
+            "unresolved": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 8192
+            },
+            "finding_associations": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 8192
+            },
+            "requires_review": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "overall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "category",
+        "requires_review"
+      ],
+      "properties": {
+        "category": {
+          "enum": [
+            "NONE",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL",
+            "UNKNOWN"
+          ]
+        },
+        "requires_review": {
+          "const": true
+        }
+      }
+    },
+    "findings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "iam",
+        "network",
+        "data"
+      ],
+      "properties": {
+        "iam": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "control_id",
+              "resource",
+              "policy_kind",
+              "statement_index",
+              "status",
+              "severity",
+              "conditioned",
+              "requires_review",
+              "message"
+            ],
+            "properties": {
+              "control_id": {
+                "enum": [
+                  "CGA_IAM_001",
+                  "CGA_IAM_002",
+                  "CGA_IAM_003",
+                  "CGA_IAM_004",
+                  "CGA_IAM_005",
+                  "CGA_IAM_006",
+                  "CGA_IAM_007",
+                  "CGA_IAM_008",
+                  "CGA_IAM_009",
+                  "CGA_IAM_010"
+                ]
+              },
+              "resource": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2048
+              },
+              "policy_kind": {
+                "enum": [
+                  "trust",
+                  "permissions"
+                ]
+              },
+              "statement_index": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0,
+                "maximum": 255
+              },
+              "status": {
+                "enum": [
+                  "FINDING",
+                  "UNKNOWN"
+                ]
+              },
+              "severity": {
+                "enum": [
+                  "CRITICAL",
+                  "HIGH",
+                  "MEDIUM",
+                  "UNKNOWN"
+                ]
+              },
+              "conditioned": {
+                "type": "boolean"
+              },
+              "requires_review": {
+                "const": true
+              },
+              "message": {
+                "enum": [
+                  "Full administrator-shaped Allow; effective access requires review",
+                  "Global wildcard Allow action",
+                  "Service or partial wildcard Allow action",
+                  "Allow uses wildcard resources; some actions require this scope",
+                  "IAM privilege-management capability; escalation is not established",
+                  "PassRole with wildcard resource; exploitation is not established",
+                  "Resource-scoped PassRole capability",
+                  "Trust Allow includes an unrestricted principal",
+                  "Federated trust lacks a nonempty Condition; external restrictions are unknown",
+                  "Unsupported or unresolved IAM context requires review"
+                ]
+              }
+            }
+          }
+        },
+        "network": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "control_id",
+              "resource",
+              "direction",
+              "rule_index",
+              "address_family",
+              "protocol",
+              "from_port",
+              "to_port",
+              "service_port",
+              "status",
+              "severity",
+              "requires_review",
+              "message"
+            ],
+            "properties": {
+              "control_id": {
+                "enum": [
+                  "CGA_NET_001",
+                  "CGA_NET_002",
+                  "CGA_NET_003",
+                  "CGA_NET_004",
+                  "CGA_NET_005",
+                  "CGA_NET_006",
+                  "CGA_NET_007",
+                  "CGA_NET_008",
+                  "CGA_NET_009"
+                ]
+              },
+              "resource": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2048
+              },
+              "direction": {
+                "enum": [
+                  "ingress",
+                  "egress",
+                  "UNKNOWN"
+                ]
+              },
+              "rule_index": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0,
+                "maximum": 255
+              },
+              "address_family": {
+                "enum": [
+                  "IPv4",
+                  "IPv6",
+                  "UNKNOWN"
+                ]
+              },
+              "protocol": {
+                "enum": [
+                  "tcp",
+                  "udp",
+                  "icmp",
+                  "icmpv6",
+                  "all",
+                  "UNKNOWN"
+                ]
+              },
+              "from_port": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": -1,
+                "maximum": 65535
+              },
+              "to_port": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": -1,
+                "maximum": 65535
+              },
+              "service_port": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": -1,
+                "maximum": 65535
+              },
+              "status": {
+                "enum": [
+                  "FINDING",
+                  "UNKNOWN"
+                ]
+              },
+              "severity": {
+                "enum": [
+                  "CRITICAL",
+                  "HIGH",
+                  "MEDIUM",
+                  "LOW",
+                  "UNKNOWN"
+                ]
+              },
+              "requires_review": {
+                "const": true
+              },
+              "message": {
+                "enum": [
+                  "Ingress allows all protocols from all addresses in the indicated family",
+                  "Ingress includes TCP port 22 from all addresses in the indicated family",
+                  "Ingress includes TCP port 3389 from all addresses in the indicated family",
+                  "Ingress includes the indicated common database TCP port from all addresses",
+                  "Ingress includes the indicated management TCP port from all addresses",
+                  "Ingress allows a public TCP/UDP range of at least 1024 ports",
+                  "Ingress allows public ICMP; TCP service exposure is not inferred",
+                  "Egress allows all protocols to all addresses in the indicated family",
+                  "Unsupported or unresolved network context requires review"
+                ]
+              }
+            }
+          }
+        },
+        "data": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "resource",
+              "category",
+              "control_id",
+              "status",
+              "severity",
+              "requires_review",
+              "message"
+            ],
+            "properties": {
+              "resource": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2048
+              },
+              "category": {
+                "enum": [
+                  "pab",
+                  "acl",
+                  "policy",
+                  "transport",
+                  "encryption",
+                  "versioning",
+                  "logging",
+                  "lifecycle",
+                  "context"
+                ]
+              },
+              "control_id": {
+                "enum": [
+                  "CGA_DATA_001",
+                  "CGA_DATA_002",
+                  "CGA_DATA_003",
+                  "CGA_DATA_004",
+                  "CGA_DATA_005",
+                  "CGA_DATA_006",
+                  "CGA_DATA_007",
+                  "CGA_DATA_008",
+                  "CGA_DATA_009",
+                  "CGA_DATA_010",
+                  "CGA_DATA_011"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "FINDING",
+                  "UNKNOWN"
+                ]
+              },
+              "severity": {
+                "enum": [
+                  "CRITICAL",
+                  "HIGH",
+                  "MEDIUM",
+                  "LOW",
+                  "UNKNOWN"
+                ]
+              },
+              "requires_review": {
+                "const": true
+              },
+              "message": {
+                "enum": [
+                  "Public-access-block protections explicitly include disabled settings",
+                  "Complete public-access-block configuration is missing from the supported plan",
+                  "ACL configuration explicitly permits public reads; effective access requires review",
+                  "ACL configuration explicitly permits public reads and writes; effective access requires review",
+                  "Bucket policy structurally allows a public principal supported S3 actions on this bucket",
+                  "Supported explicit server-side encryption configuration is not established",
+                  "Enabled versioning configuration is not established",
+                  "S3 access logging is not configured in the supported plan",
+                  "Bucket policy does not establish the recognized SecureTransport Deny pattern",
+                  "A global enabled multipart-upload abort rule within seven days is not established",
+                  "Unsupported or unresolved S3 configuration requires review"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "data_checks": {
+      "type": "array",
+      "maxItems": 2048,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "resource",
+          "category",
+          "state",
+          "encryption_mode"
+        ],
+        "properties": {
+          "resource": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "category": {
+            "enum": [
+              "pab",
+              "acl",
+              "policy",
+              "transport",
+              "encryption",
+              "versioning",
+              "logging",
+              "lifecycle"
+            ]
+          },
+          "state": {
+            "enum": [
+              "ESTABLISHED",
+              "REVIEWED",
+              "MISSING",
+              "WEAK",
+              "UNKNOWN"
+            ]
+          },
+          "encryption_mode": {
+            "enum": [
+              "NONE",
+              "AES256",
+              "aws:kms",
+              "UNKNOWN"
+            ]
+          }
+        }
+      }
+    },
+    "unresolved": {
+      "type": "array",
+      "maxItems": 8192,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source",
+          "relationship",
+          "source_field",
+          "certainty",
+          "reason"
+        ],
+        "properties": {
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "relationship": {
+            "enum": [
+              "ASSOCIATED_GATEWAY",
+              "ASSOCIATED_ROUTE_TABLE",
+              "ASSOCIATED_SUBNET",
+              "BUCKET_HAS_ACL",
+              "BUCKET_HAS_ENCRYPTION",
+              "BUCKET_HAS_LIFECYCLE",
+              "BUCKET_HAS_LOGGING",
+              "BUCKET_HAS_OWNERSHIP",
+              "BUCKET_HAS_PAB",
+              "BUCKET_HAS_POLICY",
+              "BUCKET_HAS_VERSIONING",
+              "EGRESS_REFERENCES_SECURITY_GROUP",
+              "HAS_INLINE_POLICY",
+              "HAS_POLICY_ATTACHMENT",
+              "HAS_ROUTE",
+              "INGRESS_REFERENCES_SECURITY_GROUP",
+              "MEMBER_OF_SUBNET",
+              "MEMBER_OF_VPC",
+              "PROFILE_HAS_ROLE",
+              "REFERENCES_POLICY",
+              "REFERENCES_SECURITY_GROUP",
+              "ROUTE_USES_GATEWAY",
+              "RULE_OF_SECURITY_GROUP",
+              "USES_INSTANCE_PROFILE",
+              "USES_SECURITY_GROUP"
+            ]
+          },
+          "source_field": {
+            "enum": [
+              "bucket",
+              "egress.security_groups",
+              "gateway_id",
+              "group",
+              "iam_instance_profile",
+              "ingress.security_groups",
+              "nat_gateway_id",
+              "policy_arn",
+              "referenced_security_group_id",
+              "role",
+              "route_table_id",
+              "security_group_id",
+              "security_groups",
+              "source_security_group_id",
+              "subnet_id",
+              "subnets",
+              "user",
+              "vpc_id",
+              "vpc_security_group_ids"
+            ]
+          },
+          "certainty": {
+            "const": "UNKNOWN"
+          },
+          "reason": {
+            "enum": [
+              "UNKNOWN_VALUE",
+              "MISSING_VALUE",
+              "NO_LOCAL_MATCH",
+              "AMBIGUOUS_MATCH"
+            ]
+          }
+        }
+      }
+    },
+    "finding_associations": {
+      "type": "array",
+      "maxItems": 8192,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "node",
+          "analyzer",
+          "control_id",
+          "severity",
+          "status"
+        ],
+        "properties": {
+          "node": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "analyzer": {
+            "enum": [
+              "cloudguard-iam",
+              "cloudguard-network",
+              "cloudguard-data"
+            ]
+          },
+          "control_id": {
+            "type": "string",
+            "pattern": "^CGA_(IAM|NET|DATA)_[0-9]{3}$",
+            "maxLength": 32
+          },
+          "severity": {
+            "enum": [
+              "CRITICAL",
+              "HIGH",
+              "MEDIUM",
+              "LOW",
+              "UNKNOWN"
+            ]
+          },
+          "status": {
+            "enum": [
+              "FINDING",
+              "UNKNOWN"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
