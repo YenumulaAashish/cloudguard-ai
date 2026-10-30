@@ -1,0 +1,382 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "builder",
+    "analysis_scope",
+    "nodes",
+    "edges",
+    "unresolved",
+    "finding_associations",
+    "summary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "builder": {
+      "const": "cloudguard-security-graph"
+    },
+    "analysis_scope": {
+      "const": "planned_configuration_facts"
+    },
+    "nodes": {
+      "type": "array",
+      "maxItems": 1024,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "resource_type",
+          "category",
+          "status",
+          "provenance"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "resource_type": {
+            "enum": [
+              "aws_alb",
+              "aws_default_security_group",
+              "aws_iam_group",
+              "aws_iam_group_policy",
+              "aws_iam_group_policy_attachment",
+              "aws_iam_instance_profile",
+              "aws_iam_policy",
+              "aws_iam_role",
+              "aws_iam_role_policy",
+              "aws_iam_role_policy_attachment",
+              "aws_iam_user",
+              "aws_iam_user_policy",
+              "aws_iam_user_policy_attachment",
+              "aws_instance",
+              "aws_internet_gateway",
+              "aws_lb",
+              "aws_nat_gateway",
+              "aws_network_interface",
+              "aws_route",
+              "aws_route_table",
+              "aws_route_table_association",
+              "aws_s3_bucket",
+              "aws_s3_bucket_acl",
+              "aws_s3_bucket_lifecycle_configuration",
+              "aws_s3_bucket_logging",
+              "aws_s3_bucket_ownership_controls",
+              "aws_s3_bucket_policy",
+              "aws_s3_bucket_public_access_block",
+              "aws_s3_bucket_server_side_encryption_configuration",
+              "aws_s3_bucket_versioning",
+              "aws_security_group",
+              "aws_security_group_rule",
+              "aws_subnet",
+              "aws_vpc",
+              "aws_vpc_security_group_egress_rule",
+              "aws_vpc_security_group_ingress_rule"
+            ]
+          },
+          "category": {
+            "enum": [
+              "IAM",
+              "NETWORK",
+              "COMPUTE",
+              "STORAGE"
+            ]
+          },
+          "status": {
+            "const": "PLANNED"
+          },
+          "provenance": {
+            "const": "AFTER_STATE"
+          }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "maxItems": 8192,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source",
+          "target",
+          "relationship",
+          "certainty",
+          "evidence",
+          "provenance"
+        ],
+        "properties": {
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "target": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "relationship": {
+            "enum": [
+              "ASSOCIATED_GATEWAY",
+              "ASSOCIATED_ROUTE_TABLE",
+              "ASSOCIATED_SUBNET",
+              "BUCKET_HAS_ACL",
+              "BUCKET_HAS_ENCRYPTION",
+              "BUCKET_HAS_LIFECYCLE",
+              "BUCKET_HAS_LOGGING",
+              "BUCKET_HAS_OWNERSHIP",
+              "BUCKET_HAS_PAB",
+              "BUCKET_HAS_POLICY",
+              "BUCKET_HAS_VERSIONING",
+              "EGRESS_REFERENCES_SECURITY_GROUP",
+              "HAS_INLINE_POLICY",
+              "HAS_POLICY_ATTACHMENT",
+              "HAS_ROUTE",
+              "INGRESS_REFERENCES_SECURITY_GROUP",
+              "MEMBER_OF_SUBNET",
+              "MEMBER_OF_VPC",
+              "PROFILE_HAS_ROLE",
+              "REFERENCES_POLICY",
+              "REFERENCES_SECURITY_GROUP",
+              "ROUTE_USES_GATEWAY",
+              "RULE_OF_SECURITY_GROUP",
+              "USES_INSTANCE_PROFILE",
+              "USES_SECURITY_GROUP"
+            ]
+          },
+          "certainty": {
+            "const": "PROVEN"
+          },
+          "evidence": {
+            "const": "EXACT_KNOWN_VALUE"
+          },
+          "provenance": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 32,
+            "uniqueItems": true,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "source_field",
+                "target_field",
+                "reverse"
+              ],
+              "properties": {
+                "source_field": {
+                  "enum": [
+                    "bucket",
+                    "egress.security_groups",
+                    "gateway_id",
+                    "group",
+                    "iam_instance_profile",
+                    "ingress.security_groups",
+                    "nat_gateway_id",
+                    "policy_arn",
+                    "referenced_security_group_id",
+                    "role",
+                    "route_table_id",
+                    "security_group_id",
+                    "security_groups",
+                    "source_security_group_id",
+                    "subnet_id",
+                    "subnets",
+                    "user",
+                    "vpc_id",
+                    "vpc_security_group_ids"
+                  ]
+                },
+                "target_field": {
+                  "enum": [
+                    "id",
+                    "name",
+                    "arn",
+                    "bucket"
+                  ]
+                },
+                "reverse": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "unresolved": {
+      "type": "array",
+      "maxItems": 8192,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source",
+          "relationship",
+          "source_field",
+          "certainty",
+          "reason"
+        ],
+        "properties": {
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "relationship": {
+            "enum": [
+              "ASSOCIATED_GATEWAY",
+              "ASSOCIATED_ROUTE_TABLE",
+              "ASSOCIATED_SUBNET",
+              "BUCKET_HAS_ACL",
+              "BUCKET_HAS_ENCRYPTION",
+              "BUCKET_HAS_LIFECYCLE",
+              "BUCKET_HAS_LOGGING",
+              "BUCKET_HAS_OWNERSHIP",
+              "BUCKET_HAS_PAB",
+              "BUCKET_HAS_POLICY",
+              "BUCKET_HAS_VERSIONING",
+              "EGRESS_REFERENCES_SECURITY_GROUP",
+              "HAS_INLINE_POLICY",
+              "HAS_POLICY_ATTACHMENT",
+              "HAS_ROUTE",
+              "INGRESS_REFERENCES_SECURITY_GROUP",
+              "MEMBER_OF_SUBNET",
+              "MEMBER_OF_VPC",
+              "PROFILE_HAS_ROLE",
+              "REFERENCES_POLICY",
+              "REFERENCES_SECURITY_GROUP",
+              "ROUTE_USES_GATEWAY",
+              "RULE_OF_SECURITY_GROUP",
+              "USES_INSTANCE_PROFILE",
+              "USES_SECURITY_GROUP"
+            ]
+          },
+          "source_field": {
+            "enum": [
+              "bucket",
+              "egress.security_groups",
+              "gateway_id",
+              "group",
+              "iam_instance_profile",
+              "ingress.security_groups",
+              "nat_gateway_id",
+              "policy_arn",
+              "referenced_security_group_id",
+              "role",
+              "route_table_id",
+              "security_group_id",
+              "security_groups",
+              "source_security_group_id",
+              "subnet_id",
+              "subnets",
+              "user",
+              "vpc_id",
+              "vpc_security_group_ids"
+            ]
+          },
+          "certainty": {
+            "const": "UNKNOWN"
+          },
+          "reason": {
+            "enum": [
+              "UNKNOWN_VALUE",
+              "MISSING_VALUE",
+              "NO_LOCAL_MATCH",
+              "AMBIGUOUS_MATCH"
+            ]
+          }
+        }
+      }
+    },
+    "finding_associations": {
+      "type": "array",
+      "maxItems": 8192,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "node",
+          "analyzer",
+          "control_id",
+          "severity",
+          "status"
+        ],
+        "properties": {
+          "node": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "analyzer": {
+            "enum": [
+              "cloudguard-iam",
+              "cloudguard-network",
+              "cloudguard-data"
+            ]
+          },
+          "control_id": {
+            "type": "string",
+            "pattern": "^CGA_(IAM|NET|DATA)_[0-9]{3}$",
+            "maxLength": 32
+          },
+          "severity": {
+            "enum": [
+              "CRITICAL",
+              "HIGH",
+              "MEDIUM",
+              "LOW",
+              "UNKNOWN"
+            ]
+          },
+          "status": {
+            "enum": [
+              "FINDING",
+              "UNKNOWN"
+            ]
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodes",
+        "edges",
+        "unresolved",
+        "finding_associations"
+      ],
+      "properties": {
+        "nodes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1024
+        },
+        "edges": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8192
+        },
+        "unresolved": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8192
+        },
+        "finding_associations": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8192
+        }
+      }
+    }
+  }
+}

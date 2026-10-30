@@ -163,7 +163,7 @@ Phases 1, 2 and 3 are COMPLETE. Phase 4 is IN PROGRESS.
 | 4.1 Deterministic IAM analyzer | COMPLETE |
 | 4.2 Network exposure | COMPLETE |
 | 4.3 S3/data protection | COMPLETE |
-| 4.4 Security graph | NOT STARTED |
+| 4.4 Security graph | COMPLETE |
 | 4.5 Posture integration | NOT STARTED |
 
 The offline IAM analyzer reads supplied Terraform plan JSON, identifies bounded
@@ -193,4 +193,13 @@ See [S3 controls, CLI and limitations](docs/phase4-data-protection.md).
 
 ```sh
 python scripts/analyze-data-protection.py --plan tests/fixtures/data/s3-secure.json --output reports/private/phase4/data-protection-report.json
+```
+
+The Phase 4.4 private security graph records exact known-value relationships among
+supported plan resources and preserves unresolved references. Optional validated
+analyzer reports attach findings to matching nodes without changing severity or
+inferring exploitability. See [graph contract and CLI](docs/phase4-security-graph.md).
+
+```sh
+python scripts/build-security-graph.py --plan tests/fixtures/graph/connected.json --output reports/private/phase4/security-graph.json
 ```

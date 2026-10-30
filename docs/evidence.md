@@ -209,3 +209,38 @@ Hosted execution, OIDC, AWS authentication, real AWS plans and runtime/object
 state: NOT RUN. Privacy, reviewed staging and secret checks passed.
 See [S3 scope and controls](phase4-data-protection.md) for limits and uncertainty.
 Phase 4.3 is locally complete; Phase 4 remains IN PROGRESS, 4.4/4.5 NOT STARTED.
+
+## Phase 4.4 local validation: 2026-10-30
+
+New graph tests: 80 PASS. Complete Python suite: 528 PASS, 0 skips (448 existing
+plus 80). Existing IAM 61, network 88 and data-protection 81 tests remain PASS.
+Graph schema, exact-value/ambiguity/unknown handling, typed provenance, cycles,
+bounds, inert input, no network/execution and private no-overwrite tests: PASS.
+Two graph CLI runs with all three optional analyzer reports produce byte-identical
+reports. Finding associations preserve control/severity/status without rerunning
+analyzers, inventing edges or producing new security findings: PASS.
+
+Terraform formatting and both roots' backend-free init/validate: PASS. AWS TFLint:
+PASS. Checkov: 30 passed, 0 failed, 6 skipped, 0 parsing errors. Exception contract:
+PASS (6 expected, 6 observed, 0 missing, 0 unexpected). OPA: 35 PASS. Conftest:
+6 fixtures PASS. Destructive guard and integrated offline runner: PASS. Final
+source fingerprint matches the current evidence context.
+
+Two fresh Phase 3 CLI runs passed; all seven files match each other and the
+Phase 3.5 baseline byte-for-byte. Risk 13 / LOW / requires_review true, six approved
+exceptions, zero failed findings and real-plan policy UNKNOWN remain unchanged.
+Fresh IAM/network/data CLI outputs match their previous baselines byte-for-byte.
+Prior analyzers, schemas, shared projection, security policies and risk model
+were not modified. Graph-to-Phase-3 compatibility is NOT APPLICABLE because no
+CGA_GRAPH security findings or new risk model were introduced.
+
+No dependencies or workflow changes were added. All runtime graph/analyzer reports
+remain private and ignored; synthetic topology fixtures are the only committed
+plan-shaped data. Privacy, reviewed staging and secret checks passed. No AWS,
+network lookup, deployment, live AI, hosted trigger, PR comment or Git push was
+performed. Terraform used cached providers with checkpoint/metadata lookup disabled.
+Hosted execution, OIDC, AWS authentication, real plans and runtime reachability:
+NOT RUN. Associations prove exact-address matching only, not report freshness or
+exploitability. See [graph contract](phase4-security-graph.md) for supported facts
+and limits. Phase 4.4 is locally complete; Phase 4 remains IN PROGRESS and
+Phase 4.5 remains NOT STARTED.
