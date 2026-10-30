@@ -195,10 +195,11 @@ or prove exception approval. A small mapping covers current known concerns only.
 Scores depend on the recorded configuration and the completeness/truth of input.
 An empty report proves only that it contained no findings, not that scans ran.
 
-A future Phase 3.3 consumer may use these scores and factors for explanations
-after a separate privacy review. It must retain unknowns and exception status,
-preserve deterministic gates and never treat priority or CLI exit 0 as approval.
-No LLM/API integration, AI analysis, remediation or Phase 3.3 is implemented here.
+The Phase 3.3 advisory consumer uses these scores and factors while retaining
+unknowns and exception status. Phase 3.4 reports sanitized aggregates; Phase 3.5
+integrates the chain. Neither priority nor CLI exit 0 means approval. No live
+LLM/API provider or automated remediation is implemented. See
+[Phase 3 integration](phase3-integration.md) for the completed offline pipeline.
 
 ## Local validation: 2026-10-29
 

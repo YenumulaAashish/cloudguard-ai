@@ -55,9 +55,65 @@ current Phase 2 run/fingerprint records and binds source findings to raw scan
 output; absent, stale or unrelated evidence becomes UNKNOWN. OPA/Conftest fixture
 tests are shown separately from real-plan policy evaluation.
 
-Offline CI uploads only the exact `pr-summary.json` and `pr-summary.md` files in
-a separate three-day artifact. Phase 3 private intermediates are never uploaded.
+Offline CI now uploads exactly `pr-summary.json`, `pr-summary.md` and
+`phase3-evidence.json` under `reports/sanitized/phase35/` in a separate three-day
+artifact, only after integrated runner success. Phase 3 private intermediates
+are never uploaded.
 There is no automatic comment publisher, write-token escalation or gate-result
 override. JSON/Markdown reproduction, schema checks, leakage tests and workflow
 regression tests run locally; runtime reports remain uncommitted. See
 [Phase 3.4](phase3-pr-reporting.md) for the publication trust boundary.
+
+## Final Phase 3 local validation: 2026-10-30 (Asia/Calcutta)
+
+The existing offline runner completed with PASS, followed by two successful
+Phase 3 integrated CLI runs against the actual source scan. No AWS APIs, live AI,
+PR comments, deployment or hosted workflows were invoked. Terraform used the
+existing local provider mirror with checkpoint and metadata lookup disabled.
+
+| Validation | Observed result |
+|---|---|
+| Python suite | 218 PASS, 0 skips (184 existing + 34 integration tests) |
+| Terraform formatting, both roots | PASS |
+| Workload backend-free init / validate | PASS / PASS |
+| Bootstrap backend-free init / validate | PASS / PASS |
+| TFLint including AWS rules | PASS |
+| Checkov | 30 passed / 0 failed / 6 skipped / 0 parsing errors |
+| Exception contract | PASS: expected 6, observed 6, missing 0, unexpected 0 |
+| OPA | 35 PASS |
+| Conftest fixtures | 6 PASS, including expected rejection cases |
+| Destructive-command guard / offline runner | PASS / PASS |
+| Phase 3 integrated chain | PASS |
+| Five JSON Schemas | PASS |
+| Phase 3.1 / 3.2 / 3.3 / 3.4 regression reproduction | Byte-identical to previous local outputs |
+| Two complete Phase 3.5 runs | All seven JSON/Markdown files byte-identical |
+| Workflow permissions, fork safety, exact artifact selection | PASS (static regression tests) |
+| Privacy, leakage, failure cleanup, authority boundaries | PASS (regression tests) |
+
+Recorded toolchain: Terraform 1.9.8, AWS provider 6.65.0, TFLint 0.59.1,
+AWS ruleset 0.40.0, Checkov 3.2.471, OPA 1.0.1 and Conftest 0.60.0.
+Existing schema libraries were jsonschema 4.26.0 and referencing 0.37.0;
+PyYAML 6.0.3 supported workflow tests. No dependencies were added or installed.
+These transitive Python libraries are recorded here, not independently pinned.
+
+The unchanged sanitized baseline has six findings, zero failures, six approved
+exceptions, risk 13 / LOW / requires_review true, and six offline advisory reviews.
+Checkov, exception contract and policy tests are PASS. Real-plan OPA/Conftest is
+UNKNOWN: passing fixtures do not demonstrate a real plan passed.
+
+The completion receipt has fixed constants only and records actual component,
+schema, consistency and reproduction completion, not policy approval. Phase 2
+remains authoritative for tool versions and gate evidence. Runtime reports stay
+ignored and are not committed. See [integration](phase3-integration.md) for the
+strict schema, evidence binding and completion-last publication protocol.
+
+The first new-test attempt hit Windows sandbox rename access denial; all 34 tests
+passed with local filesystem access, without a code change to bypass validation.
+The full 218-test suite then passed in that execution context. Hard interruption
+can leave incomplete files; consumers require a valid receipt and successful
+runner completion. This is not a two-directory atomic transaction or signed
+attestation, and assumes a trusted workspace.
+
+Hosted runner behavior, artifact upload service, PR UI rendering, OIDC exchange,
+AWS authentication and real AWS planning: **NOT RUN / REQUIRES HOSTED VERIFICATION**.
+Live AI: **NOT RUN / OUT OF SCOPE**. Phase 4 is not implemented.

@@ -194,10 +194,10 @@ results, actual cloud context or exception authorization. Source data remains
 untrusted. Explanation coverage is intentionally small. No real AI provider was
 configured or verified; live AI behavior is NOT RUN.
 
-Phase 3.4 may later design separately reviewed remediation verification. This
-phase implements no patch application, code execution, automated source edits,
-AWS operations, deployment or Phase 3.4 workflow. Deterministic tools remain the
-only source of security decisions.
+Phase 3.4 provides sanitized PR reporting; Phase 3.5 integrates and verifies the
+complete offline chain. Neither implements automated remediation verification,
+patch application, source edits or deployment. Deterministic tools remain the
+only source of security decisions. See [integration](phase3-integration.md).
 
 ## Local validation: 2026-10-29
 

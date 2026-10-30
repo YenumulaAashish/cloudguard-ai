@@ -4,7 +4,7 @@
 
 Final-year engineering capstone. Phase 1 supplies modular Terraform and deterministic security policies; Phase 2 adds an enforced exception contract, read-only OIDC planning and sanitized evidence. AWS region: **ap-south-1**. Intended repository: [YenumulaAashish/cloudguard-ai](https://github.com/YenumulaAashish/cloudguard-ai).
 
-**No AWS resources have been deployed.** OIDC/bootstrap code is implemented, but AWS-side configuration and authenticated GitHub planning have not been verified. AI, mutation testing, regression experiments and drift detection remain future work. No experimental accuracy or coverage results are claimed.
+**No AWS resources have been deployed.** OIDC/bootstrap code is implemented, but AWS-side configuration and authenticated GitHub planning have not been verified. Live AI, mutation testing, regression experiments and drift detection remain future work. Offline advisory analysis and the complete Phase 3 reporting chain are implemented. No experimental accuracy or coverage results are claimed.
 
 ## Infrastructure and security
 
@@ -127,6 +127,29 @@ replace CI security gate conclusions.
 | 3.2 Deterministic risk prioritization | COMPLETE |
 | 3.3 Advisory security analysis | COMPLETE |
 | 3.4 Sanitized PR security reporting | COMPLETE |
-| 3.5 Integration/evidence | NOT YET COMPLETE |
+| 3.5 Integration/evidence | COMPLETE |
 
-Phase 3 as a whole is not yet complete.
+**PHASE 3 — COMPLETE** for the locally validated offline scope. Phase 4 has not started.
+
+## Phase 3.5: integrated execution and evidence
+
+Checkov/Conftest JSON -> normalized findings -> deterministic risk -> offline
+advice -> sanitized PR reporting -> validated completion receipt.
+
+```sh
+python scripts/run-phase3.py --checkov reports/private/checkov-raw.json --current-evidence --mode offline
+```
+
+The runner reuses the existing engines, requires the JSON Schema libraries from
+the Checkov toolchain, validates every stage, checks cross-phase consistency and
+reproduces all bytes before publishing. Private outputs stay under
+`reports/private/phase35/`; three bounded public files stay under
+`reports/sanitized/phase35/`. Existing directories are never overwritten; use new
+output directories for reruns. CI uploads only after successful completion.
+
+The final local baseline is 218 Python tests, Checkov 30/0/6 with zero parsing
+errors, six exact exceptions, 35 OPA tests and six Conftest fixtures passing.
+All Phase 3 outputs reproduce byte-for-byte. Real-plan policy remains UNKNOWN;
+hosted execution, OIDC, AWS planning and live AI are not verified.
+See [integration and closure](docs/phase3-integration.md) and
+[validation evidence](docs/evidence.md) for failure behavior and limitations.

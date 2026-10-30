@@ -130,18 +130,19 @@ Only `.github/workflows/terraform-ci.yml` changes. Its existing triggers remain
 `contents: read`, with no job permission override. Checkout still disables
 credential persistence. No secrets, cloud credentials or AI keys are introduced.
 
-After gate/evidence generation, an `always()` step runs the existing normalizer,
-risk engine and offline advisory analyzer, then the new reporter. Private
-intermediates use `reports/private/phase34/`. Only the two exact sanitized filenames
-are added in a separate artifact, with three-day retention. Existing Phase 2
-artifact lists remain unchanged. There are no directory wildcards or private
-uploads. This does not automatically append artifact Markdown to a PR or job page.
+After gate/evidence generation, an `always()` step now invokes the Phase 3.5
+integrated runner, reusing the normalizer, risk engine, offline advisory analyzer
+and this reporter. Private intermediates use `reports/private/phase35/`. Only
+pr-summary.json, pr-summary.md and the completion receipt phase3-evidence.json
+under `reports/sanitized/phase35/` are uploaded, after runner success, with three-day
+retention. Existing Phase 2 artifact lists remain unchanged. There are no directory
+wildcards, private uploads or automatic PR comments.
 
 Gate failure does not prevent an attempted report. No failure masking is added:
 the original failed step still fails the job. If the scan cannot produce valid
 input, reporting fails visibly and there is no fabricated green report. The
-always-run uploads may report missing files. Fresh hosted runners avoid existing
-output collisions; local reruns must use new output filenames.
+Phase 3 upload is skipped if integration fails. Fresh hosted runners avoid existing
+output collisions; local integrated reruns must use new output directories.
 
 Fork PRs use the same credential-free read-only offline job where GitHub permits
 execution (first-contributor approval may be required). The existing separate
@@ -161,8 +162,9 @@ PR association and origin, exact filename, bounded download/file size, version,
 keys, primitive types, enums and ranges. Use trusted publisher code with no PR
 checkout/execution, render Markdown itself from validated JSON, and only update
 the appropriately owned comment. Never post artifact Markdown verbatim. Schema
-validation alone does not prove reported gate truth. That publication design and
-Phase 3.5 integration/evidence work are not implemented here.
+validation alone does not prove reported gate truth. That publication design
+remains out of scope. [Phase 3.5](phase3-integration.md) closes offline integration
+and evidence without introducing a privileged publisher.
 
 ## Validation evidence
 

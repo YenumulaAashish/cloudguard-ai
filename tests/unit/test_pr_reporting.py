@@ -418,13 +418,14 @@ class WorkflowReportingTests(unittest.TestCase):
     def test_reporting_runs_after_gates_even_on_failure_without_masking(self):
         steps = self.job['steps']
         gate = next(i for i, s in enumerate(steps) if s.get('run') == 'python scripts/run-offline.py')
-        render = next(i for i, s in enumerate(steps) if 'render-pr-summary.py' in s.get('run', ''))
+        render = next(i for i, s in enumerate(steps) if 'run-phase3.py' in s.get('run', ''))
         self.assertGreater(render, gate); self.assertEqual(steps[render]['if'], 'always()')
         self.assertNotIn('continue-on-error', self.text); self.assertNotIn('|| true', self.text)
         self.assertIn('--current-evidence', steps[render]['run']); self.assertIn('--mode offline', steps[render]['run'])
 
     def test_uploads_are_explicit_and_exclude_all_private_reports(self):
-        expected = {'reports/sanitized/pr-summary.json', 'reports/sanitized/pr-summary.md'}
+        expected = {'reports/sanitized/phase35/pr-summary.json', 'reports/sanitized/phase35/pr-summary.md',
+                    'reports/sanitized/phase35/phase3-evidence.json'}
         for path in (ROOT / '.github/workflows').glob('*'):
             flow = yaml.load(path.read_text(), Loader=yaml.BaseLoader)
             for job in flow['jobs'].values():
@@ -432,7 +433,9 @@ class WorkflowReportingTests(unittest.TestCase):
                     if step.get('uses', '').startswith('actions/upload-artifact@'):
                         paths = set(step['with']['path'].split())
                         self.assertFalse(any('private' in p or '*' in p or '..' in p for p in paths))
-                        if any('sanitized' in p for p in paths): self.assertEqual(paths, expected)
+                        if any('sanitized' in p for p in paths):
+                            self.assertEqual(paths, expected)
+                            self.assertEqual(step['if'], "always() && steps.phase3.outcome == 'success'")
                         else: self.assertTrue(all(p.startswith('reports/phase2/') for p in paths))
                         self.assertEqual(step['with']['retention-days'], '3')
 

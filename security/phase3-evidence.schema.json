@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Phase 3 completed integration receipt (not a policy verdict)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "phase", "informational_only", "completion", "advisory_mode", "components", "validation"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "phase": {"const": "3"},
+    "informational_only": {"const": true},
+    "completion": {"const": "COMPLETE"},
+    "advisory_mode": {"const": "offline"},
+    "components": {
+      "type": "object", "additionalProperties": false,
+      "required": ["normalization", "risk", "advisory", "pr_reporting"],
+      "properties": {
+        "normalization": {"const": "PASS"}, "risk": {"const": "PASS"},
+        "advisory": {"const": "PASS"}, "pr_reporting": {"const": "PASS"}
+      }
+    },
+    "validation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemas", "cross_phase_consistency", "byte_reproduction"],
+      "properties": {
+        "schemas": {"const": "PASS"}, "cross_phase_consistency": {"const": "PASS"},
+        "byte_reproduction": {"const": "PASS"}
+      }
+    }
+  }
+}

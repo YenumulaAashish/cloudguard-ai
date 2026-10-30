@@ -29,23 +29,22 @@ jobs:
         env:
           CI_JOB_STATUS: ${{ job.status }}
         run: python scripts/generate-evidence.py
-      - name: Render sanitized PR summary even on gate failure
+      - name: Complete Phase 3 reporting even on gate failure
+        id: phase3
         if: always()
         run: |
-          python scripts/normalize-findings.py --checkov reports/private/checkov-raw.json --output reports/private/phase34/normalized.json
-          python scripts/score-risk.py --input reports/private/phase34/normalized.json --output reports/private/phase34/risk.json
-          python scripts/analyze-security.py --findings reports/private/phase34/normalized.json --risk reports/private/phase34/risk.json --mode offline --output reports/private/phase34/advisory.json
-          python scripts/render-pr-summary.py --findings reports/private/phase34/normalized.json --risk reports/private/phase34/risk.json --remediation reports/private/phase34/advisory.json --current-evidence --output reports/sanitized/pr-summary.json --markdown reports/sanitized/pr-summary.md
+          python scripts/run-phase3.py --checkov reports/private/checkov-raw.json --current-evidence --mode offline
       - name: Upload bounded PR reporting artifacts
-        if: always()
+        if: always() && steps.phase3.outcome == 'success'
         uses: actions/upload-artifact@v7.0.1
         with:
           name: pr-summary-${{ github.run_id }}-${{ github.run_attempt }}
           retention-days: 3
           if-no-files-found: warn
           path: |
-            reports/sanitized/pr-summary.json
-            reports/sanitized/pr-summary.md
+            reports/sanitized/phase35/pr-summary.json
+            reports/sanitized/phase35/pr-summary.md
+            reports/sanitized/phase35/phase3-evidence.json
       - name: Upload sanitized evidence only
         if: always()
         uses: actions/upload-artifact@v7.0.1
