@@ -1,0 +1,611 @@
+{
+  "phase3": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "advisory_mode": {
+        "const": "offline"
+      },
+      "completion": {
+        "const": "COMPLETE"
+      },
+      "components": {
+        "additionalProperties": false,
+        "properties": {
+          "advisory": {
+            "const": "PASS"
+          },
+          "normalization": {
+            "const": "PASS"
+          },
+          "pr_reporting": {
+            "const": "PASS"
+          },
+          "risk": {
+            "const": "PASS"
+          }
+        },
+        "required": [
+          "normalization",
+          "risk",
+          "advisory",
+          "pr_reporting"
+        ],
+        "type": "object"
+      },
+      "informational_only": {
+        "const": true
+      },
+      "phase": {
+        "const": "3"
+      },
+      "schema_version": {
+        "const": "1.0"
+      },
+      "validation": {
+        "additionalProperties": false,
+        "properties": {
+          "byte_reproduction": {
+            "const": "PASS"
+          },
+          "cross_phase_consistency": {
+            "const": "PASS"
+          },
+          "schemas": {
+            "const": "PASS"
+          }
+        },
+        "required": [
+          "schemas",
+          "cross_phase_consistency",
+          "byte_reproduction"
+        ],
+        "type": "object"
+      }
+    },
+    "required": [
+      "schema_version",
+      "phase",
+      "informational_only",
+      "completion",
+      "advisory_mode",
+      "components",
+      "validation"
+    ],
+    "title": "Phase 3 completed integration receipt (not a policy verdict)",
+    "type": "object"
+  },
+  "phase4": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "components": {
+        "additionalProperties": false,
+        "properties": {
+          "4.1": {
+            "const": "COMPLETE"
+          },
+          "4.2": {
+            "const": "COMPLETE"
+          },
+          "4.3": {
+            "const": "COMPLETE"
+          },
+          "4.4": {
+            "const": "COMPLETE"
+          },
+          "4.5": {
+            "const": "COMPLETE"
+          }
+        },
+        "required": [
+          "4.1",
+          "4.2",
+          "4.3",
+          "4.4",
+          "4.5"
+        ],
+        "type": "object"
+      },
+      "context_status": {
+        "const": "UNKNOWN"
+      },
+      "execution_mode": {
+        "const": "offline"
+      },
+      "informational_only": {
+        "const": true
+      },
+      "phase": {
+        "const": "4"
+      },
+      "phase5_status": {
+        "const": "NOT_STARTED"
+      },
+      "schema_version": {
+        "const": "1.0"
+      },
+      "status": {
+        "const": "COMPLETE"
+      },
+      "validation": {
+        "additionalProperties": false,
+        "properties": {
+          "byte_reproduction": {
+            "const": "PASS"
+          },
+          "cross_report_consistency": {
+            "const": "PASS"
+          },
+          "input_schemas": {
+            "const": "PASS"
+          },
+          "output_schemas": {
+            "const": "PASS"
+          }
+        },
+        "required": [
+          "input_schemas",
+          "cross_report_consistency",
+          "output_schemas",
+          "byte_reproduction"
+        ],
+        "type": "object"
+      }
+    },
+    "required": [
+      "schema_version",
+      "phase",
+      "status",
+      "informational_only",
+      "components",
+      "phase5_status",
+      "context_status",
+      "validation",
+      "execution_mode"
+    ],
+    "type": "object"
+  },
+  "posture": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "completion_requirement": {
+        "const": "VALID_RECEIPT_REQUIRED"
+      },
+      "context_status": {
+        "const": "UNKNOWN"
+      },
+      "domains": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "additionalProperties": false,
+            "properties": {
+              "category": {
+                "enum": [
+                  "NONE",
+                  "LOW",
+                  "MEDIUM",
+                  "HIGH",
+                  "CRITICAL",
+                  "UNKNOWN"
+                ]
+              },
+              "finding_count": {
+                "maximum": 4096,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "requires_review": {
+                "type": "boolean"
+              },
+              "severity_counts": {
+                "additionalProperties": false,
+                "properties": {
+                  "critical": {
+                    "maximum": 4096,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "high": {
+                    "maximum": 4096,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "low": {
+                    "maximum": 4096,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "medium": {
+                    "maximum": 4096,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "unknown": {
+                    "maximum": 4096,
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "low",
+                  "medium",
+                  "high",
+                  "critical",
+                  "unknown"
+                ],
+                "type": "object"
+              },
+              "unknown_context_count": {
+                "maximum": 2048,
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "finding_count",
+              "severity_counts",
+              "category",
+              "unknown_context_count",
+              "requires_review"
+            ],
+            "type": "object"
+          },
+          "iam": {
+            "additionalProperties": false,
+            "properties": {
+              "category": {
+                "enum": [
+                  "NONE",
+                  "LOW",
+                  "MEDIUM",
+                  "HIGH",
+                  "CRITICAL",
+                  "UNKNOWN"
+                ]
+              },
+              "finding_count": {
+                "maximum": 4096,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "requires_review": {
+                "type": "boolean"
+              },
+              "severity_counts": {
+                "additionalProperties": false,
+                "properties": {
+                  "critical": {
+                    "maximum": 4096,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "high": {
+                    "maximum": 4096,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "low": {
+                    "maximum": 4096,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "medium": {
+                    "maximum": 4096,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "unknown": {
+                    "maximum": 4096,
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "low",
+                  "medium",
+                  "high",
+                  "critical",
+                  "unknown"
+                ],
+                "type": "object"
+              },
+              "unknown_context_count": {
+                "maximum": 2048,
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "finding_count",
+              "severity_counts",
+              "category",
+              "unknown_context_count",
+              "requires_review"
+            ],
+            "type": "object"
+          },
+          "network": {
+            "additionalProperties": false,
+            "properties": {
+              "category": {
+                "enum": [
+                  "NONE",
+                  "LOW",
+                  "MEDIUM",
+                  "HIGH",
+                  "CRITICAL",
+                  "UNKNOWN"
+                ]
+              },
+              "finding_count": {
+                "maximum": 4096,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "requires_review": {
+                "type": "boolean"
+              },
+              "severity_counts": {
+                "additionalProperties": false,
+                "properties": {
+                  "critical": {
+                    "maximum": 4096,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "high": {
+                    "maximum": 4096,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "low": {
+                    "maximum": 4096,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "medium": {
+                    "maximum": 4096,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "unknown": {
+                    "maximum": 4096,
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "low",
+                  "medium",
+                  "high",
+                  "critical",
+                  "unknown"
+                ],
+                "type": "object"
+              },
+              "unknown_context_count": {
+                "maximum": 2048,
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "finding_count",
+              "severity_counts",
+              "category",
+              "unknown_context_count",
+              "requires_review"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "iam",
+          "network",
+          "data"
+        ],
+        "type": "object"
+      },
+      "graph": {
+        "additionalProperties": false,
+        "properties": {
+          "requires_review": {
+            "type": "boolean"
+          },
+          "unresolved_count": {
+            "maximum": 8192,
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "unresolved_count",
+          "requires_review"
+        ],
+        "type": "object"
+      },
+      "informational_only": {
+        "const": true
+      },
+      "integrator": {
+        "const": "cloudguard-posture"
+      },
+      "overall": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "enum": [
+              "NONE",
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "CRITICAL",
+              "UNKNOWN"
+            ]
+          },
+          "requires_review": {
+            "const": true
+          }
+        },
+        "required": [
+          "category",
+          "requires_review"
+        ],
+        "type": "object"
+      },
+      "phase": {
+        "const": "4"
+      },
+      "schema_version": {
+        "const": "1.0"
+      }
+    },
+    "required": [
+      "schema_version",
+      "integrator",
+      "informational_only",
+      "phase",
+      "completion_requirement",
+      "context_status",
+      "domains",
+      "graph",
+      "overall"
+    ],
+    "type": "object"
+  },
+  "pr": {
+    "$defs": {
+      "count": {
+        "maximum": 1000000,
+        "minimum": 0,
+        "type": "integer"
+      },
+      "gate": {
+        "enum": [
+          "PASS",
+          "FAIL",
+          "UNKNOWN"
+        ]
+      }
+    },
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "advisory": {
+        "additionalProperties": false,
+        "properties": {
+          "findings_reviewed": {
+            "$ref": "#/$defs/count"
+          },
+          "mode": {
+            "enum": [
+              "offline",
+              "ai",
+              "NOT_RUN"
+            ]
+          }
+        },
+        "required": [
+          "mode",
+          "findings_reviewed"
+        ],
+        "type": "object"
+      },
+      "findings": {
+        "additionalProperties": false,
+        "properties": {
+          "approved_exceptions": {
+            "$ref": "#/$defs/count"
+          },
+          "failed": {
+            "$ref": "#/$defs/count"
+          },
+          "total": {
+            "$ref": "#/$defs/count"
+          }
+        },
+        "required": [
+          "total",
+          "failed",
+          "approved_exceptions"
+        ],
+        "type": "object"
+      },
+      "generated_by": {
+        "const": "cloudguard-ai"
+      },
+      "informational_only": {
+        "const": true
+      },
+      "policy": {
+        "additionalProperties": false,
+        "properties": {
+          "checkov": {
+            "$ref": "#/$defs/gate"
+          },
+          "exception_contract": {
+            "$ref": "#/$defs/gate"
+          },
+          "opa_conftest": {
+            "$ref": "#/$defs/gate"
+          },
+          "policy_tests": {
+            "$ref": "#/$defs/gate"
+          }
+        },
+        "required": [
+          "checkov",
+          "opa_conftest",
+          "exception_contract",
+          "policy_tests"
+        ],
+        "type": "object"
+      },
+      "risk": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "enum": [
+              "NONE",
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "CRITICAL"
+            ]
+          },
+          "requires_review": {
+            "type": "boolean"
+          },
+          "score": {
+            "maximum": 100,
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "score",
+          "category",
+          "requires_review"
+        ],
+        "type": "object"
+      },
+      "schema_version": {
+        "const": "1.0"
+      }
+    },
+    "required": [
+      "schema_version",
+      "generated_by",
+      "informational_only",
+      "policy",
+      "findings",
+      "risk",
+      "advisory"
+    ],
+    "title": "CloudGuard-AI bounded sanitized PR summary",
+    "type": "object"
+  }
+}

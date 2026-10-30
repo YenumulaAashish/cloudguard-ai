@@ -6,6 +6,29 @@ Final-year engineering capstone. Phase 1 supplies modular Terraform and determin
 
 **No AWS resources have been deployed.** OIDC/bootstrap code is implemented, but AWS-side configuration and authenticated GitHub planning have not been verified. Live AI, mutation testing, regression experiments and drift detection remain future work. Offline advisory analysis and the complete Phase 3 reporting chain are implemented. No experimental accuracy or coverage results are claimed.
 
+## Frontend Dashboard
+
+The React/TypeScript dashboard runs **without AWS**, using reviewed sanitized
+Phase 3 reports and Phase 4 synthetic posture summaries. It offers eight views:
+Overview, Findings, Cloud Posture, Risk Analysis, Security Graph, AI Advisory,
+CI / Scan Status and AWS Integration. Risk and gate results come from the existing
+engines; AI remains informational. Private findings, advisory prose and graph
+topology are withheld. Missing real-plan evidence stays UNKNOWN.
+
+```sh
+cd frontend
+npm install
+npm run dev
+# Production static build and tests:
+npm run build
+npm test
+```
+
+Use Node 22.20.0 / npm 10.9.3; `npm ci` uses the committed dependency lockfile.
+Serve only `frontend/dist/`. No backend, AWS login or deployment is added.
+See [frontend architecture, data sources, privacy boundaries and testing](docs/frontend-dashboard.md).
+AWS verification is pending; **Phase 5.2 is BLOCKED**, not complete.
+
 ## Infrastructure and security
 
 Three Terraform modules define a VPC, public/private subnets, an internet gateway and routes, security groups, and private encrypted/versioned S3 storage with TLS enforcement. Private routing has no internet default route. Public IP assignment and SSH are disabled by default. Explicit security-group rule lists preserve default deny while making planned ingress inspectable. Optional trusted IPv4 SSH ranges are configurable. `enable_ec2` must remain false.
@@ -230,8 +253,8 @@ and [executed evidence](docs/evidence.md). Hosted Phase 4 integration remains NO
 
 | Sub-phase | Status |
 |---|---|
-| 5.1 Hosted CI and GitHub Actions verification | COMPLETE LOCALLY / HOSTED EXECUTION PENDING |
-| 5.2 AWS OIDC and real Terraform plan validation | NOT STARTED |
+| 5.1 Hosted CI and GitHub Actions verification | COMPLETE — HOSTED OFFLINE CI VERIFIED |
+| 5.2 AWS OIDC and real Terraform plan validation | BLOCKED — AWS ACCOUNT VERIFICATION PENDING |
 | 5.3 Phase 4 sanitized PR reporting | NOT STARTED |
 | 5.4 Release hardening and security documentation | NOT STARTED |
 | 5.5 Portfolio demo and final release | NOT STARTED |
@@ -245,7 +268,9 @@ python scripts/verify-hosted-ci.py
 python scripts/verify-phase4-fixtures.py
 ```
 
-**GitHub-hosted execution: NOT RUN / PENDING USER PUSH.** Local YAML/security
-validation does not prove a hosted run, AWS authentication or real planning.
-No Phase 4 artifact publication is added. See [CI contract, supply-chain limits
-and user handoff](docs/phase5-hosted-ci.md).
+**Phase 5.1 hosted offline execution: PASS**, verified in
+[run 41108638752](https://github.com/YenumulaAashish/cloudguard-ai/actions/runs/41108638752)
+at commit `6ec68df80ea9012e09c6e223e0789896ec7f8ad9`. Authenticated planning was
+skipped. The dashboard is a separate offline frontend; it does not complete
+Phase 5.2 or publish Phase 4 artifacts from CI. Historical local-only checkpoints
+above retain their original scope. See [CI contract and supply-chain limits](docs/phase5-hosted-ci.md).

@@ -1,0 +1,126 @@
+{
+  "phase3": {
+    "advisory_mode": "offline",
+    "completion": "COMPLETE",
+    "components": {
+      "advisory": "PASS",
+      "normalization": "PASS",
+      "pr_reporting": "PASS",
+      "risk": "PASS"
+    },
+    "informational_only": true,
+    "phase": "3",
+    "schema_version": "1.0",
+    "validation": {
+      "byte_reproduction": "PASS",
+      "cross_phase_consistency": "PASS",
+      "schemas": "PASS"
+    }
+  },
+  "phase4": {
+    "components": {
+      "4.1": "COMPLETE",
+      "4.2": "COMPLETE",
+      "4.3": "COMPLETE",
+      "4.4": "COMPLETE",
+      "4.5": "COMPLETE"
+    },
+    "context_status": "UNKNOWN",
+    "execution_mode": "offline",
+    "informational_only": true,
+    "phase": "4",
+    "phase5_status": "NOT_STARTED",
+    "schema_version": "1.0",
+    "status": "COMPLETE",
+    "validation": {
+      "byte_reproduction": "PASS",
+      "cross_report_consistency": "PASS",
+      "input_schemas": "PASS",
+      "output_schemas": "PASS"
+    }
+  },
+  "posture": {
+    "completion_requirement": "VALID_RECEIPT_REQUIRED",
+    "context_status": "UNKNOWN",
+    "domains": {
+      "data": {
+        "category": "HIGH",
+        "finding_count": 6,
+        "requires_review": true,
+        "severity_counts": {
+          "critical": 0,
+          "high": 1,
+          "low": 2,
+          "medium": 3,
+          "unknown": 0
+        },
+        "unknown_context_count": 0
+      },
+      "iam": {
+        "category": "CRITICAL",
+        "finding_count": 4,
+        "requires_review": true,
+        "severity_counts": {
+          "critical": 1,
+          "high": 0,
+          "low": 0,
+          "medium": 1,
+          "unknown": 2
+        },
+        "unknown_context_count": 0
+      },
+      "network": {
+        "category": "HIGH",
+        "finding_count": 2,
+        "requires_review": true,
+        "severity_counts": {
+          "critical": 0,
+          "high": 1,
+          "low": 0,
+          "medium": 0,
+          "unknown": 1
+        },
+        "unknown_context_count": 0
+      }
+    },
+    "graph": {
+      "requires_review": false,
+      "unresolved_count": 0
+    },
+    "informational_only": true,
+    "integrator": "cloudguard-posture",
+    "overall": {
+      "category": "CRITICAL",
+      "requires_review": true
+    },
+    "phase": "4",
+    "schema_version": "1.0"
+  },
+  "pr": {
+    "advisory": {
+      "findings_reviewed": 6,
+      "mode": "offline"
+    },
+    "findings": {
+      "approved_exceptions": 6,
+      "failed": 0,
+      "total": 6
+    },
+    "generated_by": "cloudguard-ai",
+    "informational_only": true,
+    "policy": {
+      "checkov": "PASS",
+      "exception_contract": "PASS",
+      "opa_conftest": "UNKNOWN",
+      "policy_tests": "PASS"
+    },
+    "risk": {
+      "category": "LOW",
+      "requires_review": true,
+      "score": 13
+    },
+    "schema_version": "1.0"
+  },
+  "source": "OFFLINE_SYNTHETIC",
+  "version": "1.0"
+}
