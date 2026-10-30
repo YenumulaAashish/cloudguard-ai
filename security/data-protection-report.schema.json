@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "analyzer",
+    "scope",
+    "analysis_scope",
+    "findings",
+    "checks",
+    "summary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "analyzer": {
+      "const": "cloudguard-data"
+    },
+    "scope": {
+      "const": "s3"
+    },
+    "analysis_scope": {
+      "const": "configuration_only"
+    },
+    "findings": {
+      "type": "array",
+      "maxItems": 8192,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "resource",
+          "category",
+          "control_id",
+          "status",
+          "severity",
+          "requires_review",
+          "message"
+        ],
+        "properties": {
+          "resource": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "category": {
+            "enum": [
+              "pab",
+              "acl",
+              "policy",
+              "transport",
+              "encryption",
+              "versioning",
+              "logging",
+              "lifecycle",
+              "context"
+            ]
+          },
+          "control_id": {
+            "enum": [
+              "CGA_DATA_001",
+              "CGA_DATA_002",
+              "CGA_DATA_003",
+              "CGA_DATA_004",
+              "CGA_DATA_005",
+              "CGA_DATA_006",
+              "CGA_DATA_007",
+              "CGA_DATA_008",
+              "CGA_DATA_009",
+              "CGA_DATA_010",
+              "CGA_DATA_011"
+            ]
+          },
+          "status": {
+            "enum": [
+              "FINDING",
+              "UNKNOWN"
+            ]
+          },
+          "severity": {
+            "enum": [
+              "CRITICAL",
+              "HIGH",
+              "MEDIUM",
+              "LOW",
+              "UNKNOWN"
+            ]
+          },
+          "requires_review": {
+            "const": true
+          },
+          "message": {
+            "enum": [
+              "Public-access-block protections explicitly include disabled settings",
+              "Complete public-access-block configuration is missing from the supported plan",
+              "ACL configuration explicitly permits public reads; effective access requires review",
+              "ACL configuration explicitly permits public reads and writes; effective access requires review",
+              "Bucket policy structurally allows a public principal supported S3 actions on this bucket",
+              "Supported explicit server-side encryption configuration is not established",
+              "Enabled versioning configuration is not established",
+              "S3 access logging is not configured in the supported plan",
+              "Bucket policy does not establish the recognized SecureTransport Deny pattern",
+              "A global enabled multipart-upload abort rule within seven days is not established",
+              "Unsupported or unresolved S3 configuration requires review"
+            ]
+          }
+        }
+      }
+    },
+    "checks": {
+      "type": "array",
+      "maxItems": 2048,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "resource",
+          "category",
+          "state",
+          "encryption_mode"
+        ],
+        "properties": {
+          "resource": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "category": {
+            "enum": [
+              "pab",
+              "acl",
+              "policy",
+              "transport",
+              "encryption",
+              "versioning",
+              "logging",
+              "lifecycle"
+            ]
+          },
+          "state": {
+            "enum": [
+              "ESTABLISHED",
+              "REVIEWED",
+              "MISSING",
+              "WEAK",
+              "UNKNOWN"
+            ]
+          },
+          "encryption_mode": {
+            "enum": [
+              "NONE",
+              "AES256",
+              "aws:kms",
+              "UNKNOWN"
+            ]
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total",
+        "critical",
+        "high",
+        "medium",
+        "low",
+        "info",
+        "unknown"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8192
+        },
+        "critical": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8192
+        },
+        "high": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8192
+        },
+        "medium": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8192
+        },
+        "low": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8192
+        },
+        "info": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8192
+        },
+        "unknown": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8192
+        }
+      }
+    }
+  }
+}

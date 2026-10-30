@@ -162,7 +162,7 @@ Phases 1, 2 and 3 are COMPLETE. Phase 4 is IN PROGRESS.
 |---|---|
 | 4.1 Deterministic IAM analyzer | COMPLETE |
 | 4.2 Network exposure | COMPLETE |
-| 4.3 S3/data protection | NOT STARTED |
+| 4.3 S3/data protection | COMPLETE |
 | 4.4 Security graph | NOT STARTED |
 | 4.5 Posture integration | NOT STARTED |
 
@@ -184,4 +184,13 @@ adapter. See [network controls, CLI and limits](docs/phase4-network.md).
 
 ```sh
 python scripts/analyze-network.py --plan tests/fixtures/network/public-ssh.json --output reports/private/phase4/network-report.json
+```
+
+The Phase 4.3 S3 data-protection component correlates supported local bucket
+companions and reports public-access, encryption, versioning, logging, transport
+and multipart-cleanup posture. Missing and unknown configuration remain distinct.
+See [S3 controls, CLI and limitations](docs/phase4-data-protection.md).
+
+```sh
+python scripts/analyze-data-protection.py --plan tests/fixtures/data/s3-secure.json --output reports/private/phase4/data-protection-report.json
 ```

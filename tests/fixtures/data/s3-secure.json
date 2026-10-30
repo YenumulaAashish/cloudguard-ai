@@ -1,0 +1,118 @@
+{
+  "format_version": "1.2",
+  "planned_values": {
+    "root_module": {
+      "resources": [
+        {
+          "address": "aws_s3_bucket.example",
+          "type": "aws_s3_bucket",
+          "values": {
+            "bucket": "fixture-example",
+            "id": "fixture-example",
+            "arn": "arn:aws:s3:::fixture-example"
+          }
+        },
+        {
+          "address": "aws_s3_bucket_public_access_block.example",
+          "type": "aws_s3_bucket_public_access_block",
+          "values": {
+            "bucket": "fixture-example",
+            "block_public_acls": true,
+            "ignore_public_acls": true,
+            "block_public_policy": true,
+            "restrict_public_buckets": true
+          }
+        },
+        {
+          "address": "aws_s3_bucket_acl.example",
+          "type": "aws_s3_bucket_acl",
+          "values": {
+            "bucket": "fixture-example",
+            "acl": "private"
+          }
+        },
+        {
+          "address": "aws_s3_bucket_server_side_encryption_configuration.example",
+          "type": "aws_s3_bucket_server_side_encryption_configuration",
+          "values": {
+            "bucket": "fixture-example",
+            "rule": [
+              {
+                "apply_server_side_encryption_by_default": [
+                  {
+                    "sse_algorithm": "AES256"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "address": "aws_s3_bucket_versioning.example",
+          "type": "aws_s3_bucket_versioning",
+          "values": {
+            "bucket": "fixture-example",
+            "versioning_configuration": [
+              {
+                "status": "Enabled"
+              }
+            ]
+          }
+        },
+        {
+          "address": "aws_s3_bucket_logging.example",
+          "type": "aws_s3_bucket_logging",
+          "values": {
+            "bucket": "fixture-example",
+            "target_bucket": "fixture-logs"
+          }
+        },
+        {
+          "address": "aws_s3_bucket_lifecycle_configuration.example",
+          "type": "aws_s3_bucket_lifecycle_configuration",
+          "values": {
+            "bucket": "fixture-example",
+            "rule": [
+              {
+                "status": "Enabled",
+                "filter": [
+                  {}
+                ],
+                "abort_incomplete_multipart_upload": [
+                  {
+                    "days_after_initiation": 7
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "address": "aws_s3_bucket_policy.example",
+          "type": "aws_s3_bucket_policy",
+          "values": {
+            "bucket": "fixture-example",
+            "policy": {
+              "Statement": [
+                {
+                  "Effect": "Deny",
+                  "Principal": "*",
+                  "Action": "s3:*",
+                  "Resource": [
+                    "arn:aws:s3:::fixture-example",
+                    "arn:aws:s3:::fixture-example/*"
+                  ],
+                  "Condition": {
+                    "Bool": {
+                      "aws:SecureTransport": "false"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}
