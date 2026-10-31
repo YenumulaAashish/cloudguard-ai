@@ -98,11 +98,11 @@ class CiSecurityTests(unittest.TestCase):
                 with self.assertRaises(ValueError):ci_fixtures.verify(self.root/'reports/private/run',self.root/'reports/sanitized/run')
 
 
-    def test_readme_current_roadmap_and_pending_hosted_status(self):
+    def test_readme_current_roadmap_and_verified_hosted_status(self):
         text=(ROOT/'README.md').read_text(encoding='utf-8')
-        for value in ['Phase 5 — IN PROGRESS','COMPLETE LOCALLY / HOSTED EXECUTION PENDING','GitHub-hosted execution: NOT RUN / PENDING USER PUSH']:
+        for value in ['Phase 5 — IN PROGRESS','COMPLETE — HOSTED OFFLINE CI VERIFIED','Phase 5.1 hosted offline execution: PASS','41108638752','6ec68df80ea9012e09c6e223e0789896ec7f8ad9']:
             self.assertIn(value,text)
-        self.assertIn('| 5.2 AWS OIDC and real Terraform plan validation | NOT STARTED |',text)
+        self.assertIn('| 5.2 AWS OIDC and real Terraform plan validation | BLOCKED — AWS ACCOUNT VERIFICATION PENDING |',text)
 
     def test_evidence_contract_never_equates_local_with_hosted(self):
         text=(ROOT/'docs/phase5-hosted-ci.md').read_text(encoding='utf-8')

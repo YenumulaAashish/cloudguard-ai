@@ -29,6 +29,7 @@ for (const version of Object.values({ ...pkg.dependencies, ...pkg.devDependencie
   assert(/^\d+\.\d+\.\d+$/.test(version), 'Dependencies must use exact versions');
 }
 const forbiddenContent = [
+  /\bsk-[A-Za-z0-9_-]{20,}/,
   /(?:AKIA|ASIA)[A-Z0-9]{16}/,
   /(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})/,
   /-----BEGIN [A-Z ]*PRIVATE KEY-----/,
@@ -48,7 +49,8 @@ function scan(folder) {
     const text = readFileSync(path, 'utf8');
     for (const pattern of forbiddenContent) assert(!pattern.test(text), `Sensitive marker in ${relative(root, path)} (value withheld)`);
     if (path.includes(`${process.platform === 'win32' ? '\\' : '/'}src`) && /\.(ts|tsx)$/.test(path)) {
-      assert(!/\b(?:fetch|XMLHttpRequest|WebSocket|EventSource)\s*\(/.test(text), 'No outbound frontend transport allowed');
+      const transport = /\b(?:fetch|XMLHttpRequest|WebSocket|EventSource)\s*\(/.test(text);
+      assert(!transport || relative(root, path).replaceAll('\\', '/') === 'src/components/LiveAdvisory.tsx' && text.includes("fetch(explain ? '/api/ai/advisory' : '/api/ai/catalog'") && (text.match(/\bfetch\s*\(/g) ?? []).length === 1 && !/https?:|XMLHttpRequest|WebSocket|EventSource/.test(text), 'Only reviewed local advisory transport allowed');
       assert(!/import\.meta\.env|process\.env|dangerouslySetInnerHTML/.test(text), 'No environment or raw HTML injection allowed');
       assert(!/(?:from\s*|import\s*)['"](?:\.\.\/){3}/.test(text), 'Source import escapes frontend');
     }

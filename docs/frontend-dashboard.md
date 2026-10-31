@@ -1,5 +1,11 @@
 # Frontend security dashboard
 
+The sections below record the original offline dashboard boundary. The optional
+[live advisory service](live-ai-advisory.md) now adds one reviewed same-origin
+transport in `LiveAdvisory.tsx`, activated only by explicit user actions. The original
+offline reports and privacy boundaries remain unchanged. New synthetic selector
+data comes from the server's fixed fixture, independently of the dashboard bundle.
+
 CloudGuard's dashboard is a static, offline React application. It requires no AWS
 account, credentials, backend or AI API. AWS is required later for Phase 5.2 real-plan
 integration, which remains **BLOCKED pending account verification**. Deployment is

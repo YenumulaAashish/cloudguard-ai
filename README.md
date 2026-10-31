@@ -4,7 +4,7 @@
 
 Final-year engineering capstone. Phase 1 supplies modular Terraform and deterministic security policies; Phase 2 adds an enforced exception contract, read-only OIDC planning and sanitized evidence. AWS region: **ap-south-1**. Intended repository: [YenumulaAashish/cloudguard-ai](https://github.com/YenumulaAashish/cloudguard-ai).
 
-**No AWS resources have been deployed.** OIDC/bootstrap code is implemented, but AWS-side configuration and authenticated GitHub planning have not been verified. Live AI, mutation testing, regression experiments and drift detection remain future work. Offline advisory analysis and the complete Phase 3 reporting chain are implemented. No experimental accuracy or coverage results are claimed.
+**No AWS resources have been deployed.** OIDC/bootstrap code is implemented, but AWS-side configuration and authenticated GitHub planning have not been verified. Live AI validation, mutation testing, regression experiments and drift detection remain future work. Offline advisory analysis and the complete Phase 3 reporting chain are implemented. No experimental accuracy or coverage results are claimed.
 
 ## Frontend Dashboard
 
@@ -25,9 +25,20 @@ npm test
 ```
 
 Use Node 22.20.0 / npm 10.9.3; `npm ci` uses the committed dependency lockfile.
-Serve only `frontend/dist/`. No backend, AWS login or deployment is added.
+Serve only `frontend/dist/`. The optional local AI service is documented below;
+AWS login and deployment are unavailable.
 See [frontend architecture, data sources, privacy boundaries and testing](docs/frontend-dashboard.md).
 AWS verification is pending; **Phase 5.2 is BLOCKED**, not complete.
+
+## Live OpenAI advisory
+
+The dashboard now offers an explicit **Explain with AI** action backed by a local
+Python service and the OpenAI Responses API. Only five allowlisted fields from
+existing synthetic analyzer findings leave the server. The key stays server-side;
+missing-key and offline operation remain supported. AI output is informational and
+cannot change deterministic security results. See [setup, privacy, limits and tests](docs/live-ai-advisory.md).
+This feature is independent of AWS; Phase 5.2 remains paused. No live paid call was
+performed during implementation.
 
 ## Infrastructure and security
 
