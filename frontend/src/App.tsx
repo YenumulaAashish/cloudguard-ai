@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { NavLink, Route, Routes, useLocation, Link } from 'react-router';
 import { ShieldCheck, LayoutDashboard, ListFilter, Layers, ChartNoAxesCombined, GitBranch, Sparkles, Workflow, CloudOff, Upload, RotateCcw, Menu, X, ChevronRight } from 'lucide-react';
 import { loadReport, parseReport } from './services/reports';
+import { sourceLabel } from './services/reports';
 import demo from './data/demo.json';
 import type { ReportState } from './types/reports';
 import { Badge, Empty, Note, Panel } from './components/ui';
@@ -44,7 +45,7 @@ export function App({ initialState }: { initialState?: ReportState }) {
       <div className="sidebar-bottom"><div className="offline-status"><span/> Offline mode</div><p>No AWS connection required.</p><div className="sidebar-rule"/><p>Deterministic tools decide.<br/>AI explains. PR reporting informs.</p><small>CloudGuard AI · Capstone</small></div>
     </aside>
     {menu && <button className="sidebar-scrim" aria-label="Close navigation" onClick={() => setMenu(false)}/>}
-    <div className="main-shell"><header className="topbar"><button className="icon-button menu-toggle" onClick={() => setMenu(!menu)} aria-expanded={menu} aria-label={menu ? 'Close navigation' : 'Open navigation'}>{menu ? <X size={22}/> : <Menu size={22}/>}</button><div className="breadcrumb"><span>Workspace</span><ChevronRight size={14}/><strong>{title}</strong></div><div className="topbar-right"><span className="desktop-only"><Badge value="OFFLINE / SYNTHETIC"/></span><span className="avatar" aria-label="Local workspace">CG</span></div></header>
+    <div className="main-shell"><header className="topbar"><button className="icon-button menu-toggle" onClick={() => setMenu(!menu)} aria-expanded={menu} aria-label={menu ? 'Close navigation' : 'Open navigation'}>{menu ? <X size={22}/> : <Menu size={22}/>}</button><div className="breadcrumb"><span>Workspace</span><ChevronRight size={14}/><strong>{title}</strong></div><div className="topbar-right"><span className="desktop-only"><Badge value={state.status==='ready' && state.data.version==='1.1' ? sourceLabel(state.data) : 'OFFLINE / SYNTHETIC'}/></span><span className="avatar" aria-label="Local workspace">CG</span></div></header>
       <main id="main" ref={main} tabIndex={-1}><div className="report-toolbar"><span>{imported ? 'User-supplied snapshot · authenticity UNKNOWN' : 'Bundled snapshot · no live refresh'}</span><div>
         <input ref={fileInput} type="file" accept="application/json,.json" className="sr-only" aria-label="Select sanitized report bundle" onChange={async event => {
           const file = event.target.files?.[0]; if (!file) return;

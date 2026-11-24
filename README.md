@@ -265,9 +265,9 @@ and [executed evidence](docs/evidence.md). Hosted Phase 4 integration remains NO
 | Sub-phase | Status |
 |---|---|
 | 5.1 Hosted CI and GitHub Actions verification | COMPLETE — HOSTED OFFLINE CI VERIFIED |
-| 5.2 AWS OIDC and real Terraform plan validation | BLOCKED — AWS ACCOUNT VERIFICATION PENDING |
-| 5.3 Phase 4 sanitized PR reporting | NOT STARTED |
-| 5.4 Release hardening and security documentation | NOT STARTED |
+| 5.2 AWS OIDC and real Terraform plan validation | BLOCKED — FINAL COMMIT / AUTHENTICATED VERIFICATION PENDING |
+| 5.3 Phase 4 sanitized PR reporting | CODED — HOSTED VALIDATION PENDING |
+| 5.4 Release hardening and security documentation | IN PROGRESS — LOCAL CONTRACTS / HANDOFF PREPARED |
 | 5.5 Portfolio demo and final release | NOT STARTED |
 
 The credential-free workflow retains read-only permissions, exact sanitized
@@ -285,3 +285,18 @@ at commit `6ec68df80ea9012e09c6e223e0789896ec7f8ad9`. Authenticated planning was
 skipped. The dashboard is a separate offline frontend; it does not complete
 Phase 5.2 or publish Phase 4 artifacts from CI. Historical local-only checkpoints
 above retain their original scope. See [CI contract and supply-chain limits](docs/phase5-hosted-ci.md).
+
+The latest previously verified hosted offline run is
+[45418546667](https://github.com/YenumulaAashish/cloudguard-ai/actions/runs/45418546667)
+for `c216c427c711f7511a74ef9f98a1f247c9d05dfd`; it does not validate subsequent local changes.
+The Phase 5 integration now processes the exported plan with all Phase 4 engines,
+publishes closed sanitized finding/posture bundles, and supports reviewed actual
+finding catalogs in the advisory service and dashboard. Authenticated planning is
+manual/main-only and requires both enable and explicit review-approval variables.
+The owner approved **CG-SM-PLAN-001** on **2026-11-25** for one read-only planning run,
+including self-review and temporary absence of independent PR/CODEOWNERS approval.
+It expires at **2026-12-01T18:30:00Z** or earlier on consumption/revocation. Final
+commit/check bindings remain required; no settings or enable variables changed.
+See the [restricted approval record](security/maintainer-planning-exception.json).
+See [Phase 5 audit, contracts and manual handoff](docs/phase5-integration.md) and
+[Phase 6 provisioning architecture — design only](docs/phase6-provisioning-architecture.md).

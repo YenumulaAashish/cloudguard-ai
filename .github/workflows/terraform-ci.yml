@@ -54,6 +54,22 @@ jobs:
             reports/sanitized/phase35/pr-summary.json
             reports/sanitized/phase35/pr-summary.md
             reports/sanitized/phase35/phase3-evidence.json
+      - name: Integrate public synthetic posture and finding contract
+        id: dashboard
+        if: always() && steps.phase3.outcome == 'success'
+        run: python scripts/integrate-plan.py --plan tests/fixtures/graph/connected.json --checkov reports/private/checkov-raw.json --source SYNTHETIC --private-output reports/private/phase5-offline --public-output reports/sanitized/phase5-offline
+      - name: Upload bounded synthetic posture reporting
+        if: always() && steps.dashboard.outcome == 'success'
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: offline-dashboard-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 3
+          if-no-files-found: error
+          path: |
+            reports/sanitized/phase5-offline/dashboard.json
+            reports/sanitized/phase5-offline/posture-summary.json
+            reports/sanitized/phase5-offline/posture-summary.md
+            reports/sanitized/phase5-offline/phase4-completion.json
       - name: Upload sanitized evidence only
         if: always()
         uses: actions/upload-artifact@v7.0.1
