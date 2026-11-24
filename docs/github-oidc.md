@@ -2,7 +2,7 @@
 
 CODED: yes. CONFIGURED: user-reported, not independently inspected. VERIFIED: NOT RUN.
 The first authentication attempt failed with AccessDenied in run 45469018350;
-post-correction authentication verification is NOT RUN. See the incident below.
+post-correction authentication verification is NOT RUN. See the incident below and current approval handoff.
 The user reports an existing provider, cloudguard-ai-plan role, repository variables,
 protected aws-plan environment and main ruleset. This task did not create, inspect
 or modify AWS resources or GitHub settings. The enable switch remains user-controlled.
@@ -22,10 +22,10 @@ OIDC write permission is only on the guarded plan job; no PR write permissions e
 
 `CG-SM-PLAN-001` is **CONSUMED** by failed run 45469018350; its historical
 2026-12-01T18:30:00Z cutoff does not authorize another attempt. `CG-SM-PLAN-002`
-is **PENDING_OWNER_APPROVAL**, with approval/expiry deliberately unset. See
+is **APPROVED_RESTRICTED_SCOPE** on 2026-11-25, expiring 2026-12-01T18:30:00Z. See
 [the incident and exact-subject contract](oidc-subject-mismatch.md). The owner
 reports the deployed trust was manually corrected; this task did not contact AWS
-or verify successful STS exchange. Do not retry until fresh authorization and all
+or verify successful STS exchange. Do not retry until all
 reviewed commit, required check, environment and permission bindings are recorded.
 No enable variable or GitHub setting is changed here. Deployment, state mutation,
 apply/destroy, broader IAM and privileged Phase 6 operations remain prohibited.
@@ -52,3 +52,8 @@ EC2 metadata APIs generally do not support per-resource IAM scoping; region is r
 The workload root currently uses local state and nothing has been deployed. On a fresh hosted runner, a plan therefore describes intended creation; it is not a drift scan or a comparison with a deployed environment. Before deployment/drift experiments, select a protected remote backend, state locking and precise state-access permissions in a separate review. Do not add backend write permissions to this role by assumption.
 
 References: [GitHub AWS OIDC](https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws), [official AWS credential action](https://github.com/aws-actions/configure-aws-credentials), [Terraform JSON format](https://developer.hashicorp.com/terraform/internals/json-format).
+
+Current approval update: **CG-SM-PLAN-002 is APPROVED_RESTRICTED_SCOPE** by the owner
+on 2026-11-25 through **2026-12-01T18:30:00Z**. Only environment self-review is
+approved. Amendment PR/check/main bindings remain pending; execution is NOT RUN.
+See [the current approval handoff](plan-002-approval.md).

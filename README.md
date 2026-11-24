@@ -298,7 +298,14 @@ manual/main-only and requires both enable and explicit review-approval variables
 The owner reports CloudTrail confirmed an OIDC subject mismatch and the live trust
 was manually corrected. Bootstrap code now matches that exact subject. Successful
 authentication/planning after correction remains **NOT RUN** in this task.
-**CG-SM-PLAN-002 is PENDING_OWNER_APPROVAL**; no retry is authorized by the old
+**CG-SM-PLAN-002 is APPROVED_RESTRICTED_SCOPE**; no retry is authorized by the old
 2026-12-01T18:30:00Z cutoff. See the [failure record and fresh approval handoff](docs/oidc-subject-mismatch.md).
 See [Phase 5 audit, contracts and manual handoff](docs/phase5-integration.md) and
 [Phase 6 provisioning architecture — design only](docs/phase6-provisioning-architecture.md).
+
+Current approval update: **CG-SM-PLAN-002 is APPROVED_RESTRICTED_SCOPE** by the owner
+on 2026-11-25, through **2026-12-01T18:30:00Z**, for one read-only planning attempt.
+Only environment self-review is approved; no independent PR/CODEOWNERS waiver is
+granted by this approval. The new record amendment still requires its own protected
+PR, passing hosted check and exact resulting main binding. Execution is NOT RUN.
+See [the current approval handoff](docs/plan-002-approval.md).
