@@ -1,3 +1,10 @@
+> **Current execution update**
+
+CG-SM-PLAN-002 is **CONSUMED** by run 45484703135. Owner-confirmed OIDC authentication
+and Terraform planning passed; the security verdict failed. Historical approval and
+NOT RUN statements below describe earlier checkpoints, not current authorization.
+See [the investigation](docs/real-plan-context-investigation.md). No retry or standing authorization is active.
+
 # CloudGuard AI
 
 **A Self-Testing AI-Assisted Policy-as-Code Framework for Secure Terraform Infrastructure**
@@ -265,7 +272,7 @@ and [executed evidence](docs/evidence.md). Hosted Phase 4 integration remains NO
 | Sub-phase | Status |
 |---|---|
 | 5.1 Hosted CI and GitHub Actions verification | COMPLETE — HOSTED OFFLINE CI VERIFIED |
-| 5.2 AWS OIDC and real Terraform plan validation | BLOCKED — FINAL COMMIT / AUTHENTICATED VERIFICATION PENDING |
+| 5.2 AWS OIDC and real Terraform plan validation | BLOCKED — SECURITY VERDICT FAILED; AUTH / PLAN PASSED (OWNER EVIDENCE) |
 | 5.3 Phase 4 sanitized PR reporting | CODED — HOSTED VALIDATION PENDING |
 | 5.4 Release hardening and security documentation | IN PROGRESS — LOCAL CONTRACTS / HANDOFF PREPARED |
 | 5.5 Portfolio demo and final release | NOT STARTED |
