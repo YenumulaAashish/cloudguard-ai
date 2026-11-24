@@ -5,7 +5,7 @@ from cloudguard.runtime import ROOT, REPORTS, write_json
 from cloudguard.safety import inspect
 from cloudguard.scanning import security_scan
 from cloudguard.policy_testing import policy_tests
-from cloudguard.planning import create_plan, plan_policy
+from cloudguard.planning import create_plan, evaluate_plan
 from cloudguard.quality import quality
 
 if __name__ == "__main__":
@@ -26,7 +26,7 @@ if __name__ == "__main__":
             record("ci-safety", {"result": "FAIL" if errors else "PASS", "errors": errors})
             ready = not errors and quality() and security_scan() and policy_tests()
         if ready:
-            ok = create_plan() and plan_policy()
+            ok = create_plan() and evaluate_plan()
         else:
             record("plan-summary", {"result": "FAIL", "reason": "Offline gates absent, stale or failing"})
     finally:

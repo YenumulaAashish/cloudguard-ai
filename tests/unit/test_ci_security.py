@@ -53,6 +53,8 @@ class CiSecurityTests(unittest.TestCase):
         flow=self.load('aws_plan');job=flow['jobs']['plan']
         self.assertIn("vars.AWS_PLAN_ENABLED == 'true'",job['if']);self.assertIn('github.event.pull_request.head.repo.full_name == github.repository',job['if'])
         self.assertEqual(job['environment'],'aws-plan');self.assertEqual(job['permissions'],{'contents':'read','id-token':'write'})
+        self.assertEqual(set(flow['on']), {'workflow_dispatch'})
+        self.assertIn("github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'", job['if'])
         job.pop('if');self.save(flow,'aws_plan');self.bad()
     def test_expected_ci_runtime_and_no_cache(self):
         flow=self.load();job=flow['jobs']['offline'];self.assertEqual(job['runs-on'],'ubuntu-24.04')
@@ -102,7 +104,7 @@ class CiSecurityTests(unittest.TestCase):
         text=(ROOT/'README.md').read_text(encoding='utf-8')
         for value in ['Phase 5 — IN PROGRESS','COMPLETE — HOSTED OFFLINE CI VERIFIED','Phase 5.1 hosted offline execution: PASS','41108638752','6ec68df80ea9012e09c6e223e0789896ec7f8ad9']:
             self.assertIn(value,text)
-        self.assertIn('| 5.2 AWS OIDC and real Terraform plan validation | BLOCKED — AWS ACCOUNT VERIFICATION PENDING |',text)
+        self.assertIn('| 5.2 AWS OIDC and real Terraform plan validation | BLOCKED — SECURITY APPROVAL / AUTHENTICATED VERIFICATION PENDING |',text)
 
     def test_evidence_contract_never_equates_local_with_hosted(self):
         text=(ROOT/'docs/phase5-hosted-ci.md').read_text(encoding='utf-8')

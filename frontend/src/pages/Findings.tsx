@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Search, SlidersHorizontal } from 'lucide-react';
+import { ActualFindings } from '../components/ActualFindings';
 import type { ReportBundle } from '../types/reports';
 import { findingGroups } from '../services/reports';
 import { Badge, Empty, Note, PageTitle, Panel } from '../components/ui';
@@ -24,5 +25,5 @@ export function Findings({ data }: { data: ReportBundle }) {
       </div>
       {!groups.length ? <Empty title={data.pr || data.posture ? 'No reported findings' : 'Reports unavailable'}>Missing reports do not imply a clean scan.</Empty> : rows.length ? <div className="table-wrap"><table><caption className="sr-only">Sanitized finding groups by domain and severity</caption><thead><tr><th scope="col">Severity</th><th scope="col">Domain</th><th scope="col">Count</th><th scope="col">Status</th><th scope="col">Source</th><th scope="col">Review</th></tr></thead><tbody>{rows.map(row => <tr key={row.id}><td><Badge value={row.severity}/></td><td>{row.domain}</td><td className="tabular-nums">{row.count}</td><td><Badge value={row.status}/></td><td className="subtle">{row.source}</td><td className="subtle">Not exposed per finding</td></tr>)}</tbody></table></div> : <Empty title="No matching groups">Change your search or filters to see available evidence.</Empty>}
       <p className="subtle table-foot">UNKNOWN status means the sanitized summary does not expose a finding status. It does not mean PASS.</p>
-    </Panel></>;
+    </Panel>{data.findings && <ActualFindings catalog={data.findings}/>}</>;
 }

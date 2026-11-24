@@ -1,5 +1,11 @@
 # Frontend security dashboard
 
+Phase 5 update: the loader also accepts a closed version 1.1 plan bundle (128 KiB
+maximum) with individually projected analyzer findings, explicit omitted counts
+and source modes. Existing version 1.0 snapshots and their schemas are unchanged.
+See [contracts and provenance limitations](phase5-integration.md). The original
+aggregate-only limitations below describe the earlier dashboard checkpoint.
+
 The sections below record the original offline dashboard boundary. The optional
 [live advisory service](live-ai-advisory.md) now adds one reviewed same-origin
 transport in `LiveAdvisory.tsx`, activated only by explicit user actions. The original

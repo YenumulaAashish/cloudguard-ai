@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "source",
+    "context_status",
+    "informational_only",
+    "total_count",
+    "omitted_count",
+    "findings"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "source": {
+      "enum": [
+        "SYNTHETIC",
+        "OFFLINE",
+        "AUTHENTICATED_PLAN"
+      ]
+    },
+    "context_status": {
+      "const": "UNKNOWN"
+    },
+    "informational_only": {
+      "const": true
+    },
+    "total_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 12288
+    },
+    "omitted_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 12288
+    },
+    "findings": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "domain",
+          "control_id",
+          "resource_type",
+          "severity",
+          "status",
+          "requires_review"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^finding-[0-9]{4}$"
+          },
+          "domain": {
+            "enum": [
+              "iam",
+              "network",
+              "data"
+            ]
+          },
+          "control_id": {
+            "enum": [
+              "CGA_DATA_001",
+              "CGA_DATA_002",
+              "CGA_DATA_003",
+              "CGA_DATA_004",
+              "CGA_DATA_005",
+              "CGA_DATA_006",
+              "CGA_DATA_007",
+              "CGA_DATA_008",
+              "CGA_DATA_009",
+              "CGA_DATA_010",
+              "CGA_DATA_011",
+              "CGA_IAM_001",
+              "CGA_IAM_002",
+              "CGA_IAM_003",
+              "CGA_IAM_004",
+              "CGA_IAM_005",
+              "CGA_IAM_006",
+              "CGA_IAM_007",
+              "CGA_IAM_008",
+              "CGA_IAM_009",
+              "CGA_IAM_010",
+              "CGA_NET_001",
+              "CGA_NET_002",
+              "CGA_NET_003",
+              "CGA_NET_004",
+              "CGA_NET_005",
+              "CGA_NET_006",
+              "CGA_NET_007",
+              "CGA_NET_008",
+              "CGA_NET_009"
+            ]
+          },
+          "resource_type": {
+            "enum": [
+              "aws_alb",
+              "aws_default_security_group",
+              "aws_iam_group",
+              "aws_iam_group_policy",
+              "aws_iam_group_policy_attachment",
+              "aws_iam_instance_profile",
+              "aws_iam_policy",
+              "aws_iam_role",
+              "aws_iam_role_policy",
+              "aws_iam_role_policy_attachment",
+              "aws_iam_user",
+              "aws_iam_user_policy",
+              "aws_iam_user_policy_attachment",
+              "aws_instance",
+              "aws_internet_gateway",
+              "aws_lb",
+              "aws_nat_gateway",
+              "aws_network_interface",
+              "aws_route",
+              "aws_route_table",
+              "aws_route_table_association",
+              "aws_s3_bucket",
+              "aws_s3_bucket_acl",
+              "aws_s3_bucket_lifecycle_configuration",
+              "aws_s3_bucket_logging",
+              "aws_s3_bucket_ownership_controls",
+              "aws_s3_bucket_policy",
+              "aws_s3_bucket_public_access_block",
+              "aws_s3_bucket_server_side_encryption_configuration",
+              "aws_s3_bucket_versioning",
+              "aws_security_group",
+              "aws_security_group_rule",
+              "aws_subnet",
+              "aws_vpc",
+              "aws_vpc_security_group_egress_rule",
+              "aws_vpc_security_group_ingress_rule"
+            ]
+          },
+          "severity": {
+            "enum": [
+              "CRITICAL",
+              "HIGH",
+              "MEDIUM",
+              "LOW",
+              "UNKNOWN"
+            ]
+          },
+          "status": {
+            "enum": [
+              "FINDING",
+              "UNKNOWN"
+            ]
+          },
+          "requires_review": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}

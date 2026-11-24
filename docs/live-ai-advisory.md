@@ -1,5 +1,12 @@
 # Live OpenAI advisory
 
+Phase 5 update: the optional server-side `CLOUDGUARD_CATALOG_PATH` now accepts a
+reviewed completed sanitized dashboard bundle, including actual plan findings.
+The new contract and revision-bound requests are documented in
+[Phase 5 integration](phase5-integration.md). The synthetic-only statements below
+describe the original checkpoint. Existing API key, rate, authority and privacy
+boundaries remain applicable; paid execution is still not claimed by local tests.
+
 Deterministic tools decide. AI explains. The advisory service cannot modify reports,
 scores, severity, status, exceptions, policies, CI outcomes or deployment decisions.
 Its output has a separate `advisory` namespace and rejects all other fields.

@@ -434,8 +434,12 @@ class WorkflowReportingTests(unittest.TestCase):
                         paths = set(step['with']['path'].split())
                         self.assertFalse(any('private' in p or '*' in p or '..' in p for p in paths))
                         if any('sanitized' in p for p in paths):
-                            self.assertEqual(paths, expected)
-                            self.assertEqual(step['if'], "always() && steps.phase3.outcome == 'success'")
+                            if paths == expected:
+                                self.assertEqual(step['if'], "always() && steps.phase3.outcome == 'success'")
+                            else:
+                                name = 'phase5-plan' if path.name == 'terraform-plan.yml' else 'phase5-offline'
+                                self.assertEqual(paths, {'reports/sanitized/'+name+'/'+n for n in ('dashboard.json','posture-summary.json','posture-summary.md','phase4-completion.json')})
+                                self.assertEqual(step['if'], "always() && hashFiles('reports/sanitized/phase5-plan/dashboard.json') != ''" if name == 'phase5-plan' else "always() && steps.dashboard.outcome == 'success'")
                         else: self.assertTrue(all(p.startswith('reports/phase2/') for p in paths))
                         self.assertEqual(step['with']['retention-days'], '3')
 

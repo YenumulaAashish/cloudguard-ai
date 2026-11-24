@@ -23,7 +23,7 @@ describe('closed public report boundary', () => {
   it('rejects oversize input before parsing', () => expect(parseText(' '.repeat(20_001)).status).toBe('malformed'));
   it('rejects oversize files without reading', async () => {
     let read = false;
-    expect((await loadReport({ size: 30_000, text: async () => { read = true; return '{}'; } } as File)).status).toBe('malformed');
+    expect((await loadReport({ size: 131073, text: async () => { read = true; return '{}'; } } as File)).status).toBe('malformed');
     expect(read).toBe(false);
   });
   it('handles read errors without leaking values', async () => {

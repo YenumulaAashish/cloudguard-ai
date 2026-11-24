@@ -1,0 +1,244 @@
+{
+  "findings": {
+    "context_status": "UNKNOWN",
+    "findings": [
+      {
+        "control_id": "CGA_DATA_001",
+        "domain": "data",
+        "id": "finding-0000",
+        "requires_review": true,
+        "resource_type": "aws_s3_bucket",
+        "severity": "HIGH",
+        "status": "FINDING"
+      },
+      {
+        "control_id": "CGA_DATA_006",
+        "domain": "data",
+        "id": "finding-0001",
+        "requires_review": true,
+        "resource_type": "aws_s3_bucket",
+        "severity": "MEDIUM",
+        "status": "FINDING"
+      },
+      {
+        "control_id": "CGA_DATA_007",
+        "domain": "data",
+        "id": "finding-0002",
+        "requires_review": true,
+        "resource_type": "aws_s3_bucket",
+        "severity": "MEDIUM",
+        "status": "FINDING"
+      },
+      {
+        "control_id": "CGA_DATA_008",
+        "domain": "data",
+        "id": "finding-0003",
+        "requires_review": true,
+        "resource_type": "aws_s3_bucket",
+        "severity": "LOW",
+        "status": "FINDING"
+      },
+      {
+        "control_id": "CGA_DATA_009",
+        "domain": "data",
+        "id": "finding-0004",
+        "requires_review": true,
+        "resource_type": "aws_s3_bucket",
+        "severity": "MEDIUM",
+        "status": "FINDING"
+      },
+      {
+        "control_id": "CGA_DATA_010",
+        "domain": "data",
+        "id": "finding-0005",
+        "requires_review": true,
+        "resource_type": "aws_s3_bucket",
+        "severity": "LOW",
+        "status": "FINDING"
+      },
+      {
+        "control_id": "CGA_IAM_001",
+        "domain": "iam",
+        "id": "finding-0006",
+        "requires_review": true,
+        "resource_type": "aws_iam_policy",
+        "severity": "CRITICAL",
+        "status": "FINDING"
+      },
+      {
+        "control_id": "CGA_IAM_004",
+        "domain": "iam",
+        "id": "finding-0007",
+        "requires_review": true,
+        "resource_type": "aws_iam_role_policy",
+        "severity": "MEDIUM",
+        "status": "FINDING"
+      },
+      {
+        "control_id": "CGA_IAM_010",
+        "domain": "iam",
+        "id": "finding-0008",
+        "requires_review": true,
+        "resource_type": "aws_iam_instance_profile",
+        "severity": "UNKNOWN",
+        "status": "UNKNOWN"
+      },
+      {
+        "control_id": "CGA_IAM_010",
+        "domain": "iam",
+        "id": "finding-0009",
+        "requires_review": true,
+        "resource_type": "aws_iam_role_policy_attachment",
+        "severity": "UNKNOWN",
+        "status": "UNKNOWN"
+      },
+      {
+        "control_id": "CGA_NET_002",
+        "domain": "network",
+        "id": "finding-0010",
+        "requires_review": true,
+        "resource_type": "aws_security_group",
+        "severity": "HIGH",
+        "status": "FINDING"
+      },
+      {
+        "control_id": "CGA_NET_009",
+        "domain": "network",
+        "id": "finding-0011",
+        "requires_review": true,
+        "resource_type": "aws_instance",
+        "severity": "UNKNOWN",
+        "status": "UNKNOWN"
+      }
+    ],
+    "informational_only": true,
+    "omitted_count": 0,
+    "schema_version": "1.0",
+    "source": "SYNTHETIC",
+    "total_count": 12
+  },
+  "phase3": {
+    "advisory_mode": "offline",
+    "completion": "COMPLETE",
+    "components": {
+      "advisory": "PASS",
+      "normalization": "PASS",
+      "pr_reporting": "PASS",
+      "risk": "PASS"
+    },
+    "informational_only": true,
+    "phase": "3",
+    "schema_version": "1.0",
+    "validation": {
+      "byte_reproduction": "PASS",
+      "cross_phase_consistency": "PASS",
+      "schemas": "PASS"
+    }
+  },
+  "phase4": {
+    "components": {
+      "4.1": "COMPLETE",
+      "4.2": "COMPLETE",
+      "4.3": "COMPLETE",
+      "4.4": "COMPLETE",
+      "4.5": "COMPLETE"
+    },
+    "context_status": "UNKNOWN",
+    "execution_mode": "offline",
+    "informational_only": true,
+    "phase": "4",
+    "phase5_status": "NOT_STARTED",
+    "schema_version": "1.0",
+    "status": "COMPLETE",
+    "validation": {
+      "byte_reproduction": "PASS",
+      "cross_report_consistency": "PASS",
+      "input_schemas": "PASS",
+      "output_schemas": "PASS"
+    }
+  },
+  "posture": {
+    "completion_requirement": "VALID_RECEIPT_REQUIRED",
+    "context_status": "UNKNOWN",
+    "domains": {
+      "data": {
+        "category": "HIGH",
+        "finding_count": 6,
+        "requires_review": true,
+        "severity_counts": {
+          "critical": 0,
+          "high": 1,
+          "low": 2,
+          "medium": 3,
+          "unknown": 0
+        },
+        "unknown_context_count": 0
+      },
+      "iam": {
+        "category": "CRITICAL",
+        "finding_count": 4,
+        "requires_review": true,
+        "severity_counts": {
+          "critical": 1,
+          "high": 0,
+          "low": 0,
+          "medium": 1,
+          "unknown": 2
+        },
+        "unknown_context_count": 0
+      },
+      "network": {
+        "category": "HIGH",
+        "finding_count": 2,
+        "requires_review": true,
+        "severity_counts": {
+          "critical": 0,
+          "high": 1,
+          "low": 0,
+          "medium": 0,
+          "unknown": 1
+        },
+        "unknown_context_count": 0
+      }
+    },
+    "graph": {
+      "requires_review": false,
+      "unresolved_count": 0
+    },
+    "informational_only": true,
+    "integrator": "cloudguard-posture",
+    "overall": {
+      "category": "CRITICAL",
+      "requires_review": true
+    },
+    "phase": "4",
+    "schema_version": "1.0"
+  },
+  "pr": {
+    "advisory": {
+      "findings_reviewed": 2,
+      "mode": "offline"
+    },
+    "findings": {
+      "approved_exceptions": 1,
+      "failed": 1,
+      "total": 2
+    },
+    "generated_by": "cloudguard-ai",
+    "informational_only": true,
+    "policy": {
+      "checkov": "UNKNOWN",
+      "exception_contract": "UNKNOWN",
+      "opa_conftest": "UNKNOWN",
+      "policy_tests": "UNKNOWN"
+    },
+    "risk": {
+      "category": "HIGH",
+      "requires_review": true,
+      "score": 75
+    },
+    "schema_version": "1.0"
+  },
+  "source": "SYNTHETIC",
+  "version": "1.1"
+}

@@ -33,13 +33,14 @@ export interface Phase4Receipt {
   validation: Record<'input_schemas' | 'cross_report_consistency' | 'output_schemas' | 'byte_reproduction', 'PASS'>;
 }
 export interface ReportBundle {
-  version: '1.0'; source: 'OFFLINE_SYNTHETIC';
+  version: '1.0'|'1.1'; source: 'OFFLINE_SYNTHETIC'|'SYNTHETIC'|'OFFLINE'|'AUTHENTICATED_PLAN';
+  findings?: import('../services/publicFindings').PublicCatalog;
   pr: PrSummary | null; phase3: Phase3Receipt | null;
   posture: PostureSummary | null; phase4: Phase4Receipt | null;
 }
 export interface FindingGroup {
   id: string; domain: Domain; severity: Severity; count: number;
   status: 'APPROVED EXCEPTION' | 'FAILED' | 'UNKNOWN';
-  source: 'Offline source scan' | 'Synthetic fixture';
+  source: string;
 }
 export type ReportState = { status: 'ready'; data: ReportBundle } | { status: 'unavailable' | 'malformed' };

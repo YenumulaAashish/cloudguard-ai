@@ -2,6 +2,7 @@ import { Fingerprint, Network, Database, GitBranch } from 'lucide-react';
 import type { PostureSummary, ReportBundle } from '../types/reports';
 import { Badge, Empty, Note, PageTitle, Panel } from '../components/ui';
 import { EvidenceChart } from '../components/charts';
+import { sourceLabel } from '../services/reports';
 
 export const domains = [{ key: 'iam', label: 'IAM Security', icon: Fingerprint, explanation: 'Static permissions and trust analysis.' },
   { key: 'network', label: 'Network Security', icon: Network, explanation: 'Static network rule exposure analysis.' },
@@ -20,10 +21,10 @@ export function DomainCards({ posture }: { posture: PostureSummary }) {
 
 export function Posture({ data }: { data: ReportBundle }) {
   const p = data.posture;
-  return <><PageTitle title="Cloud posture" text="Deterministic analyzer summaries, with uncertainty kept visible." tag="SYNTHETIC FIXTURE"/>
-    {p ? <><div className="status-strip"><span>Overall synthetic posture</span><Badge value={p.overall.category}/><Badge value="REVIEW REQUIRED"/><span className="ml-auto">Context <Badge value={p.context_status}/></span></div>
+  return <><PageTitle title="Cloud posture" text="Deterministic analyzer summaries, with uncertainty kept visible." tag={sourceLabel(data)}/>
+    {p ? <><div className="status-strip"><span>Overall supplied posture</span><Badge value={p.overall.category}/><Badge value="REVIEW REQUIRED"/><span className="ml-auto">Context <Badge value={p.context_status}/></span></div>
       <DomainCards posture={p}/><p className="subtle mt-4">*Unknown findings and unknown configuration contexts are shown together here; they are not additional findings.</p>
-      <div className="two-columns mt-6"><Panel title="Findings by domain" eyebrow="SYNTHETIC · COUNTS ONLY"><EvidenceChart label="Synthetic findings by domain" rows={domains.map(d => ({ name: { iam: 'IAM', network: 'Network', data: 'Data' }[d.key], count: p.domains[d.key].finding_count }))}/></Panel>
+      <div className="two-columns mt-6"><Panel title="Findings by domain" eyebrow={sourceLabel(data)+' · COUNTS ONLY'}><EvidenceChart label="Supplied findings by domain" rows={domains.map(d => ({ name: { iam: 'IAM', network: 'Network', data: 'Data' }[d.key], count: p.domains[d.key].finding_count }))}/></Panel>
         <Panel title="What the posture means"><p>The overall category is supplied by the existing Phase 4 integrator. The dashboard does not recalculate it or combine it with the Phase 3 risk score.</p><div className="gate-list"><div><span>Same-plan provenance</span><Badge value="UNKNOWN"/></div><div><span>Freshness</span><Badge value="UNKNOWN"/></div><div><span>Authenticity</span><Badge value="UNKNOWN"/></div></div></Panel></div>
     </> : <Panel title="Cloud posture"><Empty title="Report unavailable">Provide both the sanitized summary and its valid completion receipt.</Empty></Panel>}
     <Note>Analyzer completion confirms report integration, not AWS security or runtime behavior. Individual control IDs, resource identities and messages are absent from the public contract.</Note>

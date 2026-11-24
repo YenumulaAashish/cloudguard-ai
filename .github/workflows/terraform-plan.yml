@@ -1,8 +1,5 @@
 name: Authenticated Terraform plan
 on:
-  pull_request:
-  push:
-    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
@@ -13,6 +10,8 @@ jobs:
   plan:
     if: >-
       github.repository == 'YenumulaAashish/cloudguard-ai' &&
+      github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' &&
+      vars.AWS_PLAN_REVIEW_APPROVED == 'true' &&
       vars.AWS_PLAN_ENABLED == 'true' && vars.AWS_PLAN_ROLE_ARN != '' &&
       ((github.event_name == 'pull_request' &&
         github.event.pull_request.head.repo.full_name == github.repository) ||
@@ -77,6 +76,18 @@ jobs:
             reports/phase2/ci-safety.json
             reports/phase2/plan-summary.json
             reports/phase2/plan-policy.json
+      - name: Upload completed sanitized plan reporting
+        if: always() && hashFiles('reports/sanitized/phase5-plan/dashboard.json') != ''
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: plan-dashboard-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 3
+          if-no-files-found: error
+          path: |
+            reports/sanitized/phase5-plan/dashboard.json
+            reports/sanitized/phase5-plan/posture-summary.json
+            reports/sanitized/phase5-plan/posture-summary.md
+            reports/sanitized/phase5-plan/phase4-completion.json
       - name: Remove generated plans from runner
         if: always()
         run: python scripts/clean.py

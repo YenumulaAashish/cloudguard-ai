@@ -4,6 +4,7 @@ import os
 import re
 import threading
 import time
+import uuid
 from copy import deepcopy
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from .runtime import ROOT
@@ -83,19 +84,38 @@ def provider_call(finding, model, key):
 
 
 class Service:
-    def __init__(self, provider=provider_call, key=None, model=None):
+    def __init__(self, provider=provider_call, key=None, model=None, catalog_path=None):
         self.key = os.environ.get('OPENAI_API_KEY', '') if key is None else key
         self.model = os.environ.get('OPENAI_MODEL', DEFAULT_MODEL) if model is None else model
         if not re.fullmatch(r'[a-zA-Z0-9._-]{1,80}', self.model):
             raise AdvisoryError('AI_CONFIGURATION_ERROR')
         self.provider = provider
         self.findings = catalog()
+        self.source = 'SYNTHETIC'
+        self.catalog_id = None
+        self.public_catalog = None
+        path = catalog_path or os.environ.get('CLOUDGUARD_CATALOG_PATH')
+        if path:
+            from pathlib import Path
+            from .public_findings import validate
+            path = Path(path).resolve()
+            if not path.is_relative_to((ROOT / 'reports/sanitized').resolve()) or path.name != 'dashboard.json' or path.stat().st_size > 131072:
+                raise AdvisoryError('AI_CONFIGURATION_ERROR')
+            bundle = json.loads(path.read_text())
+            # Full wrapper validation is shared with the offline pipeline.
+            from .phase5 import validate_bundle
+            validate_bundle(bundle)
+            value = validate(bundle['findings'])
+            self.public_catalog = value
+            self.findings = value['findings']; self.source = value['source']
+            self.catalog_id = str(uuid.uuid4())
         self.lock = threading.Lock()
         self.cache = {}
         self.calls = []
 
     def explain(self, body):
-        if type(body) is not dict or set(body) != {'finding_id'} or type(body['finding_id']) is not str:
+        expected = {'finding_id', 'catalog_id'} if self.catalog_id else {'finding_id'}
+        if type(body) is not dict or set(body) != expected or type(body['finding_id']) is not str or (self.catalog_id and body['catalog_id'] != self.catalog_id):
             raise AdvisoryError('AI_INVALID_REQUEST')
         found = next((f for f in self.findings if f['id'] == body['finding_id']), None)
         if found is None:
@@ -156,7 +176,11 @@ def handler(service):
                 if self.path.endswith('/catalog'):
                     if body != {}:
                         raise AdvisoryError('AI_INVALID_REQUEST')
-                    return self.reply(200, {'configured': bool(service.key), 'source': 'SYNTHETIC', 'findings': service.findings})
+                    result = {'configured': bool(service.key), 'source': service.source, 'findings': service.findings}
+                    if service.catalog_id:
+                        result['catalog_id'] = service.catalog_id
+                        result['catalog'] = service.public_catalog
+                    return self.reply(200, result)
                 return self.reply(200, service.explain(body))
             except AdvisoryError as exc:
                 return self.reply(400, {'available': False, 'error': str(exc)})

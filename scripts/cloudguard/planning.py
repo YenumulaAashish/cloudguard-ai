@@ -3,6 +3,27 @@ import os
 from .runtime import ROOT, PRIVATE, tool, run, read_json
 from .evidence import record, plan_summary, policy_summary
 
+def analyze_plan_artifacts():
+    """Same operational input as Conftest; context proof remains UNKNOWN."""
+    from .phase5 import publish
+    try:
+        publish(ROOT / 'terraform/tfplan.json', PRIVATE / 'phase5-plan',
+                ROOT / 'reports/sanitized/phase5-plan', 'AUTHENTICATED_PLAN',
+                [('checkov', read_json(PRIVATE / 'checkov-raw.json')),
+                 ('conftest', read_json(PRIVATE / 'plan-policy-raw.json'))])
+    except Exception:
+        print('Phase 4 plan integration: FAIL; values withheld')
+        return False
+    print('Phase 4 plan integration: PASS; context UNKNOWN')
+    return True
+
+def evaluate_plan():
+    # Analyzer reporting must not mask a failed policy verdict, nor be skipped
+    # merely because that verdict failed. No deployment authority is introduced.
+    policy_ok = plan_policy()
+    analysis_ok = analyze_plan_artifacts()
+    return policy_ok and analysis_ok
+
 def plan_exit_success(code):
     return code in (0, 2)
 

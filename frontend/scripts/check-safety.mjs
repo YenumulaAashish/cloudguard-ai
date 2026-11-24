@@ -7,6 +7,7 @@ import Ajv2020 from 'ajv/dist/2020.js';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const read = name => readFileSync(resolve(root, name), 'utf8');
 const schemas = JSON.parse(read('src/data/contracts.json'));
+assert.deepEqual(JSON.parse(read('src/data/public-findings.schema.json')), JSON.parse(read('../security/public-findings.schema.json')), 'Public finding schema must match engine contract');
 const names = { pr: 'pr-summary', phase3: 'phase3-evidence', posture: 'cloud-posture-summary', phase4: 'phase4-completion' };
 for (const [key, name] of Object.entries(names)) {
   assert.deepEqual(schemas[key], JSON.parse(read(`../security/${name}.schema.json`)), 'Public schema must match the engine contract');
