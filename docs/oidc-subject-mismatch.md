@@ -38,19 +38,15 @@ retains the original date, scope and approval evidence and records this failed r
 The old activity flags describe the original recording task, not the later AWS
 workflow. No retry is granted by its historical 2026-12-01T18:30:00Z cutoff.
 
-The fresh [CG-SM-PLAN-002 draft](../security/maintainer-planning-exception-002.json)
-is **PENDING_OWNER_APPROVAL**. It grants no current authority. Approver, approval
-date/source, expiry, reviewed fix commit/PR and protected main binding are unset.
-Approval of this local code repair is not authorization for another AWS attempt.
-Proposed scope: one manually dispatched read-only sandbox planning attempt in
-ap-south-1, existing `cloudguard-ai-plan` permissions, protected main and environment.
-Any proposed review-only accommodation requires explicit fresh owner acceptance.
-All other protections and deterministic gates remain required. No deployment,
-apply/destroy, state mutation, IAM/resource modification or privileged Phase 6
-operation is authorized. Expiry must be explicitly recorded on approval, no later
-than seven calendar days afterward; completion, failure or cancellation consumes
-the attempt earlier. Revocation/restoration obligations remain as in the original
-contract. These records are not an automatic expiry or GitHub variable mechanism.
+The owner subsequently approved **CG-SM-PLAN-002** on **2026-11-25**, with
+expiry **2026-12-01T18:30:00Z** or earlier on any terminal outcome, revocation or
+security violation. The status is **APPROVED_RESTRICTED_SCOPE**, for exactly one
+read-only sandbox planning attempt; execution remains **NOT RUN**. Only environment
+self-review is approved. See [the current approval and evidence handoff](plan-002-approval.md)
+and [record](../security/maintainer-planning-exception-002.json). The fix and PR #3
+merge SHAs are resolved, but this new approval-record amendment still needs its
+own protected PR, hosted check and final main binding before execution. No prior
+independent PR/CODEOWNERS waiver is carried forward.
 
 ## Remaining manual actions
 
@@ -60,14 +56,14 @@ contract. These records are not an automatic expiry or GitHub variable mechanism
 2. Confirm the previous enable/review switches are disabled and any prior temporary
    review-setting accommodations are restored. This task does not inspect or toggle
    them. Preserve main protection, required PRs/checks, CODEOWNERS and exact trust.
-3. Explicitly authorize `CG-SM-PLAN-002` with the reviewed fix/PR/main commit bindings,
-   required check evidence, precise permitted review accommodations and UTC expiry.
-   Do not carry over the old approval or guess missing evidence.
+3. CG-SM-PLAN-002 is now explicitly approved. Complete the additional amendment
+   PR/check/main bindings and live protection/permission verification described in
+   the current handoff. Do not guess missing evidence or carry over the old approval.
 4. Before a separately authorized retry, manually confirm the already-corrected
    trust matches the exact subject/audience and provider principal, and that inline
    AND attached IAM policies remain read-only and narrowly scoped. The code change
    does not authorize another IAM edit, bootstrap provisioning or permission expansion.
-5. Only under that fresh approval, follow the existing manual enable/dispatch review
+5. Only under that valid, unused approval and completed prerequisites, follow the existing manual enable/dispatch review
    procedure on protected main. Inspect actual credential-action, plan, Conftest and
    analyzer outcomes; retain only sanitized evidence. A denial stays a failure.
 6. After the attempt or earlier revocation/expiry, disable both planning variables,

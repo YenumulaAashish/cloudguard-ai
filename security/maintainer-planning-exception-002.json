@@ -1,23 +1,18 @@
 {
   "id": "CG-SM-PLAN-002",
-  "status": "PENDING_OWNER_APPROVAL",
+  "status": "APPROVED_RESTRICTED_SCOPE",
   "supersedes_consumed": "CG-SM-PLAN-001",
-  "approval_source": null,
-  "approver": null,
-  "approval_date": null,
-  "expires_at": null,
+  "approval_source": "Owner's explicit approval in this conversation on 2026-11-25",
+  "approver": "YenumulaAashish (repository owner)",
+  "approval_date": "2026-11-25",
+  "expires_at": "2026-12-01T18:30:00Z",
   "repository": "YenumulaAashish/cloudguard-ai",
-  "reviewed_baseline": "4de89ebab07defa44f48b4ab61a1fa48b7331830",
-  "reviewed_fix_commit": null,
-  "pull_request": null,
-  "protected_main_sha": null,
+  "reviewed_baseline": "ccc6adadf49cade9be2cd801fab42bc8cf67f004",
+  "reviewed_fix_commit": "b7b71ea7c60dceaa69991acb17bc319448bb385d",
+  "pull_request": "https://github.com/YenumulaAashish/cloudguard-ai/pull/3",
+  "protected_main_sha": "ccc6adadf49cade9be2cd801fab42bc8cf67f004",
   "maximum_plan_runs": 1,
   "scope": "One manually dispatched read-only AWS sandbox planning attempt in ap-south-1, protected main and aws-plan environment, existing cloudguard-ai-plan permissions only",
-  "proposed_review_exceptions": [
-    "environment self-review",
-    "absence of independent PR approval",
-    "absence of independent CODEOWNERS approval"
-  ],
   "preserved_controls": [
     "required pull request",
     "passing up-to-date offline security checks",
@@ -50,16 +45,55 @@
     "suspected credential or private-evidence exposure"
   ],
   "restoration_owner": "YenumulaAashish",
-  "expiry_policy": "Owner must explicitly approve an exact UTC cutoff no later than seven calendar days after approval; any terminal outcome consumes the one attempt earlier",
+  "expiry_policy": "Owner-approved fixed cutoff; earlier expiry on completion, failure, cancellation, revocation or security violation; any terminal attempt consumes the single use",
   "prerequisites": [
-    "explicit fresh owner authorization",
-    "record reviewed fix commit and PR, final main SHA and required passing up-to-date hosted check",
-    "verify effective exact OIDC trust and unchanged read-only permissions",
-    "confirm protected environment/main rules and record narrow review accommodations",
-    "confirm old enable/review variables are disabled before preparing a separately authorized run"
+    "approval-record amendment must pass its own protected PR process and hosted checks",
+    "record exact amendment PR/head, required hosted check evidence and resulting protected main SHA before enabling",
+    "verify effective exact OIDC trust, unchanged read-only permissions and protected environment/main rules",
+    "confirm approval is unused, unexpired and not revoked; previous enable/review switches disabled before preparation",
+    "record narrow environment self-review accommodation and restoration procedure; no independent PR/CODEOWNERS waiver granted"
   ],
   "execution_status": "NOT RUN",
-  "retry_authorized": false,
+  "retry_authorized": true,
   "settings_or_variables_changed_by_this_task": false,
-  "aws_contacted_by_this_task": false
+  "aws_contacted_by_this_task": false,
+  "approval_timezone": "Asia/Calcutta",
+  "approval_time_precision": "date_only",
+  "execution_authorized_by_this_task": false,
+  "execution_readiness": "BLOCKED_FINAL_AMENDMENT_BINDINGS",
+  "approved_review_exceptions": [
+    "environment self-review"
+  ],
+  "unapproved_review_exceptions": [
+    "absence of independent PR approval",
+    "absence of independent CODEOWNERS approval"
+  ],
+  "amendment_scope": "Approval record, documentation and consistency tests only; other executable/configuration/security changes require renewed review",
+  "amendment_bindings": {
+    "pull_request": null,
+    "reviewed_head_sha": null,
+    "required_check_run_url": null,
+    "required_check_conclusion": null,
+    "resulting_main_sha": null
+  },
+  "owner_confirmed_evidence": {
+    "pr_3_merged": true,
+    "required_pr_check_result": "PASS",
+    "latest_main_hosted_offline_ci": "PASS",
+    "live_iam_trust_manually_corrected": true,
+    "prior_approval_consumed": true,
+    "required_pr_check_run_url": null,
+    "main_offline_run_url": null,
+    "independently_verified": false
+  },
+  "independently_verified_evidence": {
+    "method": "Local git object inspection only; no GitHub check or AWS API inspection",
+    "fix_sha_resolved": true,
+    "merge_sha_resolved": true,
+    "fix_is_ancestor_of_merge": true,
+    "merge_commit_message": "Merge pull request #3 from YenumulaAashish/codex/fix-oidc-subject",
+    "local_main_matches_local_origin_main_ref": true,
+    "remote_ref_freshness_verified": false
+  },
+  "proposal_baseline": "4de89ebab07defa44f48b4ab61a1fa48b7331830"
 }

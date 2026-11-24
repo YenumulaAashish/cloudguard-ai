@@ -47,7 +47,7 @@ class PlanningApprovalTests(unittest.TestCase):
             self.assertIn('2026-12-01T18:30:00Z',text)
             self.assertIn('CONSUMED',text)
             self.assertIn('CG-SM-PLAN-002',text)
-            self.assertIn('PENDING_OWNER_APPROVAL',text)
+            self.assertIn('APPROVED_RESTRICTED_SCOPE',text)
 
     def test_automated_gates_and_trust_remain_intact(self):
         from cloudguard.ci_security import verify

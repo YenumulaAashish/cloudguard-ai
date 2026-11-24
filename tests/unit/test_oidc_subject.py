@@ -45,13 +45,20 @@ class OidcSubjectTests(unittest.TestCase):
             self.assertIn(condition,job['if'])
         self.assertEqual(job['permissions'],{'contents':'read','id-token':'write'})
 
-    def test_fresh_approval_has_no_inherited_authorization(self):
+    def test_fresh_approval_has_explicit_owner_authorization_and_known_bindings(self):
         r=json.loads((ROOT/'security/maintainer-planning-exception-002.json').read_text())
-        self.assertEqual(r['id'],'CG-SM-PLAN-002');self.assertEqual(r['status'],'PENDING_OWNER_APPROVAL')
+        self.assertEqual(r['id'],'CG-SM-PLAN-002');self.assertEqual(r['status'],'APPROVED_RESTRICTED_SCOPE')
         self.assertEqual(r['supersedes_consumed'],'CG-SM-PLAN-001')
-        for key in ['approver','approval_source','approval_date','expires_at','reviewed_fix_commit','pull_request','protected_main_sha']:
-            self.assertIsNone(r[key])
-        self.assertFalse(r['retry_authorized']);self.assertEqual(r['maximum_plan_runs'],1)
+        self.assertEqual(r['approver'],'YenumulaAashish (repository owner)')
+        self.assertEqual(r['approval_date'],'2026-11-25')
+        self.assertEqual(r['expires_at'],'2026-12-01T18:30:00Z')
+        self.assertIn('explicit approval',r['approval_source'])
+        self.assertEqual(r['reviewed_fix_commit'],'b7b71ea7c60dceaa69991acb17bc319448bb385d')
+        self.assertEqual(r['protected_main_sha'],'ccc6adadf49cade9be2cd801fab42bc8cf67f004')
+        self.assertEqual(r['reviewed_baseline'],r['protected_main_sha'])
+        self.assertEqual(r['proposal_baseline'],'4de89ebab07defa44f48b4ab61a1fa48b7331830')
+        self.assertEqual(r['pull_request'],'https://github.com/YenumulaAashish/cloudguard-ai/pull/3')
+        self.assertTrue(r['retry_authorized']);self.assertEqual(r['maximum_plan_runs'],1)
         self.assertEqual(r['execution_status'],'NOT RUN')
         old=json.loads((ROOT/'security/maintainer-planning-exception.json').read_text())
         self.assertEqual(r['preserved_controls'],old['preserved_controls'])
@@ -69,5 +76,31 @@ class OidcSubjectTests(unittest.TestCase):
             text=(ROOT/name).read_text()
             self.assertIn(SUBJECT,text)
         text=(ROOT/'docs/oidc-subject-mismatch.md').read_text()
-        for expected in ['45469018350','AccessDenied','StringEquals','PENDING_OWNER_APPROVAL','NOT RUN']:
+        for expected in ['45469018350','AccessDenied','StringEquals','APPROVED_RESTRICTED_SCOPE','NOT RUN']:
             self.assertIn(expected,text)
+
+    def test_amendment_does_not_fabricate_future_execution_bindings(self):
+        r=json.loads((ROOT/'security/maintainer-planning-exception-002.json').read_text())
+        self.assertEqual(r['execution_readiness'],'BLOCKED_FINAL_AMENDMENT_BINDINGS')
+        self.assertFalse(r['execution_authorized_by_this_task'])
+        self.assertTrue(all(v is None for v in r['amendment_bindings'].values()))
+        self.assertEqual(r['approved_review_exceptions'],['environment self-review'])
+        self.assertIn('absence of independent CODEOWNERS approval',r['unapproved_review_exceptions'])
+
+    def test_evidence_provenance_is_explicit_and_missing_urls_stay_missing(self):
+        r=json.loads((ROOT/'security/maintainer-planning-exception-002.json').read_text())
+        evidence=r['owner_confirmed_evidence']
+        self.assertFalse(evidence['independently_verified'])
+        self.assertEqual(evidence['required_pr_check_result'],'PASS')
+        self.assertEqual(evidence['latest_main_hosted_offline_ci'],'PASS')
+        self.assertIsNone(evidence['required_pr_check_run_url']);self.assertIsNone(evidence['main_offline_run_url'])
+        self.assertTrue(r['independently_verified_evidence']['fix_is_ancestor_of_merge'])
+        self.assertFalse(r['independently_verified_evidence']['remote_ref_freshness_verified'])
+
+    def test_new_approval_documents_require_final_bindings_and_unchanged_authority(self):
+        text=(ROOT/'docs/plan-002-approval.md').read_text()
+        for value in ['2026-12-01T18:30:00Z','owner-confirmed','BLOCKED_FINAL_AMENDMENT_BINDINGS','NOT RUN','No independent PR approval']:
+            self.assertIn(value.lower(),text.lower())
+        r=json.loads((ROOT/'security/maintainer-planning-exception-002.json').read_text())
+        for prohibited in ['Terraform apply','Terraform destroy','state mutation','privileged Phase 6 operations']:
+            self.assertIn(prohibited,r['prohibited_operations'])
