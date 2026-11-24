@@ -1,6 +1,6 @@
 {
   "id": "CG-SM-PLAN-002",
-  "status": "APPROVED_RESTRICTED_SCOPE",
+  "status": "CONSUMED",
   "supersedes_consumed": "CG-SM-PLAN-001",
   "approval_source": "Owner's explicit approval in this conversation on 2026-11-25",
   "approver": "YenumulaAashish (repository owner)",
@@ -53,14 +53,14 @@
     "confirm approval is unused, unexpired and not revoked; previous enable/review switches disabled before preparation",
     "record narrow environment self-review accommodation and restoration procedure; no independent PR/CODEOWNERS waiver granted"
   ],
-  "execution_status": "NOT RUN",
-  "retry_authorized": true,
+  "execution_status": "FAILED_SECURITY_VERDICT",
+  "retry_authorized": false,
   "settings_or_variables_changed_by_this_task": false,
   "aws_contacted_by_this_task": false,
   "approval_timezone": "Asia/Calcutta",
   "approval_time_precision": "date_only",
   "execution_authorized_by_this_task": false,
-  "execution_readiness": "BLOCKED_FINAL_AMENDMENT_BINDINGS",
+  "execution_readiness": "CONSUMED_NO_RETRY",
   "approved_review_exceptions": [
     "environment self-review"
   ],
@@ -95,5 +95,33 @@
     "local_main_matches_local_origin_main_ref": true,
     "remote_ref_freshness_verified": false
   },
-  "proposal_baseline": "4de89ebab07defa44f48b4ab61a1fa48b7331830"
+  "proposal_baseline": "4de89ebab07defa44f48b4ab61a1fa48b7331830",
+  "consumed_by_run": "45484703135",
+  "consumed_job": "138766888056",
+  "executed_main_sha": "003a26a775ec651b415fe039267bc590bd8eb831",
+  "consumption_evidence_source": "Owner-confirmed execution evidence in this conversation; no AWS inspection or new workflow execution by this task",
+  "execution_milestones": {
+    "oidc_authentication": "PASS",
+    "terraform_plan": "PASS",
+    "plan_exit_code": 2,
+    "creates": 18,
+    "updates": 0,
+    "deletes": 0,
+    "conftest_passed": 12,
+    "conftest_failed": 1,
+    "conftest_warnings": 0,
+    "conftest_exceptions": 0,
+    "checkov_passed": 30,
+    "checkov_failed": 0,
+    "approved_exceptions": 6,
+    "phase4_integration": "PASS",
+    "sanitized_artifacts_uploaded": true,
+    "risk_score": 50,
+    "risk_category": "MEDIUM",
+    "data_unknown_findings": 9,
+    "graph_unresolved": 16
+  },
+  "activity_flags_scope": "Existing false activity flags refer to the approval-record amendment task, not the later authenticated workflow",
+  "confirmed_failed_rule_id": null,
+  "confirmed_failed_reason_code": null
 }

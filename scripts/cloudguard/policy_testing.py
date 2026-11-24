@@ -17,6 +17,13 @@ def fixtures():
         failures = [f["msg"] for row in rows for f in row.get("failures", [])]
         valid = result.returncode == 1 and bool(failures) and all(msg.startswith(prefix) for msg in failures)
         outcomes.append({"fixture": name + ".json", "expected": "REJECT", "result": "PASS" if valid else "FAIL"})
+    # Provider-shaped initial-create fixtures supplement all existing controls.
+    realistic={'computed-s3':'PASS','unknown-algorithm':'REJECT','public-block-disabled':'REJECT','unknown-companion':'REJECT'}
+    for name,expected in realistic.items():
+        result=run(tool('conftest')+['test',f'tests/fixtures/realistic-plan/{name}.json','--policy','policies/terraform','--output','json'],capture_output=True)
+        rows=json.loads(result.stdout);summary=policy_summary(rows,result.returncode)
+        valid=(result.returncode==0 and summary['result']=='PASS') if expected=='PASS' else (result.returncode==1 and summary['failed']>0)
+        outcomes.append({'fixture':name+'.json','expected':expected,'result':'PASS' if valid else 'FAIL'})
     return outcomes
 
 def policy_tests():

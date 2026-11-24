@@ -80,10 +80,11 @@ def policy_summary(rows, exit_code):
     successes = sum(row.get("successes", 0) for row in rows)
     if exit_code == 0 and (failures or exceptions or not successes):
         raise ValueError("Inconsistent Conftest status")
-    # Do not export messages, metadata or filenames; they can carry sensitive values.
+    # Only allowlisted category/reason pairs are public; raw strings stay private.
+    from .policy_reporting import failure_reasons
     return {"result": "PASS" if exit_code == 0 and not (failures or exceptions) else "FAIL",
             "exit_code": exit_code, "passed": successes, "failed": failures,
-            "warnings": warnings, "exceptions": exceptions}
+            "warnings": warnings, "exceptions": exceptions, "failure_reasons": failure_reasons(rows)}
 
 def version(name):
     try:

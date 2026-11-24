@@ -1,0 +1,713 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.9.8",
+  "complete": true,
+  "planned_values": {
+    "root_module": {
+      "child_modules": [
+        {
+          "address": "module.storage",
+          "resources": [
+            {
+              "address": "module.storage.aws_s3_bucket.this",
+              "mode": "managed",
+              "type": "aws_s3_bucket",
+              "values": {
+                "bucket": "synthetic-plan-bucket",
+                "tags": {
+                  "Project": "cloudguard-ai",
+                  "Environment": "sandbox",
+                  "ManagedBy": "Terraform"
+                },
+                "tags_all": {
+                  "Project": "cloudguard-ai",
+                  "Environment": "sandbox",
+                  "ManagedBy": "Terraform"
+                },
+                "force_destroy": false
+              }
+            },
+            {
+              "address": "module.storage.aws_s3_bucket_public_access_block.this",
+              "mode": "managed",
+              "type": "aws_s3_bucket_public_access_block",
+              "values": {
+                "block_public_acls": true,
+                "block_public_policy": true,
+                "ignore_public_acls": true,
+                "restrict_public_buckets": true
+              }
+            },
+            {
+              "address": "module.storage.aws_s3_bucket_server_side_encryption_configuration.this",
+              "mode": "managed",
+              "type": "aws_s3_bucket_server_side_encryption_configuration",
+              "values": {
+                "bucket": "synthetic-plan-bucket",
+                "rule": [
+                  {
+                    "apply_server_side_encryption_by_default": [
+                      {
+                        "sse_algorithm": "AES256"
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "address": "module.storage.aws_s3_bucket_versioning.this",
+              "mode": "managed",
+              "type": "aws_s3_bucket_versioning",
+              "values": {
+                "bucket": "synthetic-plan-bucket",
+                "versioning_configuration": [
+                  {
+                    "status": "Enabled"
+                  }
+                ]
+              }
+            },
+            {
+              "address": "module.storage.aws_s3_bucket_ownership_controls.this",
+              "mode": "managed",
+              "type": "aws_s3_bucket_ownership_controls",
+              "values": {
+                "bucket": "synthetic-plan-bucket",
+                "rule": [
+                  {
+                    "object_ownership": "BucketOwnerEnforced"
+                  }
+                ]
+              }
+            },
+            {
+              "address": "module.storage.aws_s3_bucket_policy.tls",
+              "mode": "managed",
+              "type": "aws_s3_bucket_policy",
+              "values": {
+                "bucket": "synthetic-plan-bucket"
+              }
+            },
+            {
+              "address": "module.storage.aws_s3_bucket_lifecycle_configuration.this",
+              "mode": "managed",
+              "type": "aws_s3_bucket_lifecycle_configuration",
+              "values": {
+                "bucket": "synthetic-plan-bucket",
+                "rule": [
+                  {
+                    "id": "abort",
+                    "status": "Enabled",
+                    "filter": [
+                      {}
+                    ],
+                    "abort_incomplete_multipart_upload": [
+                      {
+                        "days_after_initiation": 7
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "address": "module.network",
+          "resources": [
+            {
+              "address": "module.network.aws_vpc.this",
+              "mode": "managed",
+              "type": "aws_vpc",
+              "values": {
+                "tags": {
+                  "Project": "cloudguard-ai",
+                  "Environment": "sandbox",
+                  "ManagedBy": "Terraform"
+                },
+                "tags_all": {
+                  "Project": "cloudguard-ai",
+                  "Environment": "sandbox",
+                  "ManagedBy": "Terraform"
+                }
+              }
+            },
+            {
+              "address": "module.network.aws_subnet.public",
+              "mode": "managed",
+              "type": "aws_subnet",
+              "values": {
+                "tags": {
+                  "Project": "cloudguard-ai",
+                  "Environment": "sandbox",
+                  "ManagedBy": "Terraform"
+                },
+                "tags_all": {
+                  "Project": "cloudguard-ai",
+                  "Environment": "sandbox",
+                  "ManagedBy": "Terraform"
+                }
+              }
+            },
+            {
+              "address": "module.network.aws_subnet.private",
+              "mode": "managed",
+              "type": "aws_subnet",
+              "values": {
+                "tags": {
+                  "Project": "cloudguard-ai",
+                  "Environment": "sandbox",
+                  "ManagedBy": "Terraform"
+                },
+                "tags_all": {
+                  "Project": "cloudguard-ai",
+                  "Environment": "sandbox",
+                  "ManagedBy": "Terraform"
+                }
+              }
+            },
+            {
+              "address": "module.network.aws_internet_gateway.this",
+              "mode": "managed",
+              "type": "aws_internet_gateway",
+              "values": {
+                "tags": {
+                  "Project": "cloudguard-ai",
+                  "Environment": "sandbox",
+                  "ManagedBy": "Terraform"
+                },
+                "tags_all": {
+                  "Project": "cloudguard-ai",
+                  "Environment": "sandbox",
+                  "ManagedBy": "Terraform"
+                }
+              }
+            },
+            {
+              "address": "module.network.aws_route_table.public",
+              "mode": "managed",
+              "type": "aws_route_table",
+              "values": {
+                "tags": {
+                  "Project": "cloudguard-ai",
+                  "Environment": "sandbox",
+                  "ManagedBy": "Terraform"
+                },
+                "tags_all": {
+                  "Project": "cloudguard-ai",
+                  "Environment": "sandbox",
+                  "ManagedBy": "Terraform"
+                }
+              }
+            },
+            {
+              "address": "module.network.aws_route_table_association.public",
+              "mode": "managed",
+              "type": "aws_route_table_association",
+              "values": {}
+            },
+            {
+              "address": "module.network.aws_route_table.private",
+              "mode": "managed",
+              "type": "aws_route_table",
+              "values": {
+                "tags": {
+                  "Project": "cloudguard-ai",
+                  "Environment": "sandbox",
+                  "ManagedBy": "Terraform"
+                },
+                "tags_all": {
+                  "Project": "cloudguard-ai",
+                  "Environment": "sandbox",
+                  "ManagedBy": "Terraform"
+                }
+              }
+            },
+            {
+              "address": "module.network.aws_route_table_association.private",
+              "mode": "managed",
+              "type": "aws_route_table_association",
+              "values": {}
+            },
+            {
+              "address": "module.network.aws_route.internet",
+              "mode": "managed",
+              "type": "aws_route",
+              "values": {
+                "destination_cidr_block": "0.0.0.0/0"
+              }
+            },
+            {
+              "address": "module.network.aws_security_group.this",
+              "mode": "managed",
+              "type": "aws_security_group",
+              "values": {
+                "tags": {
+                  "Project": "cloudguard-ai",
+                  "Environment": "sandbox",
+                  "ManagedBy": "Terraform"
+                },
+                "tags_all": {
+                  "Project": "cloudguard-ai",
+                  "Environment": "sandbox",
+                  "ManagedBy": "Terraform"
+                },
+                "ingress": [],
+                "egress": []
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "resource_changes": [
+    {
+      "address": "module.storage.aws_s3_bucket.this",
+      "mode": "managed",
+      "type": "aws_s3_bucket",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "bucket": "synthetic-plan-bucket",
+          "tags": {
+            "Project": "cloudguard-ai",
+            "Environment": "sandbox",
+            "ManagedBy": "Terraform"
+          },
+          "tags_all": {
+            "Project": "cloudguard-ai",
+            "Environment": "sandbox",
+            "ManagedBy": "Terraform"
+          },
+          "force_destroy": false
+        },
+        "after_unknown": {
+          "id": true,
+          "arn": true,
+          "acl": true,
+          "policy": true,
+          "versioning": true,
+          "logging": true,
+          "lifecycle_rule": true,
+          "server_side_encryption_configuration": true
+        },
+        "after_sensitive": {}
+      }
+    },
+    {
+      "address": "module.storage.aws_s3_bucket_public_access_block.this",
+      "mode": "managed",
+      "type": "aws_s3_bucket_public_access_block",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "block_public_acls": true,
+          "block_public_policy": true,
+          "ignore_public_acls": true,
+          "restrict_public_buckets": true
+        },
+        "after_unknown": {
+          "id": true,
+          "bucket": true
+        },
+        "after_sensitive": {}
+      }
+    },
+    {
+      "address": "module.storage.aws_s3_bucket_server_side_encryption_configuration.this",
+      "mode": "managed",
+      "type": "aws_s3_bucket_server_side_encryption_configuration",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "bucket": "synthetic-plan-bucket",
+          "rule": [
+            {
+              "apply_server_side_encryption_by_default": [
+                {
+                  "sse_algorithm": "AES256"
+                }
+              ]
+            }
+          ]
+        },
+        "after_unknown": {
+          "id": true,
+          "rule": [
+            {
+              "bucket_key_enabled": true,
+              "blocked_encryption_types": true,
+              "apply_server_side_encryption_by_default": [
+                {
+                  "kms_master_key_id": true
+                }
+              ]
+            }
+          ]
+        },
+        "after_sensitive": {}
+      }
+    },
+    {
+      "address": "module.storage.aws_s3_bucket_versioning.this",
+      "mode": "managed",
+      "type": "aws_s3_bucket_versioning",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "bucket": "synthetic-plan-bucket",
+          "versioning_configuration": [
+            {
+              "status": "Enabled"
+            }
+          ]
+        },
+        "after_unknown": {
+          "id": true
+        },
+        "after_sensitive": {}
+      }
+    },
+    {
+      "address": "module.storage.aws_s3_bucket_ownership_controls.this",
+      "mode": "managed",
+      "type": "aws_s3_bucket_ownership_controls",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "bucket": "synthetic-plan-bucket",
+          "rule": [
+            {
+              "object_ownership": "BucketOwnerEnforced"
+            }
+          ]
+        },
+        "after_unknown": {
+          "id": true
+        },
+        "after_sensitive": {}
+      }
+    },
+    {
+      "address": "module.storage.aws_s3_bucket_policy.tls",
+      "mode": "managed",
+      "type": "aws_s3_bucket_policy",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "bucket": "synthetic-plan-bucket"
+        },
+        "after_unknown": {
+          "id": true,
+          "policy": true
+        },
+        "after_sensitive": {}
+      }
+    },
+    {
+      "address": "module.storage.aws_s3_bucket_lifecycle_configuration.this",
+      "mode": "managed",
+      "type": "aws_s3_bucket_lifecycle_configuration",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "bucket": "synthetic-plan-bucket",
+          "rule": [
+            {
+              "id": "abort",
+              "status": "Enabled",
+              "filter": [
+                {}
+              ],
+              "abort_incomplete_multipart_upload": [
+                {
+                  "days_after_initiation": 7
+                }
+              ]
+            }
+          ]
+        },
+        "after_unknown": {
+          "id": true
+        },
+        "after_sensitive": {}
+      }
+    },
+    {
+      "address": "module.network.aws_vpc.this",
+      "mode": "managed",
+      "type": "aws_vpc",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "tags": {
+            "Project": "cloudguard-ai",
+            "Environment": "sandbox",
+            "ManagedBy": "Terraform"
+          },
+          "tags_all": {
+            "Project": "cloudguard-ai",
+            "Environment": "sandbox",
+            "ManagedBy": "Terraform"
+          }
+        },
+        "after_unknown": {
+          "id": true
+        },
+        "after_sensitive": {}
+      }
+    },
+    {
+      "address": "module.network.aws_subnet.public",
+      "mode": "managed",
+      "type": "aws_subnet",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "tags": {
+            "Project": "cloudguard-ai",
+            "Environment": "sandbox",
+            "ManagedBy": "Terraform"
+          },
+          "tags_all": {
+            "Project": "cloudguard-ai",
+            "Environment": "sandbox",
+            "ManagedBy": "Terraform"
+          }
+        },
+        "after_unknown": {
+          "id": true,
+          "vpc_id": true
+        },
+        "after_sensitive": {}
+      }
+    },
+    {
+      "address": "module.network.aws_subnet.private",
+      "mode": "managed",
+      "type": "aws_subnet",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "tags": {
+            "Project": "cloudguard-ai",
+            "Environment": "sandbox",
+            "ManagedBy": "Terraform"
+          },
+          "tags_all": {
+            "Project": "cloudguard-ai",
+            "Environment": "sandbox",
+            "ManagedBy": "Terraform"
+          }
+        },
+        "after_unknown": {
+          "id": true,
+          "vpc_id": true
+        },
+        "after_sensitive": {}
+      }
+    },
+    {
+      "address": "module.network.aws_internet_gateway.this",
+      "mode": "managed",
+      "type": "aws_internet_gateway",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "tags": {
+            "Project": "cloudguard-ai",
+            "Environment": "sandbox",
+            "ManagedBy": "Terraform"
+          },
+          "tags_all": {
+            "Project": "cloudguard-ai",
+            "Environment": "sandbox",
+            "ManagedBy": "Terraform"
+          }
+        },
+        "after_unknown": {
+          "id": true,
+          "vpc_id": true
+        },
+        "after_sensitive": {}
+      }
+    },
+    {
+      "address": "module.network.aws_route_table.public",
+      "mode": "managed",
+      "type": "aws_route_table",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "tags": {
+            "Project": "cloudguard-ai",
+            "Environment": "sandbox",
+            "ManagedBy": "Terraform"
+          },
+          "tags_all": {
+            "Project": "cloudguard-ai",
+            "Environment": "sandbox",
+            "ManagedBy": "Terraform"
+          }
+        },
+        "after_unknown": {
+          "id": true,
+          "vpc_id": true
+        },
+        "after_sensitive": {}
+      }
+    },
+    {
+      "address": "module.network.aws_route_table_association.public",
+      "mode": "managed",
+      "type": "aws_route_table_association",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {},
+        "after_unknown": {
+          "id": true,
+          "subnet_id": true,
+          "route_table_id": true
+        },
+        "after_sensitive": {}
+      }
+    },
+    {
+      "address": "module.network.aws_route_table.private",
+      "mode": "managed",
+      "type": "aws_route_table",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "tags": {
+            "Project": "cloudguard-ai",
+            "Environment": "sandbox",
+            "ManagedBy": "Terraform"
+          },
+          "tags_all": {
+            "Project": "cloudguard-ai",
+            "Environment": "sandbox",
+            "ManagedBy": "Terraform"
+          }
+        },
+        "after_unknown": {
+          "id": true,
+          "vpc_id": true
+        },
+        "after_sensitive": {}
+      }
+    },
+    {
+      "address": "module.network.aws_route_table_association.private",
+      "mode": "managed",
+      "type": "aws_route_table_association",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {},
+        "after_unknown": {
+          "id": true,
+          "subnet_id": true,
+          "route_table_id": true
+        },
+        "after_sensitive": {}
+      }
+    },
+    {
+      "address": "module.network.aws_route.internet",
+      "mode": "managed",
+      "type": "aws_route",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "destination_cidr_block": "0.0.0.0/0"
+        },
+        "after_unknown": {
+          "id": true,
+          "route_table_id": true,
+          "gateway_id": true
+        },
+        "after_sensitive": {}
+      }
+    },
+    {
+      "address": "module.network.aws_security_group.this",
+      "mode": "managed",
+      "type": "aws_security_group",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "tags": {
+            "Project": "cloudguard-ai",
+            "Environment": "sandbox",
+            "ManagedBy": "Terraform"
+          },
+          "tags_all": {
+            "Project": "cloudguard-ai",
+            "Environment": "sandbox",
+            "ManagedBy": "Terraform"
+          },
+          "ingress": [],
+          "egress": []
+        },
+        "after_unknown": {
+          "id": true,
+          "vpc_id": true
+        },
+        "after_sensitive": {}
+      }
+    }
+  ]
+}

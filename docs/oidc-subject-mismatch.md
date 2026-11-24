@@ -1,3 +1,10 @@
+> **Current execution update**
+
+CG-SM-PLAN-002 is **CONSUMED** by run 45484703135. Owner-confirmed OIDC authentication
+and Terraform planning passed; the security verdict failed. Historical approval and
+NOT RUN statements below describe earlier checkpoints, not current authorization.
+See [the investigation](real-plan-context-investigation.md). No retry or standing authorization is active.
+
 # OIDC subject mismatch — failed attempt and retry handoff
 
 The first authenticated workflow [run 45469018350](https://github.com/YenumulaAashish/cloudguard-ai/actions/runs/45469018350)

@@ -8,7 +8,7 @@ from .runtime import ROOT
 
 KINDS={"public_access_block":"pab", "acl":"acl", "policy":"policy",
        "server_side_encryption_configuration":"encryption", "versioning":"versioning",
-       "logging":"logging", "lifecycle_configuration":"lifecycle"}
+       "logging":"logging", "lifecycle_configuration":"lifecycle", "ownership_controls":"ownership"}
 CATEGORIES=("pab","acl","policy","transport","encryption","versioning","logging","lifecycle")
 CONTROLS={
  "CGA_DATA_001":("HIGH","Public-access-block protections explicitly include disabled settings"),
@@ -82,6 +82,22 @@ def analyze(plan):
         if m is True:return True
         require(isinstance(m,dict))
         return any(unknown(v) for k,v in m.items() if fields is None or k in fields)
+    def known_sse_s3_metadata(a,values):
+        rules=(values or {}).get('rule')
+        m=mask(a)
+        if not isinstance(rules,list) or len(rules)!=1 or not isinstance(m,dict):return False
+        enc=rules[0].get('apply_server_side_encryption_by_default')
+        if not isinstance(enc,list) or len(enc)!=1 or enc[0].get('sse_algorithm')!='AES256':return False
+        rm=m.get('rule')
+        if not isinstance(rm,list) or len(rm)!=1:return False
+        allowed={(0,'bucket_key_enabled'),(0,'blocked_encryption_types'),(0,'apply_server_side_encryption_by_default',0,'kms_master_key_id')}
+        def paths(value,path=()):
+            if value is True:yield path
+            elif isinstance(value,dict):
+                for k,v in value.items():yield from paths(v,path+(k,))
+            elif isinstance(value,list):
+                for i,v in enumerate(value):yield from paths(v,path+(i,))
+        return all(p in allowed for p in paths(rm))
     names={};identities={}
     for a,r in buckets.items():
         require(0<len(a)<=2048)
@@ -106,8 +122,12 @@ def analyze(plan):
         target=(v or {}).get("bucket")
         if target is not None: require(isinstance(target,str) and 0<len(target)<=2048)
         if uncertain(a,{"bucket"}) or target not in names:
-            unresolved.add(kind);emit(a,kind,"CGA_DATA_011");continue
+            unresolved.add(kind);emit(a,'context' if kind=='ownership' else kind,"CGA_DATA_011");continue
         owner=names[target];require(kind not in maps[owner]);maps[owner][kind]=(a,v)
+        if kind=='ownership':
+            rules=(v or {}).get('rule')
+            if uncertain(a,{'rule'}) or not isinstance(rules,list) or len(rules)!=1 or rules[0].get('object_ownership')!='BucketOwnerEnforced':
+                emit(a,'context','CGA_DATA_011')
     def body_policy(a,raw,arn):
         if isinstance(raw,str):
             require(len(raw.encode())<=262144)
@@ -180,14 +200,25 @@ def analyze(plan):
         for c in CATEGORIES:
             kind="policy" if c=="transport" else c
             entry=maps[a].get(kind)
-            if not identities[a] or kind in unresolved or uncertain(a,legacy) or any(v.get(k) for k in legacy):
+            ownership=maps[a].get('ownership');pab=maps[a].get('pab')
+            enforced=('ownership' not in unresolved and ownership is not None and not uncertain(ownership[0],{'rule'}) and
+                      isinstance((ownership[1] or {}).get('rule'),list) and len(ownership[1]['rule'])==1 and
+                      ownership[1]['rule'][0].get('object_ownership')=='BucketOwnerEnforced' and
+                      pab is not None and not uncertain(pab[0],set(PAB)) and
+                      all((pab[1] or {}).get(k) is True for k in PAB))
+            # Dedicated known controls establish their own category. Unrelated
+            # computed legacy readback does not invalidate that evidence. Explicit
+            # inline config remains unsupported, and absent controls remain unknown.
+            if not identities[a] or kind in unresolved or (uncertain(a,legacy) and entry is None and not (c=='acl' and enforced)) or any(v.get(k) for k in legacy):
                 check(a,c,"UNKNOWN","CGA_DATA_011");continue
+            if c=='acl' and entry is None and enforced:
+                check(a,c,'REVIEWED');continue
             if entry is None:
                 missing={"pab":"CGA_DATA_002","encryption":"CGA_DATA_006","versioning":"CGA_DATA_007","logging":"CGA_DATA_008","transport":"CGA_DATA_009","lifecycle":"CGA_DATA_010"}
                 check(a,c,"MISSING",missing.get(c));continue
             ca,cv=entry
             fields={"pab":set(PAB),"acl":{"acl","access_control_policy"},"policy":{"policy"},"transport":{"policy"},"encryption":{"rule"},"versioning":{"versioning_configuration"},"logging":{"target_bucket"},"lifecycle":{"rule"}}[c]
-            if cv is None or uncertain(ca,fields):
+            if cv is None or (uncertain(ca,fields) and not (c=='encryption' and known_sse_s3_metadata(ca,cv))):
                 check(a,c,"UNKNOWN","CGA_DATA_011");continue
             if c=="pab":
                 vals=[cv.get(k) for k in PAB]

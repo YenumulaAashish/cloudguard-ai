@@ -47,7 +47,7 @@ class OidcSubjectTests(unittest.TestCase):
 
     def test_fresh_approval_has_explicit_owner_authorization_and_known_bindings(self):
         r=json.loads((ROOT/'security/maintainer-planning-exception-002.json').read_text())
-        self.assertEqual(r['id'],'CG-SM-PLAN-002');self.assertEqual(r['status'],'APPROVED_RESTRICTED_SCOPE')
+        self.assertEqual(r['id'],'CG-SM-PLAN-002');self.assertEqual(r['status'],'CONSUMED')
         self.assertEqual(r['supersedes_consumed'],'CG-SM-PLAN-001')
         self.assertEqual(r['approver'],'YenumulaAashish (repository owner)')
         self.assertEqual(r['approval_date'],'2026-11-25')
@@ -58,8 +58,8 @@ class OidcSubjectTests(unittest.TestCase):
         self.assertEqual(r['reviewed_baseline'],r['protected_main_sha'])
         self.assertEqual(r['proposal_baseline'],'4de89ebab07defa44f48b4ab61a1fa48b7331830')
         self.assertEqual(r['pull_request'],'https://github.com/YenumulaAashish/cloudguard-ai/pull/3')
-        self.assertTrue(r['retry_authorized']);self.assertEqual(r['maximum_plan_runs'],1)
-        self.assertEqual(r['execution_status'],'NOT RUN')
+        self.assertFalse(r['retry_authorized']);self.assertEqual(r['maximum_plan_runs'],1)
+        self.assertEqual(r['execution_status'],'FAILED_SECURITY_VERDICT')
         old=json.loads((ROOT/'security/maintainer-planning-exception.json').read_text())
         self.assertEqual(r['preserved_controls'],old['preserved_controls'])
         self.assertEqual(r['prohibited_operations'],old['prohibited_operations'])
@@ -81,7 +81,7 @@ class OidcSubjectTests(unittest.TestCase):
 
     def test_amendment_does_not_fabricate_future_execution_bindings(self):
         r=json.loads((ROOT/'security/maintainer-planning-exception-002.json').read_text())
-        self.assertEqual(r['execution_readiness'],'BLOCKED_FINAL_AMENDMENT_BINDINGS')
+        self.assertEqual(r['execution_readiness'],'CONSUMED_NO_RETRY')
         self.assertFalse(r['execution_authorized_by_this_task'])
         self.assertTrue(all(v is None for v in r['amendment_bindings'].values()))
         self.assertEqual(r['approved_review_exceptions'],['environment self-review'])

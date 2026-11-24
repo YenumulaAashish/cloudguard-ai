@@ -22,6 +22,24 @@ security_fields := {
 unknown_security_field(c, key) if {
 	key in object.get(security_fields, c.type, set())
 	not blocked_unknown_acl(c, key)
+	not known_sse_s3_metadata(c, key)
+}
+
+# The explicit AES256 algorithm is the encryption decision. Provider 6.65.0
+# computes these optional metadata/default fields even with known SSE-S3.
+# Do not exempt whole blocks, algorithms, other keys, or KMS configurations.
+known_sse_s3_metadata(c, key) if {
+	c.type == "aws_s3_bucket_server_side_encryption_configuration"
+	key == "rule"
+	count(c.change.after.rule) == 1
+	count(c.change.after.rule[0].apply_server_side_encryption_by_default) == 1
+	c.change.after.rule[0].apply_server_side_encryption_by_default[0].sse_algorithm == "AES256"
+	mask := c.change.after_unknown.rule
+	is_array(mask)
+	count(mask) == 1
+	every path in {p | walk(mask, [p, true])} {
+		path in {[0, "bucket_key_enabled"], [0, "blocked_encryption_types"], [0, "apply_server_side_encryption_by_default", 0, "kms_master_key_id"]}
+	}
 }
 
 # A computed legacy bucket ACL cannot make a bucket public when every planned

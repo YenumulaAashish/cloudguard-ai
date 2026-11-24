@@ -1,3 +1,10 @@
+> **Current execution update**
+
+CG-SM-PLAN-002 is **CONSUMED** by run 45484703135. Owner-confirmed OIDC authentication
+and Terraform planning passed; the security verdict failed. Historical approval and
+NOT RUN statements below describe earlier checkpoints, not current authorization.
+See [the investigation](real-plan-context-investigation.md). No retry or standing authorization is active.
+
 # Phase 5 integration and verification handoff
 
 Status: implementation prepared locally; authenticated AWS verification **NOT RUN**.
