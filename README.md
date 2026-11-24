@@ -293,10 +293,12 @@ The Phase 5 integration now processes the exported plan with all Phase 4 engines
 publishes closed sanitized finding/posture bundles, and supports reviewed actual
 finding catalogs in the advisory service and dashboard. Authenticated planning is
 manual/main-only and requires both enable and explicit review-approval variables.
-The owner approved **CG-SM-PLAN-001** on **2026-11-25** for one read-only planning run,
-including self-review and temporary absence of independent PR/CODEOWNERS approval.
-It expires at **2026-12-01T18:30:00Z** or earlier on consumption/revocation. Final
-commit/check bindings remain required; no settings or enable variables changed.
-See the [restricted approval record](security/maintainer-planning-exception.json).
+**CG-SM-PLAN-001 is CONSUMED** by failed authenticated run
+[45469018350](https://github.com/YenumulaAashish/cloudguard-ai/actions/runs/45469018350).
+The owner reports CloudTrail confirmed an OIDC subject mismatch and the live trust
+was manually corrected. Bootstrap code now matches that exact subject. Successful
+authentication/planning after correction remains **NOT RUN** in this task.
+**CG-SM-PLAN-002 is PENDING_OWNER_APPROVAL**; no retry is authorized by the old
+2026-12-01T18:30:00Z cutoff. See the [failure record and fresh approval handoff](docs/oidc-subject-mismatch.md).
 See [Phase 5 audit, contracts and manual handoff](docs/phase5-integration.md) and
 [Phase 6 provisioning architecture — design only](docs/phase6-provisioning-architecture.md).

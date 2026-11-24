@@ -1,6 +1,8 @@
 # GitHub OIDC and the read-only plan role
 
 CODED: yes. CONFIGURED: user-reported, not independently inspected. VERIFIED: NOT RUN.
+The first authentication attempt failed with AccessDenied in run 45469018350;
+post-correction authentication verification is NOT RUN. See the incident below.
 The user reports an existing provider, cloudguard-ai-plan role, repository variables,
 protected aws-plan environment and main ruleset. This task did not create, inspect
 or modify AWS resources or GitHub settings. The enable switch remains user-controlled.
@@ -8,7 +10,7 @@ or modify AWS resources or GitHub settings. The enable switch remains user-contr
 The exact trust audience is sts.amazonaws.com and subject is:
 
 ```text
-repo:YenumulaAashish/cloudguard-ai:environment:aws-plan
+repo:YenumulaAashish@212769106/cloudguard-ai@1379194368:environment:aws-plan
 ```
 
 Environment deployment refs and review protections are part of this boundary.
@@ -18,16 +20,15 @@ The retained same-repository condition is an additional legacy defense; PR and p
 triggers are removed. Offline PR checks remain credential-free, with contents: read.
 OIDC write permission is only on the guarded plan job; no PR write permissions exist.
 
-The owner approved `CG-SM-PLAN-001` on 2026-11-25 for one read-only sandbox
-planning run, permitting self-review and temporarily accepting no independent
-PR/CODEOWNERS approval. Expiry: **2026-12-01T18:30:00Z**, or earlier on run
-completion/failure/cancellation or revocation. This approval grants no deployment,
-Terraform apply/destroy, IAM expansion or privileged Phase 6 authority.
-See [the recorded scope, execution prerequisites and restoration duties](phase5-integration.md).
-No GitHub setting or enable variable is changed by this record. Before a later
-manual run, bind the final reviewed PR/main SHAs and passing hosted checks, verify
-effective protections/trust/permissions, and confirm approval remains unused and
-unexpired. Preserve all other controls. No bootstrap provisioning is authorized.
+`CG-SM-PLAN-001` is **CONSUMED** by failed run 45469018350; its historical
+2026-12-01T18:30:00Z cutoff does not authorize another attempt. `CG-SM-PLAN-002`
+is **PENDING_OWNER_APPROVAL**, with approval/expiry deliberately unset. See
+[the incident and exact-subject contract](oidc-subject-mismatch.md). The owner
+reports the deployed trust was manually corrected; this task did not contact AWS
+or verify successful STS exchange. Do not retry until fresh authorization and all
+reviewed commit, required check, environment and permission bindings are recorded.
+No enable variable or GitHub setting is changed here. Deployment, state mutation,
+apply/destroy, broader IAM and privileged Phase 6 operations remain prohibited.
 
 ## Permission rationale
 

@@ -1,7 +1,11 @@
 # Phase 5 integration and verification handoff
 
 Status: implementation prepared locally; authenticated AWS verification **NOT RUN**.
-The owner approved the restricted single-maintainer exception below on **2026-11-25**. No GitHub
+The first authenticated attempt subsequently failed at OIDC exchange in run
+45469018350. Post-correction verification remains NOT RUN; see the incident link below.
+**CG-SM-PLAN-001 is CONSUMED**; **CG-SM-PLAN-002 is PENDING_OWNER_APPROVAL**.
+See [the OIDC mismatch incident and retry contract](oidc-subject-mismatch.md).
+The original owner approval below is retained as historical evidence only. No GitHub
 settings or AWS configuration were inspected or changed by this implementation.
 
 ## Audit and evidence
@@ -148,7 +152,9 @@ Paid requests still require an explicit click and the existing rate limits/key.
    Review this approval-record amendment and obtain separate push authorization.
    After the later push to that existing PR, wait for the exact final head's required
    hosted offline checks. This task does not push or merge.
-2. Confirm the recorded approval above is still valid, unused and within expiry.
+2. CG-SM-PLAN-001 is consumed by failed run 45469018350. Obtain explicit fresh
+   approval of CG-SM-PLAN-002, reviewed fix/PR/main bindings and a new UTC expiry.
+   The old 2026-12-01T18:30:00Z cutoff grants no retry.
    Preserve required PRs, required passing/up-to-date offline checks, protected main,
    blocked force pushes/deletions and exact environment deployment refs. Do not
    remove CODEOWNERS or disable the ruleset to work around missing approval.
