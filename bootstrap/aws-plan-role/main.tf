@@ -15,7 +15,7 @@ resource "aws_iam_role" "plan" {
       Condition = {
         StringEquals = {
           "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
-          "token.actions.githubusercontent.com:sub" = "repo:YenumulaAashish/cloudguard-ai:environment:aws-plan"
+          "token.actions.githubusercontent.com:sub" = "repo:YenumulaAashish@212769106/cloudguard-ai@1379194368:environment:aws-plan"
         }
       }
     }]

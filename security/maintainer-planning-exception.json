@@ -1,6 +1,6 @@
 {
   "id": "CG-SM-PLAN-001",
-  "status": "APPROVED_RESTRICTED_SCOPE",
+  "status": "CONSUMED",
   "approver": "YenumulaAashish (repository owner)",
   "approval_source": "Owner's explicit instruction in this conversation on 2026-11-25",
   "approval_date": "2026-11-25",
@@ -14,15 +14,58 @@
   "amendments_allowed": "This approval-record documentation and consistency-test amendment only; other code changes require renewed review and approval",
   "maximum_plan_runs": 1,
   "scope": "Read-only AWS sandbox planning in ap-south-1, manually dispatched on protected main through aws-plan",
-  "review_exceptions": ["environment self-review", "absence of independent PR approval", "absence of independent CODEOWNERS approval"],
-  "preserved_controls": ["required pull request", "passing up-to-date offline security checks", "main branch protection", "blocked force pushes and deletions", "exact OIDC audience and environment subject", "main-only manual dispatch", "least-privilege read-only IAM", "six exact Checkov exceptions", "OPA and Conftest gates", "no deployment"],
-  "prohibited_operations": ["infrastructure deployment", "Terraform apply", "Terraform destroy", "state mutation", "AWS resource or IAM modification", "privileged Phase 6 operations", "bypass of automated gates", "direct push to main", "fork-controlled authenticated execution"],
-  "revocation_conditions": ["owner revokes approval", "single planning run reaches any terminal outcome, including failure or cancellation", "expiry reached", "scope or reviewed executable code changes", "security gate fails or protection/trust/permission validation fails", "suspected credential or private-evidence exposure"],
+  "review_exceptions": [
+    "environment self-review",
+    "absence of independent PR approval",
+    "absence of independent CODEOWNERS approval"
+  ],
+  "preserved_controls": [
+    "required pull request",
+    "passing up-to-date offline security checks",
+    "main branch protection",
+    "blocked force pushes and deletions",
+    "exact OIDC audience and environment subject",
+    "main-only manual dispatch",
+    "least-privilege read-only IAM",
+    "six exact Checkov exceptions",
+    "OPA and Conftest gates",
+    "no deployment"
+  ],
+  "prohibited_operations": [
+    "infrastructure deployment",
+    "Terraform apply",
+    "Terraform destroy",
+    "state mutation",
+    "AWS resource or IAM modification",
+    "privileged Phase 6 operations",
+    "bypass of automated gates",
+    "direct push to main",
+    "fork-controlled authenticated execution"
+  ],
+  "revocation_conditions": [
+    "owner revokes approval",
+    "single planning run reaches any terminal outcome, including failure or cancellation",
+    "expiry reached",
+    "scope or reviewed executable code changes",
+    "security gate fails or protection/trust/permission validation fails",
+    "suspected credential or private-evidence exposure"
+  ],
   "restoration_owner": "YenumulaAashish",
-  "remaining_execution_prerequisites": ["record final PR head and protected main SHA", "verify required hosted check for final head", "review effective environment and branch protections", "verify effective role permissions and exact OIDC trust", "record any narrowly scoped review-setting accommodation and restoration procedure"],
+  "remaining_execution_prerequisites": [
+    "record final PR head and protected main SHA",
+    "verify required hosted check for final head",
+    "review effective environment and branch protections",
+    "verify effective role permissions and exact OIDC trust",
+    "record any narrowly scoped review-setting accommodation and restoration procedure"
+  ],
   "hosted_check_status": "Owner reports PR #2 required offline check passed; new amendment not yet hosted-tested",
-  "execution_status": "NOT RUN",
+  "execution_status": "FAILED_OIDC_AUTHENTICATION",
   "github_settings_changed": false,
   "aws_variables_enabled": false,
-  "aws_contacted": false
+  "aws_contacted": false,
+  "consumed_by_run": "45469018350",
+  "consumed_run_url": "https://github.com/YenumulaAashish/cloudguard-ai/actions/runs/45469018350",
+  "consumption_evidence": "Owner reports first authenticated run failed with sts:AssumeRoleWithWebIdentity AccessDenied; CloudTrail confirmed subject mismatch",
+  "retry_authorized": false,
+  "recording_task_scope": "The original false activity flags describe the approval-record task only, not the later authenticated workflow run"
 }
