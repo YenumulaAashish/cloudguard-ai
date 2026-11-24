@@ -18,13 +18,16 @@ The retained same-repository condition is an additional legacy defense; PR and p
 triggers are removed. Offline PR checks remain credential-free, with contents: read.
 OIDC write permission is only on the guarded plan job; no PR write permissions exist.
 
-The proposed single-maintainer exception is NOT APPROVED. Review the exact commit,
-record an explicit time-bounded approval or obtain independent review, and follow
-[the current Phase 5 manual handoff](phase5-integration.md) before enabling or
-requesting any authenticated workflow. Preserve all other protections. No bootstrap
-provisioning is necessary or authorized by these instructions; the user reports
-that setup already exists. Missing permissions require a separate review, not a
-broad policy workaround or expansion of the read-only role.
+The owner approved `CG-SM-PLAN-001` on 2026-11-25 for one read-only sandbox
+planning run, permitting self-review and temporarily accepting no independent
+PR/CODEOWNERS approval. Expiry: **2026-12-01T18:30:00Z**, or earlier on run
+completion/failure/cancellation or revocation. This approval grants no deployment,
+Terraform apply/destroy, IAM expansion or privileged Phase 6 authority.
+See [the recorded scope, execution prerequisites and restoration duties](phase5-integration.md).
+No GitHub setting or enable variable is changed by this record. Before a later
+manual run, bind the final reviewed PR/main SHAs and passing hosted checks, verify
+effective protections/trust/permissions, and confirm approval remains unused and
+unexpired. Preserve all other controls. No bootstrap provisioning is authorized.
 
 ## Permission rationale
 

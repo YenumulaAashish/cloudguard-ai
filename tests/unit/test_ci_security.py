@@ -104,7 +104,7 @@ class CiSecurityTests(unittest.TestCase):
         text=(ROOT/'README.md').read_text(encoding='utf-8')
         for value in ['Phase 5 — IN PROGRESS','COMPLETE — HOSTED OFFLINE CI VERIFIED','Phase 5.1 hosted offline execution: PASS','41108638752','6ec68df80ea9012e09c6e223e0789896ec7f8ad9']:
             self.assertIn(value,text)
-        self.assertIn('| 5.2 AWS OIDC and real Terraform plan validation | BLOCKED — SECURITY APPROVAL / AUTHENTICATED VERIFICATION PENDING |',text)
+        self.assertIn('| 5.2 AWS OIDC and real Terraform plan validation | BLOCKED — FINAL COMMIT / AUTHENTICATED VERIFICATION PENDING |',text)
 
     def test_evidence_contract_never_equates_local_with_hosted(self):
         text=(ROOT/'docs/phase5-hosted-ci.md').read_text(encoding='utf-8')

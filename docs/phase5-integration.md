@@ -1,7 +1,7 @@
 # Phase 5 integration and verification handoff
 
 Status: implementation prepared locally; authenticated AWS verification **NOT RUN**.
-The single-maintainer exception below is **PENDING USER APPROVAL**. No GitHub
+The owner approved the restricted single-maintainer exception below on **2026-11-25**. No GitHub
 settings or AWS configuration were inspected or changed by this implementation.
 
 ## Audit and evidence
@@ -29,34 +29,65 @@ posture validator, Conftest enforcement and publication helpers. No risk algorit
 Rego policy, Checkov exception or IAM permission is changed. The old dashboard
 version 1.0 remains supported. Static output remains informational, never a gate.
 
-## Temporary single-maintainer security exception — NOT APPROVED
+## Temporary single-maintainer security exception — APPROVED RESTRICTED SCOPE
 
-Proposed identifier: `CG-SM-PLAN-001`. Scope: one manually dispatched, read-only
-authenticated plan validation on protected main, within seven calendar days of
-explicit approval. Expiry is the earlier of that run's completion or the end of
-the approved seven-day window. Record exact UTC start/expiry before enabling.
-This draft is not approval and must not be used to bypass unavailable protections.
+`CG-SM-PLAN-001` was explicitly approved by repository owner **YenumulaAashish**
+in the instruction to record approval in this conversation on **2026-11-25**
+(Asia/Calcutta). This is the approval source; no exact time-of-day was supplied.
+The machine-readable record is
+[`security/maintainer-planning-exception.json`](../security/maintainer-planning-exception.json).
 
-The proposed exception covers only the absence of an independent reviewer for the
-maintainer's own PR/CODEOWNERS approval and environment self-review. It recognizes
-that the same person can author and approve trusted code. It does not assert
-independent separation of duties. It must not permit direct pushes, force pushes,
-deletions, bypassing failed required checks, changing AWS permissions, applying a
-plan, trusting forks, or running unreviewed workflow/script changes.
+Scope: **one** manually dispatched read-only AWS sandbox planning run in
+ap-south-1 on protected main through the protected `aws-plan` environment.
+The approval binds to [PR #2](https://github.com/YenumulaAashish/cloudguard-ai/pull/2)
+and reviewed baseline `bb97a1d6bbb7826c9ddd7501ea26ab909959b198`, plus this
+approval-record documentation and consistency-test amendment only. Other executable,
+workflow, Terraform, IAM or policy changes require renewed review and approval.
+The owner reports that PR #2's required offline check passed. This new amendment
+requires its own hosted check after a separately authorized push.
 
-Before approval, record: approver identity; exact reviewed commit and PR; protected
-main SHA; offline run URL/conclusion; environment/branch settings reviewed; precise
-review settings that cannot be satisfied; compensating controls; UTC expiry; owner
-responsible for restoring review settings; rollback instructions and result.
-Use a narrow, auditable repository/environment exception only if GitHub supports
-it while keeping the other controls effective. If that is impossible, obtain an
-independent reviewer; do not disable the broader ruleset or environment protections.
+**Expiry: 2026-12-01T18:30:00Z**, equivalent to **2026-12-02 00:00 IST**.
+This conservatively covers seven calendar dates, 25 November through 1 December,
+without inventing an approval timestamp. Expiry occurs earlier when the one run
+reaches any terminal outcome (success, failure or cancellation), the owner revokes
+approval, scope/reviewed executable code changes, a security gate fails, effective
+protection/trust/permission validation fails, or credential/private-evidence exposure
+is suspected. A failed/cancelled run does not grant a free retry.
 
-Suggested explicit approval text (must be supplied by the user, not generated as
-an approval record): “I approve CG-SM-PLAN-001 for commit [SHA], PR [URL], one
-read-only manual plan run, expiring [UTC time], accepting the documented lack of
-independent review.” The placeholders must be replaced. No approval is currently
-recorded. There is no blanket exception for future PRs, deployment or Phase 6.
+The owner **permits environment self-review** and temporarily accepts the absence
+of independent PR and CODEOWNERS approval for this scope. Author and reviewer may
+therefore be the same person; no independent review is claimed. CODEOWNERS remains
+in the repository. This record does not claim that GitHub permits self-approval of
+an authored PR, nor that any GitHub setting has been changed.
+
+Required PRs, passing up-to-date automated security checks, main branch protection,
+blocked force pushes/deletions, exact OIDC audience/environment subject, main-only
+manual dispatch, read-only least-privilege IAM and all existing policy/exception
+gates remain mandatory. No direct main push, broad ruleset bypass, failed-check
+bypass or fork-controlled authenticated execution is authorized. Any future manual
+review-setting accommodation must be narrowly scoped, recorded and restorable;
+if GitHub cannot accommodate it while preserving the other controls, obtain an
+independent reviewer rather than disabling protections.
+
+**Not authorized:** infrastructure deployment, Terraform apply/destroy, state
+mutation, resource or IAM modification, increased permissions, or privileged
+Phase 6 operations. Approval is not evidence of AWS authentication or planning.
+No AWS access, workflow dispatch, enable-variable or GitHub setting change is
+performed by this approval-record task.
+
+Before later execution, record the final reviewed PR head and resulting protected
+main SHA, the successful required hosted check for that head, effective environment
+and branch protections, exact trust/role permission review, and any narrowly scoped
+review-setting accommodation/restoration procedure. These execution bindings are
+pending and must not be replaced with guessed SHAs or fabricated verification.
+
+Restoration owner: **YenumulaAashish**. On expiry/revocation, do not dispatch or
+approve further runs; cancel any still-pending/running run safely, disable BOTH
+`AWS_PLAN_ENABLED` and `AWS_PLAN_REVIEW_APPROVED`, restore any review-only settings
+covered by the exception, and record the outcome/restoration evidence. No automatic
+cleanup, resource deletion or state mutation is authorized. Variables remain
+untouched in this task. The record and tests document scope; they are **not a
+runtime expiry mechanism** or proof that external settings were restored.
 
 ## Public data and advisory contract
 
@@ -111,12 +142,13 @@ resource identifiers or private content hashes. Only five enum/allowlist fields
 reach OpenAI; no review flag, receipt, risk, source identity or resource ID is sent.
 Paid requests still require an explicit click and the existing rate limits/key.
 
-## Manual authenticated validation — after explicit approval only
+## Manual authenticated validation — approved scope, prerequisites still required
 
-1. Review the local feature branch and its complete diff. Obtain separate push
-   authorization; push, open a PR and wait for the exact commit's hosted offline
-   checks. These changes have not been pushed by this task.
-2. Record approval of the time-bounded exception above or obtain independent review.
+1. PR #2 is already open; its required offline check passed according to the owner.
+   Review this approval-record amendment and obtain separate push authorization.
+   After the later push to that existing PR, wait for the exact final head's required
+   hosted offline checks. This task does not push or merge.
+2. Confirm the recorded approval above is still valid, unused and within expiry.
    Preserve required PRs, required passing/up-to-date offline checks, protected main,
    blocked force pushes/deletions and exact environment deployment refs. Do not
    remove CODEOWNERS or disable the ruleset to work around missing approval.
@@ -147,7 +179,7 @@ NOT RUN. Phase 5 authenticated verification and final release remain incomplete
 until the above execution and review provide actual evidence. The dashboard's AWS
 status is deliberately not inferred from imported JSON or OIDC configuration code.
 
-## Executed local validation
+## Prior integration checkpoint validation (bb97a1d)
 
 | Check | Observed result |
 |---|---|
@@ -171,4 +203,23 @@ No paid AI call, AWS authentication/API call, protected workflow run, infrastruc
 change, deployment execution, GitHub setting change, push or merge was performed.
 Public documentation/dependency databases and the historical GitHub run metadata
 were read. New hosted/authenticated validation remains NOT RUN; these local checks
-do not approve the security exception or complete the release.
+do not authorize execution or complete the release; owner approval is recorded separately above.
+
+## Approval-record amendment validation — 2026-11-25
+
+The complete local regression suite passed: **687 Python tests, zero failures and
+zero skips**, including six new approval-record consistency tests; **50 frontend
+tests**; **3 browser checks**; **1 mocked backend HTTP test**; **8 exporter tests**.
+The production frontend build and source/build privacy checks passed. Terraform
+workload/bootstrap formatting, cached backend-free init and validation, TFLint
+with AWS ruleset, destructive-command guard and reviewed local CI contract passed.
+Checkov remained **30 passed / 0 failed / 6 skipped / 0 parsing errors**; the exact
+exception contract remained expected 6, observed 6, missing 0, unexpected 0.
+OPA **35 tests** and Conftest **6 fixtures** passed. Integrated offline Phase 3/4
+private and public outputs reproduced byte-for-byte. Secret scan and diff checks
+passed. No workflow, IAM, Terraform, policy or Checkov-exception files changed.
+
+These are local results for the approval-record amendment, not hosted evidence
+for its eventual PR head. Authenticated AWS planning remains **NOT RUN**. No AWS,
+live AI, GitHub setting change, variable enablement, push, merge or deployment was
+performed. The expiry and manual restoration obligations above remain in force.

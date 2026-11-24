@@ -265,7 +265,7 @@ and [executed evidence](docs/evidence.md). Hosted Phase 4 integration remains NO
 | Sub-phase | Status |
 |---|---|
 | 5.1 Hosted CI and GitHub Actions verification | COMPLETE — HOSTED OFFLINE CI VERIFIED |
-| 5.2 AWS OIDC and real Terraform plan validation | BLOCKED — SECURITY APPROVAL / AUTHENTICATED VERIFICATION PENDING |
+| 5.2 AWS OIDC and real Terraform plan validation | BLOCKED — FINAL COMMIT / AUTHENTICATED VERIFICATION PENDING |
 | 5.3 Phase 4 sanitized PR reporting | CODED — HOSTED VALIDATION PENDING |
 | 5.4 Release hardening and security documentation | IN PROGRESS — LOCAL CONTRACTS / HANDOFF PREPARED |
 | 5.5 Portfolio demo and final release | NOT STARTED |
@@ -293,6 +293,10 @@ The Phase 5 integration now processes the exported plan with all Phase 4 engines
 publishes closed sanitized finding/posture bundles, and supports reviewed actual
 finding catalogs in the advisory service and dashboard. Authenticated planning is
 manual/main-only and requires both enable and explicit review-approval variables.
-The proposed single-maintainer exception is **NOT APPROVED**.
+The owner approved **CG-SM-PLAN-001** on **2026-11-25** for one read-only planning run,
+including self-review and temporary absence of independent PR/CODEOWNERS approval.
+It expires at **2026-12-01T18:30:00Z** or earlier on consumption/revocation. Final
+commit/check bindings remain required; no settings or enable variables changed.
+See the [restricted approval record](security/maintainer-planning-exception.json).
 See [Phase 5 audit, contracts and manual handoff](docs/phase5-integration.md) and
 [Phase 6 provisioning architecture — design only](docs/phase6-provisioning-architecture.md).
