@@ -30,3 +30,7 @@ plan-policy:
 	python3 scripts/plan-policy.py
 evidence:
 	python3 scripts/generate-evidence.py
+
+.PHONY: review-ci-contract
+review-ci-contract:
+	python3 scripts/verify-hosted-ci.py

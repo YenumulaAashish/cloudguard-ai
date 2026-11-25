@@ -33,7 +33,8 @@ export interface Phase4Receipt {
   validation: Record<'input_schemas' | 'cross_report_consistency' | 'output_schemas' | 'byte_reproduction', 'PASS'>;
 }
 export interface ReportBundle {
-  version: '1.0'|'1.1'; source: 'OFFLINE_SYNTHETIC'|'SYNTHETIC'|'OFFLINE'|'AUTHENTICATED_PLAN';
+  version: '1.0'|'1.1'|'1.2';
+  policy_reasons?: {rule_id:string;reason_code:string;count:number}[]; source: 'OFFLINE_SYNTHETIC'|'SYNTHETIC'|'OFFLINE'|'AUTHENTICATED_PLAN';
   findings?: import('../services/publicFindings').PublicCatalog;
   pr: PrSummary | null; phase3: Phase3Receipt | null;
   posture: PostureSummary | null; phase4: Phase4Receipt | null;

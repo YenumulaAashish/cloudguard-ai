@@ -43,7 +43,7 @@ class OidcSubjectTests(unittest.TestCase):
         job=flow['jobs']['plan'];self.assertEqual(job['environment'],'aws-plan')
         for condition in ["github.ref == 'refs/heads/main'","vars.AWS_PLAN_ENABLED == 'true'","vars.AWS_PLAN_REVIEW_APPROVED == 'true'","github.repository == 'YenumulaAashish/cloudguard-ai'"]:
             self.assertIn(condition,job['if'])
-        self.assertEqual(job['permissions'],{'contents':'read','id-token':'write'})
+        self.assertEqual(job['permissions'],{'contents':'read','actions':'read','id-token':'write'})
 
     def test_fresh_approval_has_explicit_owner_authorization_and_known_bindings(self):
         r=json.loads((ROOT/'security/maintainer-planning-exception-002.json').read_text())

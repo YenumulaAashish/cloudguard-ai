@@ -3,3 +3,5 @@ from pathlib import Path
 root = Path(__file__).resolve().parents[1]
 for name in ("tfplan", "tfplan.json"):
     (root / "terraform" / name).unlink(missing_ok=True)
+
+(root / 'reports/private/planning-reservation.json').unlink(missing_ok=True)

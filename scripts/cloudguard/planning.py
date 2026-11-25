@@ -1,5 +1,7 @@
 """Authenticated planning only. Never execute deployment operations."""
 import os
+import time
+import subprocess
 from .runtime import ROOT, PRIVATE, tool, run, read_json
 from .evidence import record, plan_summary, policy_summary
 
@@ -27,7 +29,13 @@ def evaluate_plan():
 def plan_exit_success(code):
     return code in (0, 2)
 
-def create_plan():
+def create_plan(deadline=None):
+    def bounded(args, **kwargs):
+        if deadline is not None:
+            remaining=deadline-time.time()
+            if remaining<=0:raise ValueError('Authorization expired')
+            kwargs['timeout']=remaining
+        return run(args,**kwargs)
     os.umask(0o077)
     PRIVATE.mkdir(parents=True, exist_ok=True)
     binary, json_path = ROOT / "terraform/tfplan", ROOT / "terraform/tfplan.json"
@@ -40,21 +48,21 @@ def create_plan():
         # Logs can include sensitive values; keep them local/private and never echo them.
         with (PRIVATE / "terraform-plan.log").open("w", encoding="utf-8") as log:
             for args in (["init", "-input=false", "-lockfile=readonly"], ["validate", "-no-color"]):
-                if run(command + args, stdout=log, stderr=log).returncode != 0:
+                if bounded(command + args, stdout=log, stderr=log).returncode != 0:
                     raise ValueError("Initialization/validation failed")
-            result = run(command + ["plan", "-input=false", "-no-color", "-detailed-exitcode", "-out=tfplan"], stdout=log, stderr=log)
+            result = bounded(command + ["plan", "-input=false", "-no-color", "-detailed-exitcode", "-out=tfplan"], stdout=log, stderr=log)
             if not plan_exit_success(result.returncode):
                 record("plan-summary", {"result": "FAIL", "exit_code": result.returncode})
                 return False
             with json_path.open("w", encoding="utf-8") as output:
-                shown = run(command + ["show", "-json", "tfplan"], stdout=output, stderr=log)
+                shown = bounded(command + ["show", "-json", "tfplan"], stdout=output, stderr=log)
             if shown.returncode != 0:
                 raise ValueError("Plan JSON export failed")
         summary = plan_summary(read_json(json_path), result.returncode)
         record("plan-summary", summary)
         print(f"Terraform plan: PASS (exit {result.returncode}); values withheld")
         return True
-    except (OSError, ValueError, KeyError, TypeError):
+    except (OSError, ValueError, KeyError, TypeError, subprocess.TimeoutExpired):
         record("plan-summary", {"result": "FAIL", "reason": "Plan failed; inspect private local log"})
         return False
 

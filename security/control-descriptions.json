@@ -1,0 +1,216 @@
+{
+  "version": "1.0",
+  "review_basis": "Existing deterministic analyzer definitions; field-level remediation reviewed in Phase 5 hardening.",
+  "controls": {
+    "CGA_IAM_001": {
+      "domain": "iam",
+      "description": "Full administrator-shaped Allow; effective access requires review",
+      "reason_code": "ADMIN_SHAPED_ALLOW",
+      "terraform_guidance": "Replace administrator-shaped IAM statements with task-specific actions and resources; review conditions and effective permissions.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_IAM_002": {
+      "domain": "iam",
+      "description": "Global wildcard Allow action",
+      "reason_code": "GLOBAL_ACTION_WILDCARD",
+      "terraform_guidance": "Replace the global Action wildcard with explicit service actions required by the workload.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_IAM_003": {
+      "domain": "iam",
+      "description": "Service or partial wildcard Allow action",
+      "reason_code": "PARTIAL_ACTION_WILDCARD",
+      "terraform_guidance": "Enumerate required actions instead of service or partial action wildcards.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_IAM_004": {
+      "domain": "iam",
+      "description": "Allow uses wildcard resources; some actions require this scope",
+      "reason_code": "RESOURCE_WILDCARD",
+      "terraform_guidance": "Scope IAM Resource where the action supports resource-level permissions; document unavoidable wildcard scope.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_IAM_005": {
+      "domain": "iam",
+      "description": "IAM privilege-management capability; escalation is not established",
+      "reason_code": "PRIVILEGE_MANAGEMENT",
+      "terraform_guidance": "Remove unnecessary IAM management actions; review permission boundaries and service-role assumptions.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_IAM_006": {
+      "domain": "iam",
+      "description": "PassRole with wildcard resource; exploitation is not established",
+      "reason_code": "BROAD_PASS_ROLE",
+      "terraform_guidance": "Scope iam:PassRole to preapproved role resources and the intended service condition.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_IAM_007": {
+      "domain": "iam",
+      "description": "Resource-scoped PassRole capability",
+      "reason_code": "SCOPED_PASS_ROLE",
+      "terraform_guidance": "Review the approved role scope and intended-service condition; capability alone does not establish escalation.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_IAM_008": {
+      "domain": "iam",
+      "description": "Trust Allow includes an unrestricted principal",
+      "reason_code": "UNRESTRICTED_TRUST",
+      "terraform_guidance": "Replace unrestricted trust principals with reviewed exact identities and conditions.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_IAM_009": {
+      "domain": "iam",
+      "description": "Federated trust lacks a nonempty Condition; external restrictions are unknown",
+      "reason_code": "FEDERATED_CONDITION_MISSING",
+      "terraform_guidance": "Require exact reviewed federation audience and subject conditions where supported.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_IAM_010": {
+      "domain": "iam",
+      "description": "Unsupported or unresolved IAM context requires review",
+      "reason_code": "UNRESOLVED_IAM_CONTEXT",
+      "terraform_guidance": "Resolve computed or unsupported policy context in private reviewed evidence; do not invent a policy or remove restrictions.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_NET_001": {
+      "domain": "network",
+      "description": "Ingress allows all protocols from all addresses in the indicated family",
+      "reason_code": "PUBLIC_ALL_PROTOCOLS",
+      "terraform_guidance": "Restrict ingress protocol, ports and source ranges to the reviewed application requirement.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_NET_002": {
+      "domain": "network",
+      "description": "Ingress includes TCP port 22 from all addresses in the indicated family",
+      "reason_code": "PUBLIC_SSH",
+      "terraform_guidance": "Remove world-wide SSH ingress and use a reviewed private administration path.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_NET_003": {
+      "domain": "network",
+      "description": "Ingress includes TCP port 3389 from all addresses in the indicated family",
+      "reason_code": "PUBLIC_RDP",
+      "terraform_guidance": "Remove world-wide RDP ingress and use a reviewed private administration path.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_NET_004": {
+      "domain": "network",
+      "description": "Ingress includes the indicated common database TCP port from all addresses",
+      "reason_code": "PUBLIC_DATABASE",
+      "terraform_guidance": "Restrict database ingress to approved application security groups or private ranges.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_NET_005": {
+      "domain": "network",
+      "description": "Ingress includes the indicated management TCP port from all addresses",
+      "reason_code": "PUBLIC_MANAGEMENT",
+      "terraform_guidance": "Restrict management ingress to approved private administration sources.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_NET_006": {
+      "domain": "network",
+      "description": "Ingress allows a public TCP/UDP range of at least 1024 ports",
+      "reason_code": "PUBLIC_WIDE_PORT_RANGE",
+      "terraform_guidance": "Replace wide ingress port ranges with narrowly reviewed service ports and sources.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_NET_007": {
+      "domain": "network",
+      "description": "Ingress allows public ICMP; TCP service exposure is not inferred",
+      "reason_code": "PUBLIC_ICMP",
+      "terraform_guidance": "Review ICMP types and permitted sources; ICMP alone does not establish application exposure.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_NET_008": {
+      "domain": "network",
+      "description": "Egress allows all protocols to all addresses in the indicated family",
+      "reason_code": "UNRESTRICTED_EGRESS",
+      "terraform_guidance": "Review egress protocol, destinations and ports; introduce only required outbound access.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_NET_009": {
+      "domain": "network",
+      "description": "Unsupported or unresolved network context requires review",
+      "reason_code": "UNRESOLVED_NETWORK_CONTEXT",
+      "terraform_guidance": "Resolve unknown rule fields and references privately; a dependency does not prove reachability.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_DATA_001": {
+      "domain": "data",
+      "description": "Public-access-block protections explicitly include disabled settings",
+      "reason_code": "PUBLIC_BLOCK_DISABLED",
+      "terraform_guidance": "Set all four supported S3 public-access-block flags true in the dedicated companion resource.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_DATA_002": {
+      "domain": "data",
+      "description": "Complete public-access-block configuration is missing from the supported plan",
+      "reason_code": "PUBLIC_BLOCK_MISSING",
+      "terraform_guidance": "Add a dedicated S3 public-access-block companion with all four flags explicitly true.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_DATA_003": {
+      "domain": "data",
+      "description": "ACL configuration explicitly permits public reads; effective access requires review",
+      "reason_code": "PUBLIC_READ_ACL",
+      "terraform_guidance": "Remove public-read ACL grants; review BucketOwnerEnforced ownership and all four public blocks.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_DATA_004": {
+      "domain": "data",
+      "description": "ACL configuration explicitly permits public reads and writes; effective access requires review",
+      "reason_code": "PUBLIC_WRITE_ACL",
+      "terraform_guidance": "Remove public read/write ACL grants; review ownership and public-access-block settings.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_DATA_005": {
+      "domain": "data",
+      "description": "Bucket policy structurally allows a public principal supported S3 actions on this bucket",
+      "reason_code": "PUBLIC_BUCKET_POLICY",
+      "terraform_guidance": "Remove public Allow principals or scope them to approved identities and resources; review conditions privately.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_DATA_006": {
+      "domain": "data",
+      "description": "Supported explicit server-side encryption configuration is not established",
+      "reason_code": "ENCRYPTION_NOT_ESTABLISHED",
+      "terraform_guidance": "Declare a known supported encryption algorithm in the encryption companion; review key context for KMS.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_DATA_007": {
+      "domain": "data",
+      "description": "Enabled versioning configuration is not established",
+      "reason_code": "VERSIONING_NOT_ENABLED",
+      "terraform_guidance": "Review versioning_configuration status Enabled in the dedicated versioning companion.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_DATA_008": {
+      "domain": "data",
+      "description": "S3 access logging is not configured in the supported plan",
+      "reason_code": "ACCESS_LOGGING_MISSING",
+      "terraform_guidance": "Review a dedicated logging companion and approved target; logging infrastructure and costs need separate review.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_DATA_009": {
+      "domain": "data",
+      "description": "Bucket policy does not establish the recognized SecureTransport Deny pattern",
+      "reason_code": "TLS_DENY_NOT_ESTABLISHED",
+      "terraform_guidance": "Review an explicit Deny for insecure transport in the private bucket policy; do not publish the policy contents.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_DATA_010": {
+      "domain": "data",
+      "description": "A global enabled multipart-upload abort rule within seven days is not established",
+      "reason_code": "MULTIPART_CLEANUP_MISSING",
+      "terraform_guidance": "Review an enabled global lifecycle rule to abort incomplete multipart uploads within seven days.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    },
+    "CGA_DATA_011": {
+      "domain": "data",
+      "description": "Unsupported or unresolved S3 configuration requires review",
+      "reason_code": "UNRESOLVED_S3_CONTEXT",
+      "terraform_guidance": "Review computed fields, exact companion associations and private policy evidence. UNKNOWN is insufficient evidence, not proof of exposure.",
+      "limitations": "Static configuration only. Effective access, runtime reachability, authenticity and freshness are not established. Human review required."
+    }
+  }
+}

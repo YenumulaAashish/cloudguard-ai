@@ -5,7 +5,7 @@ permissions:
   contents: read
 concurrency:
   group: aws-plan-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 jobs:
   plan:
     if: >-
@@ -17,12 +17,15 @@ jobs:
         github.event.pull_request.head.repo.full_name == github.repository) ||
        (github.event_name != 'pull_request' && github.ref == 'refs/heads/main'))
     environment: aws-plan
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64, cloudguard-readonly-plan]
     timeout-minutes: 25
     permissions:
       contents: read
+      actions: read
       id-token: write
     env:
+      CHECKPOINT_DISABLE: '1'
+      AWS_EC2_METADATA_DISABLED: 'true'
       CLOUDGUARD_SCOPE: authenticated-plan
       AWS_REGION: ap-south-1
       AWS_DEFAULT_REGION: ap-south-1
@@ -30,6 +33,10 @@ jobs:
       TF_VAR_bucket_name: ${{ vars.AWS_SANDBOX_BUCKET_NAME }}
       TFLINT_AWS: '1'
       TF_IN_AUTOMATION: 'true'
+      CLOUDGUARD_LEDGER_PATH: ${{ vars.CLOUDGUARD_LEDGER_PATH }}
+      PLAN_ROLE: ${{ vars.AWS_PLAN_ROLE_ARN }}
+      AWS_PLAN_ENABLED: ${{ vars.AWS_PLAN_ENABLED }}
+      AWS_PLAN_REVIEW_APPROVED: ${{ vars.AWS_PLAN_REVIEW_APPROVED }}
     steps:
       - uses: actions/checkout@v7.0.1
         with:
@@ -42,6 +49,10 @@ jobs:
           python -c 'import os,re; assert re.fullmatch(r"arn:aws:iam::[0-9]{12}:role/[A-Za-z0-9+=,.@_/-]+", os.environ["PLAN_ROLE"]); assert re.fullmatch(r"[a-z0-9][a-z0-9-]{1,61}[a-z0-9]", os.environ["TF_VAR_bucket_name"])'
       - name: Offline preflight gates
         run: python scripts/run-offline.py
+      - name: Reserve bounded planning attempt before AWS credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/planning-authorization.py reserve
       - name: Assume protected read-only AWS plan role
         uses: aws-actions/configure-aws-credentials@v6.3.0
         with:
@@ -52,7 +63,11 @@ jobs:
           role-duration-seconds: 900
           unset-current-credentials: true
           mask-aws-account-id: true
+          disable-retry: true
+          retry-max-attempts: 1
       - name: Real plan, JSON export and policy gate
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: python scripts/aws-plan.py --reuse-offline
       - name: Generate sanitized evidence on failure too
         if: always()
@@ -88,6 +103,11 @@ jobs:
             reports/sanitized/phase5-plan/posture-summary.json
             reports/sanitized/phase5-plan/posture-summary.md
             reports/sanitized/phase5-plan/phase4-completion.json
+      - name: Finalize durable attempt without refunding quota
+        if: always()
+        env:
+          CI_JOB_STATUS: ${{ job.status }}
+        run: python scripts/planning-authorization.py finish
       - name: Remove generated plans from runner
         if: always()
         run: python scripts/clean.py

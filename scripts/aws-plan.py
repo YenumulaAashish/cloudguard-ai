@@ -1,7 +1,9 @@
 """Explicit authenticated entry point; only reuse current passing offline evidence."""
 import argparse
+import subprocess
+import sys
 from cloudguard.evidence import begin, context, load, fingerprint, generate, record
-from cloudguard.runtime import ROOT, REPORTS, write_json
+from cloudguard.runtime import ROOT, REPORTS, PRIVATE, write_json, read_json
 from cloudguard.safety import inspect
 from cloudguard.scanning import security_scan
 from cloudguard.policy_testing import policy_tests
@@ -26,7 +28,10 @@ if __name__ == "__main__":
             record("ci-safety", {"result": "FAIL" if errors else "PASS", "errors": errors})
             ready = not errors and quality() and security_scan() and policy_tests()
         if ready:
-            ok = create_plan() and evaluate_plan()
+            # Revalidate quota receipt, current gates, protection and expiry after STS.
+            authorized = subprocess.run([sys.executable, str(ROOT / 'scripts/planning-authorization.py'), 'start'], cwd=ROOT).returncode == 0
+            deadline = read_json(PRIVATE / 'planning-reservation.json')['deadline'] if authorized else None
+            ok = authorized and create_plan(deadline=deadline) and evaluate_plan()
         else:
             record("plan-summary", {"result": "FAIL", "reason": "Offline gates absent, stale or failing"})
     finally:

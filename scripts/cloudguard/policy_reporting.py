@@ -29,3 +29,15 @@ def failure_reasons(rows):
                 pair=next(((rule,reason) for rule,reason,pattern in TEMPLATES if re.fullmatch(pattern,message)),pair)
             counts[pair]+=1
     return [{'rule_id':rule,'reason_code':reason,'count':count} for (rule,reason),count in sorted(counts.items())]
+
+
+def validate_reasons(rows):
+    allowed={(rule,reason) for rule,reason,_ in TEMPLATES}|{('UNMAPPED','UNRECOGNIZED_POLICY_MESSAGE')}
+    if type(rows) is not list or len(rows)>len(allowed):raise ValueError('Invalid public policy reasons')
+    seen=set()
+    for row in rows:
+        if type(row) is not dict or set(row)!={'rule_id','reason_code','count'}:raise ValueError('Invalid public policy reasons')
+        pair=(row['rule_id'],row['reason_code'])
+        if pair not in allowed or pair in seen or type(row['count']) is not int or not 1<=row['count']<=100000:raise ValueError('Invalid public policy reasons')
+        seen.add(pair)
+    return rows

@@ -1,3 +1,5 @@
+> Phase 5 final hardening: [release/verification](docs/phase5-release.md), [bounded planning authorization (inactive)](docs/planning-authorization.md), and [Phase 6 roadmap (design only)](docs/phase6-roadmap.md). Historical authentication and planning passed; the real-plan security verdict failed and remains recorded. No fresh authenticated verification is claimed.
+
 > **Current execution update**
 
 CG-SM-PLAN-002 is **CONSUMED** by run 45484703135. Owner-confirmed OIDC authentication
@@ -35,17 +37,17 @@ Use Node 22.20.0 / npm 10.9.3; `npm ci` uses the committed dependency lockfile.
 Serve only `frontend/dist/`. The optional local AI service is documented below;
 AWS login and deployment are unavailable.
 See [frontend architecture, data sources, privacy boundaries and testing](docs/frontend-dashboard.md).
-AWS verification is pending; **Phase 5.2 is BLOCKED**, not complete.
+Historical AWS authentication and planning succeeded; the historical security verdict failed. Final verification of this hardened release remains pending.
 
 ## Live OpenAI advisory
 
 The dashboard now offers an explicit **Explain with AI** action backed by a local
-Python service and the OpenAI Responses API. Only five allowlisted fields from
-existing synthetic analyzer findings leave the server. The key stays server-side;
+Python service and the OpenAI Responses API. Only reviewed static control context and allowlisted finding fields leave the server,
+from either the synthetic catalog or an explicitly loaded sanitized report. The key stays server-side;
 missing-key and offline operation remain supported. AI output is informational and
 cannot change deterministic security results. See [setup, privacy, limits and tests](docs/live-ai-advisory.md).
-This feature is independent of AWS; Phase 5.2 remains paused. No live paid call was
-performed during implementation.
+This feature is independent of live AWS connectivity. The owner reports a live
+advisory demonstration; this hardening task makes no paid API requests.
 
 ## Infrastructure and security
 
@@ -68,6 +70,10 @@ python scripts/run-offline.py
 Set `TFLINT_AWS=1` in the environment to include AWS lint in the portable command. The default local lint uses core rules and explicitly reports the AWS plugin as NOT RUN. CI requires both.
 
 Offline means **no AWS credentials or AWS API calls**; provider/tool installation still needs network access. The runner executes Terraform formatting, backend-free init and validation for both roots, lint, Python negative-control tests, the destructive-CI guard, source Checkov, the exception contract, OPA tests and Conftest fixtures. Failures produce a nonzero exit status. Evidence is retained even if a gate fails.
+
+Authenticated plan targets now fail closed outside the protected manual workflow
+and its separately approved persistent ledger. They do not authorize local AWS
+execution; see [authorization setup](docs/planning-authorization.md).
 
 Existing targets remain: `init`, `fmt`, `validate`, `lint`, `security`, `policy-test`, `plan`, `clean`. New targets: `check-exceptions`, `ci-safety`, `aws-plan`, `plan-json`, `plan-policy`, `evidence`.
 
@@ -273,9 +279,9 @@ and [executed evidence](docs/evidence.md). Hosted Phase 4 integration remains NO
 |---|---|
 | 5.1 Hosted CI and GitHub Actions verification | COMPLETE — HOSTED OFFLINE CI VERIFIED |
 | 5.2 AWS OIDC and real Terraform plan validation | BLOCKED — SECURITY VERDICT FAILED; AUTH / PLAN PASSED (OWNER EVIDENCE) |
-| 5.3 Phase 4 sanitized PR reporting | CODED — HOSTED VALIDATION PENDING |
-| 5.4 Release hardening and security documentation | IN PROGRESS — LOCAL CONTRACTS / HANDOFF PREPARED |
-| 5.5 Portfolio demo and final release | NOT STARTED |
+| 5.3 Phase 4 sanitized reporting | HISTORICAL UPLOAD PASS (OWNER EVIDENCE); v1.2 HOSTED CHECK PENDING |
+| 5.4 Release hardening and security documentation | CODED — BOUNDED AUTHORIZATION INACTIVE; FINAL VERIFICATION PENDING |
+| 5.5 Portfolio demo and final release | OWNER-REPORTED IMPORT / AI DEMOS; FINAL RELEASE VERIFICATION PENDING |
 
 The credential-free workflow retains read-only permissions, exact sanitized
 artifact paths and all deterministic gates. A local reviewed-contract verifier
