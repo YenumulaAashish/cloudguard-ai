@@ -13,9 +13,11 @@ import { Risk } from './pages/Risk';
 import { Graph } from './pages/Graph';
 import { Advisory } from './pages/Advisory';
 import { Scans } from './pages/Scans';
+import { Provisioning } from './pages/Provisioning';
 import { Aws } from './pages/Aws';
 
 const navigation = [
+  { path: '/provisioning', title: 'Provisioning', icon: Layers },
   { path: '/', title: 'Overview', icon: LayoutDashboard }, { path: '/findings', title: 'Findings', icon: ListFilter },
   { path: '/posture', title: 'Cloud Posture', icon: Layers }, { path: '/risk', title: 'Risk Analysis', icon: ChartNoAxesCombined },
   { path: '/graph', title: 'Security Graph', icon: GitBranch }, { path: '/advisory', title: 'AI Advisory', icon: Sparkles },
@@ -58,6 +60,7 @@ export function App({ initialState }: { initialState?: ReportState }) {
       {imported && <Note>Local file only; nothing is uploaded. Schema validity is not evidence authenticity or freshness. Imported origin claims do not establish live AWS connectivity.</Note>}
       <div aria-live="polite">{state.status !== 'ready' && <Panel title={state.status === 'malformed' ? 'Report rejected' : 'Report unavailable'}><Empty title={loading ? 'Reading sanitized report…' : state.status === 'malformed' ? 'Malformed or unsupported report' : 'No valid evidence available'}>Values are withheld. Use a bounded sanitized bundle with valid summaries and matching completion receipts. No PASS or risk score is inferred. Reset demo to restore the reviewed snapshot.</Empty></Panel>}</div>
       <Routes>
+        <Route path="/provisioning" element={<Provisioning/>}/>
         <Route path="/aws" element={<Aws data={state.status==='ready'?state.data:undefined}/>}/>
         <Route path="/" element={state.status === 'ready' ? <Overview data={state.data}/> : null}/>
         <Route path="/findings" element={state.status === 'ready' ? <Findings data={state.data}/> : null}/>
@@ -68,6 +71,6 @@ export function App({ initialState }: { initialState?: ReportState }) {
         <Route path="/scans" element={state.status === 'ready' ? <Scans data={state.data}/> : null}/>
         <Route path="*" element={<Panel title="Page not found"><p>This view is not available. <Link to="/">Return to overview</Link>.</p></Panel>}/>
       </Routes>
-      <footer><span><ShieldCheck size={14}/> Evidence-led security. Human-reviewed decisions.</span><span>Informational dashboard · No deployment controls</span></footer>
+      <footer><span><ShieldCheck size={14}/> Evidence-led security. Human-reviewed decisions.</span><span>Informational reporting · AWS deployment disabled</span></footer>
       </main></div></div>;
 }

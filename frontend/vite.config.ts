@@ -10,7 +10,7 @@ export default defineConfig({
   publicDir: false,
   envDir: fileURLToPath(new URL('./disabled-environment', import.meta.url)),
   envPrefix: 'CLOUDGUARD_NO_BROWSER_ENV_',
-  server: { host: '127.0.0.1', port: 5173, strictPort: true, proxy: { '/api/ai/': { target: 'http://127.0.0.1:8787', changeOrigin: true } }, fs: { strict: true, allow: [root], deny: ['**/.env*', '**/*.tfstate*', '**/tfplan*'] } },
+  server: { host: '127.0.0.1', port: 5173, strictPort: true, proxy: { '/api/phase6/': { target: 'http://127.0.0.1:8790', changeOrigin: true }, '/api/ai/': { target: 'http://127.0.0.1:8787', changeOrigin: true } }, fs: { strict: true, allow: [root], deny: ['**/.env*', '**/*.tfstate*', '**/tfplan*'] } },
   build: { sourcemap: false, target: 'es2022', rollupOptions: {
     output: { manualChunks: { charts: ['recharts'], validation: ['ajv/dist/2020'] } },
   } },

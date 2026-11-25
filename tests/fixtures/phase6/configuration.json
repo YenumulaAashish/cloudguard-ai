@@ -1,0 +1,23 @@
+{
+  "project": "capstone",
+  "region": "ap-south-1",
+  "vpc": {
+    "enabled": true,
+    "cidr": "10.40.0.0/16",
+    "subnet_cidr": "10.40.1.0/24"
+  },
+  "ec2": {
+    "enabled": true,
+    "instance_type": "t3.micro",
+    "ami": "mock-al2023",
+    "root_gb": 8,
+    "hours": 24
+  },
+  "s3": {
+    "enabled": true,
+    "storage_gb": 1,
+    "requests": 1000,
+    "transfer_gb": 0
+  },
+  "budget_usd": "5.00"
+}

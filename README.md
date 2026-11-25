@@ -1,4 +1,6 @@
-> Phase 5 final hardening: [release/verification](docs/phase5-release.md), [bounded planning authorization (inactive)](docs/planning-authorization.md), and [Phase 6 roadmap (design only)](docs/phase6-roadmap.md). Historical authentication and planning passed; the real-plan security verdict failed and remains recorded. No fresh authenticated verification is claimed.
+> Phase 6: [single-operator architecture](docs/phase6-provisioning-architecture.md), [mock testing](docs/phase6-offline-mvp.md), [inactive live AWS setup](docs/phase6-live-setup.md). Secure native AWS adapters are coded; live configuration, connectivity and deployment remain separately authorized and unverified. Phase 1-5 controls are preserved.
+
+> Phase 5 final hardening: [release/verification](docs/phase5-release.md), [bounded planning authorization (inactive)](docs/planning-authorization.md), and [Phase 6 roadmap](docs/phase6-roadmap.md). Historical authentication and planning passed; the real-plan security verdict failed and remains recorded. No fresh authenticated verification is claimed.
 
 > **Current execution update**
 
@@ -314,7 +316,7 @@ authentication/planning after correction remains **NOT RUN** in this task.
 **CG-SM-PLAN-002 is APPROVED_RESTRICTED_SCOPE**; no retry is authorized by the old
 2026-12-01T18:30:00Z cutoff. See the [failure record and fresh approval handoff](docs/oidc-subject-mismatch.md).
 See [Phase 5 audit, contracts and manual handoff](docs/phase5-integration.md) and
-[Phase 6 provisioning architecture — design only](docs/phase6-provisioning-architecture.md).
+[Phase 6 provisioning architecture](docs/phase6-provisioning-architecture.md).
 
 Current approval update: **CG-SM-PLAN-002 is APPROVED_RESTRICTED_SCOPE** by the owner
 on 2026-11-25, through **2026-12-01T18:30:00Z**, for one read-only planning attempt.

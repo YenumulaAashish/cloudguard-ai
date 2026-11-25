@@ -1,0 +1,13 @@
+{
+  "status": "NOT_APPROVED",
+  "approved_by": null,
+  "not_before": null,
+  "expires_at": null,
+  "configuration_digest": null,
+  "source_digest": null,
+  "allow_read": false,
+  "allow_state_locking": false,
+  "allow_deploy": false,
+  "allow_delete": false,
+  "isolation_digest": null
+}
