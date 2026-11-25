@@ -52,7 +52,7 @@ class CiSecurityTests(unittest.TestCase):
     def test_aws_boundary_frozen(self):
         flow=self.load('aws_plan');job=flow['jobs']['plan']
         self.assertIn("vars.AWS_PLAN_ENABLED == 'true'",job['if']);self.assertIn('github.event.pull_request.head.repo.full_name == github.repository',job['if'])
-        self.assertEqual(job['environment'],'aws-plan');self.assertEqual(job['permissions'],{'contents':'read','id-token':'write'})
+        self.assertEqual(job['environment'],'aws-plan');self.assertEqual(job['permissions'],{'contents':'read','actions':'read','id-token':'write'})
         self.assertEqual(set(flow['on']), {'workflow_dispatch'})
         self.assertIn("github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'", job['if'])
         job.pop('if');self.save(flow,'aws_plan');self.bad()

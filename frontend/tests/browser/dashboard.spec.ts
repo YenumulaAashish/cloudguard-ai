@@ -36,7 +36,7 @@ test('mobile and tablet layouts remain usable without horizontal overflow', asyn
     if (width < 700) {
       await page.getByRole('button', { name: 'Open navigation' }).click();
       await page.getByRole('navigation').getByRole('link', { name: 'AWS Integration' }).click();
-      await expect(page.getByText('WAITING FOR AWS VERIFICATION')).toBeVisible();
+      await expect(page.getByText('LIVE CONNECTIVITY UNVERIFIED')).toBeVisible();
       await page.goto('/');
     }
     await page.screenshot({ path: `test-results/overview-${width}.png`, fullPage: true });
@@ -47,4 +47,17 @@ test('dev server blocks repository files', async ({ request }) => {
   // A known non-sensitive repository file is the canary for the filesystem boundary.
   const response = await request.get('/@fs/' + process.cwd().replaceAll('\\', '/').replace(/\/frontend$/, '') + '/README.md');
   expect(response.status()).toBe(403);
+});
+
+
+test('authenticated-origin import retains warnings and renders safe failed reasons', async ({page})=>{
+  const fs=await import('node:fs/promises');const value=JSON.parse(await fs.readFile('src/test/plan-demo.json','utf8'));
+  value.source=value.findings.source='AUTHENTICATED_PLAN';value.pr.policy.opa_conftest='FAIL';value.version='1.2';
+  value.policy_reasons=[{rule_id:'UNKNOWN',reason_code:'UNRESOLVED_SECURITY_FIELD',count:1}];
+  await page.goto('/');
+  await page.getByLabel('Select sanitized report bundle').setInputFiles({name:'sanitized.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(value))});
+  await expect(page.getByText('Imported authenticated-plan verdict · provenance unverified')).toBeVisible();
+  await page.goto('/#/aws');await expect(page.getByText(/Authenticated-plan report supplied/)).toBeVisible();
+  await expect(page.getByText('LIVE CONNECTIVITY UNVERIFIED')).toBeVisible();
+  await page.goto('/#/scans');await expect(page.getByText(/UNRESOLVED_SECURITY_FIELD/)).toBeVisible();
 });

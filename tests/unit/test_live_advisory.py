@@ -20,7 +20,7 @@ class LiveAdvisoryTests(unittest.TestCase):
         result = self.service.explain(self.body)
         self.assertEqual(result['advisory'], self.advice)
         self.assertTrue(result['informational_only'])
-        self.assertEqual(set(self.provider.call_args.args[0]), {'control_id','domain','severity','status','resource_type'})
+        self.assertEqual(set(self.provider.call_args.args[0]), {'control_id','domain','severity','status','resource_type','control_context','source','context_status'})
         self.assertNotIn('synthetic-test-key', json.dumps(result))
         self.assertEqual(before, json.dumps(self.service.findings))
         self.service.explain(self.body)

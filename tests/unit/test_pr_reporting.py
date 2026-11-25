@@ -449,7 +449,7 @@ class WorkflowReportingTests(unittest.TestCase):
         self.assertIn('github.event.pull_request.head.repo.full_name == github.repository', job['if'])
         self.assertIn("vars.AWS_PLAN_ENABLED == 'true'", job['if'])
         self.assertEqual(job['environment'], 'aws-plan')
-        self.assertEqual(job['permissions'], {'contents': 'read', 'id-token': 'write'})
+        self.assertEqual(job['permissions'], {'contents': 'read', 'actions': 'read', 'id-token': 'write'})
 
     def test_no_deployment_or_suppression_regression(self):
         self.assertEqual(inspect(ROOT), [])

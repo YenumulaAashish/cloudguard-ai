@@ -1,4 +1,5 @@
 import Ajv2020 from 'ajv/dist/2020';
+import reasonPairs from '../data/policy-reasons.json';
 import contracts from '../data/contracts.json';
 import { validCatalog } from './publicFindings';
 import type { ReportBundle, ReportState, FindingGroup, Severity, Domain } from '../types/reports';
@@ -15,8 +16,18 @@ export function parseReport(value: unknown): ReportState {
   try {
     if (JSON.stringify(value).length > MAX_BUNDLE_BYTES || typeof value !== 'object' || Array.isArray(value)) throw Error();
     const raw = value as Record<string, unknown>;
-    const modern = raw.version === '1.1';
-    const expected = modern ? [...keys,'findings'] : keys;
+    const modern = raw.version === '1.1' || raw.version === '1.2';
+    const expected = modern ? [...keys,'findings',...(raw.version==='1.2'?['policy_reasons']:[])] : keys;
+    if(raw.version==='1.2') {
+      const reasons=raw.policy_reasons;
+      if(!Array.isArray(reasons) || reasons.length>reasonPairs.length) throw Error();
+      const seen=new Set();
+      for(const r of reasons) {
+        if(!r || Object.keys(r).sort().join()!=='count,reason_code,rule_id' || !reasonPairs.some(([id,code])=>r.rule_id===id && r.reason_code===code) || !Number.isInteger(r.count) || r.count<1 || r.count>100000 || seen.has(r.rule_id+':'+r.reason_code)) throw Error();
+        seen.add(r.rule_id+':'+r.reason_code);
+      }
+      if(reasons.length && (raw.source!=='AUTHENTICATED_PLAN' || (raw.pr as {policy?:{opa_conftest?:string}})?.policy?.opa_conftest!=='FAIL')) throw Error();
+    }
     if (Object.keys(raw).length !== expected.length || !expected.every(key => Object.hasOwn(raw, key))) throw Error();
     if (modern) {
       if (!validCatalog(raw.findings) || raw.findings.source !== raw.source || !raw.pr || !raw.phase3 || !raw.posture || !raw.phase4) throw Error();
@@ -75,7 +86,7 @@ export function findingGroups(data: ReportBundle): FindingGroup[] {
     const f = data.pr.findings;
     const groups = [['APPROVED EXCEPTION', f.approved_exceptions], ['FAILED', f.failed],
       ['UNKNOWN', f.total - f.failed - f.approved_exceptions]] as const;
-    for (const [status, count] of groups) if (count) rows.push({ id: `policy-${status}`, domain: 'Policy', severity: 'UNKNOWN', status, count, source: 'Offline source scan' });
+    for (const [status, count] of groups) if (count) rows.push({ id: `policy-${status}`, domain: 'Policy', severity: 'UNKNOWN', status, count, source: 'Phase 3 · normalized scanner findings' });
   }
   const labels: Record<string, Domain> = { iam: 'IAM', network: 'Network', data: 'Data Protection' };
   if (data.posture) for (const [key, domain] of Object.entries(data.posture.domains)) {

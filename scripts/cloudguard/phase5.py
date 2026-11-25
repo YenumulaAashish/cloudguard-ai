@@ -3,11 +3,18 @@ import json
 from . import posture, integration, public_findings
 from .runtime import ROOT
 from .findings import serialize
+from .policy_reporting import failure_reasons, validate_reasons
 from .risk import read_document
 
 def validate_bundle(bundle):
-    if type(bundle) is not dict or set(bundle) != {'version','source','pr','phase3','posture','phase4','findings'} or bundle['version'] != '1.1' or bundle['source'] not in public_findings.SOURCES:
+    if type(bundle) is not dict:raise ValueError('Invalid dashboard bundle')
+    modern=bundle.get('version')=='1.2'
+    expected={'version','source','pr','phase3','posture','phase4','findings'} | ({'policy_reasons'} if modern else set())
+    if set(bundle) != expected or bundle['version'] not in ('1.1','1.2') or bundle['source'] not in public_findings.SOURCES:
         raise ValueError('Invalid dashboard bundle')
+    if modern:
+        validate_reasons(bundle['policy_reasons'])
+        if bundle['policy_reasons'] and (bundle['source']!='AUTHENTICATED_PLAN' or bundle['pr']['policy']['opa_conftest']!='FAIL'):raise ValueError('Inconsistent policy reasons')
     integration.schema_validate(bundle['pr'], 'summary')
     integration.validate_summary(bundle['pr'])
     integration.schema_validate(bundle['phase3'], 'manifest')
@@ -34,9 +41,10 @@ def prepare(plan, source, scanner_inputs):
     reports = public_findings.analyze(plan)
     private, summary, receipt = posture.prepare(reports)
     chain, phase3_private, phase3_public = integration.prepare(scanner_inputs, evidence=source == 'AUTHENTICATED_PLAN')
-    bundle = {'version': '1.1', 'source': source, 'pr': chain['summary'],
+    bundle = {'version': '1.2', 'source': source, 'pr': chain['summary'],
               'phase3': json.loads(phase3_public['phase3-evidence.json']),
-              'posture': summary, 'phase4': receipt, 'findings': public_findings.project(reports, source)}
+              'posture': summary, 'phase4': receipt, 'findings': public_findings.project(reports, source),
+              'policy_reasons': failure_reasons([row for kind,rows in scanner_inputs if kind=='conftest' for row in rows]) if source=='AUTHENTICATED_PLAN' else []}
     # Reuse every existing contract. New catalog supplements rather than changes them.
     integration.schema_validate(bundle['pr'], 'summary')
     integration.schema_validate(bundle['phase3'], 'manifest')

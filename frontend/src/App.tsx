@@ -45,7 +45,7 @@ export function App({ initialState }: { initialState?: ReportState }) {
       <div className="sidebar-bottom"><div className="offline-status"><span/> Offline mode</div><p>No AWS connection required.</p><div className="sidebar-rule"/><p>Deterministic tools decide.<br/>AI explains. PR reporting informs.</p><small>CloudGuard AI · Capstone</small></div>
     </aside>
     {menu && <button className="sidebar-scrim" aria-label="Close navigation" onClick={() => setMenu(false)}/>}
-    <div className="main-shell"><header className="topbar"><button className="icon-button menu-toggle" onClick={() => setMenu(!menu)} aria-expanded={menu} aria-label={menu ? 'Close navigation' : 'Open navigation'}>{menu ? <X size={22}/> : <Menu size={22}/>}</button><div className="breadcrumb"><span>Workspace</span><ChevronRight size={14}/><strong>{title}</strong></div><div className="topbar-right"><span className="desktop-only"><Badge value={state.status==='ready' && state.data.version==='1.1' ? sourceLabel(state.data) : 'OFFLINE / SYNTHETIC'}/></span><span className="avatar" aria-label="Local workspace">CG</span></div></header>
+    <div className="main-shell"><header className="topbar"><button className="icon-button menu-toggle" onClick={() => setMenu(!menu)} aria-expanded={menu} aria-label={menu ? 'Close navigation' : 'Open navigation'}>{menu ? <X size={22}/> : <Menu size={22}/>}</button><div className="breadcrumb"><span>Workspace</span><ChevronRight size={14}/><strong>{title}</strong></div><div className="topbar-right"><span className="desktop-only"><Badge value={state.status==='ready' && state.data.version!=='1.0' ? sourceLabel(state.data) : 'OFFLINE / SYNTHETIC'}/></span><span className="avatar" aria-label="Local workspace">CG</span></div></header>
       <main id="main" ref={main} tabIndex={-1}><div className="report-toolbar"><span>{imported ? 'User-supplied snapshot · authenticity UNKNOWN' : 'Bundled snapshot · no live refresh'}</span><div>
         <input ref={fileInput} type="file" accept="application/json,.json" className="sr-only" aria-label="Select sanitized report bundle" onChange={async event => {
           const file = event.target.files?.[0]; if (!file) return;
@@ -55,10 +55,10 @@ export function App({ initialState }: { initialState?: ReportState }) {
         <button className="button quiet" disabled={loading} onClick={() => fileInput.current?.click()}><Upload size={14}/>{loading ? 'Reading…' : 'Load sanitized bundle'}</button>
         <button className="button quiet" disabled={loading} onClick={() => { setState(parseReport(demo)); setImported(false); }}><RotateCcw size={14}/>Reset demo</button>
       </div></div>
-      {imported && <Note>Local file only; nothing is uploaded. Schema validity is not evidence authenticity or freshness. No supplied file can change AWS integration status.</Note>}
+      {imported && <Note>Local file only; nothing is uploaded. Schema validity is not evidence authenticity or freshness. Imported origin claims do not establish live AWS connectivity.</Note>}
       <div aria-live="polite">{state.status !== 'ready' && <Panel title={state.status === 'malformed' ? 'Report rejected' : 'Report unavailable'}><Empty title={loading ? 'Reading sanitized report…' : state.status === 'malformed' ? 'Malformed or unsupported report' : 'No valid evidence available'}>Values are withheld. Use a bounded sanitized bundle with valid summaries and matching completion receipts. No PASS or risk score is inferred. Reset demo to restore the reviewed snapshot.</Empty></Panel>}</div>
       <Routes>
-        <Route path="/aws" element={<Aws/>}/>
+        <Route path="/aws" element={<Aws data={state.status==='ready'?state.data:undefined}/>}/>
         <Route path="/" element={state.status === 'ready' ? <Overview data={state.data}/> : null}/>
         <Route path="/findings" element={state.status === 'ready' ? <Findings data={state.data}/> : null}/>
         <Route path="/posture" element={state.status === 'ready' ? <Posture data={state.data}/> : null}/>

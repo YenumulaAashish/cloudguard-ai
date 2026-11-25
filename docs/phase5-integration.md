@@ -1,3 +1,5 @@
+> Current Phase 5 hardening: see [release evidence and verification](phase5-release.md) and [inactive bounded authorization](planning-authorization.md). Earlier execution-status statements below are historical checkpoints. No new authorization is activated.
+
 > **Current execution update**
 
 CG-SM-PLAN-002 is **CONSUMED** by run 45484703135. Owner-confirmed OIDC authentication

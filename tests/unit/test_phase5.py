@@ -104,7 +104,7 @@ class Phase5Tests(unittest.TestCase):
                 service=Service(provider,key='synthetic-test-key',catalog_path=path)
             body={'finding_id':service.findings[0]['id'],'catalog_id':service.catalog_id}
             service.explain(body)
-            self.assertEqual(set(provider.call_args.args[0]), {'control_id','domain','severity','status','resource_type'})
+            self.assertEqual(set(provider.call_args.args[0]), {'control_id','domain','severity','status','resource_type','control_context','source','context_status'})
             with self.assertRaises(AdvisoryError): service.explain(dict(body,catalog_id='stale'))
             with self.assertRaises(AdvisoryError): service.explain({'finding_id':body['finding_id']})
 

@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "id": "CG-PLAN-UNAPPROVED",
+  "approval": "NOT_APPROVED",
+  "owner": "YenumulaAashish",
+  "approved_at": null,
+  "starts_at": null,
+  "expires_at": null,
+  "max_attempts": 5,
+  "max_daily": 2,
+  "scope": {
+    "repository": "YenumulaAashish/cloudguard-ai",
+    "repository_id": "1379194368",
+    "owner_id": "212769106",
+    "ref": "refs/heads/main",
+    "workflow": "YenumulaAashish/cloudguard-ai/.github/workflows/terraform-plan.yml@refs/heads/main",
+    "subject": "repo:YenumulaAashish@212769106/cloudguard-ai@1379194368:environment:aws-plan",
+    "audience": "sts.amazonaws.com",
+    "region": "ap-south-1",
+    "role": null,
+    "bucket": null,
+    "sha": null,
+    "source_digest": null
+  },
+  "allow_self_review": false
+}

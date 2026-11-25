@@ -1,3 +1,5 @@
+> Current Phase 5 hardening: see [release evidence and verification](phase5-release.md) and [inactive bounded authorization](planning-authorization.md). Earlier execution-status statements below are historical checkpoints. No new authorization is activated.
+
 # Phase 2 architecture and research traceability
 
 ```mermaid

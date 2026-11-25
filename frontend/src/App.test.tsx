@@ -16,14 +16,14 @@ describe('dashboard behavior', () => {
     mount('/', parseReport(value));
     expect(screen.getByRole('heading', { name: 'Security overview' })).toBeVisible();
     expect(screen.getByTestId('risk-score')).toHaveTextContent('27');
-    expect(screen.getByText('AWS PENDING')).toBeVisible();
+    expect(screen.getByText('LIVE AWS UNVERIFIED')).toBeVisible();
   });
   it('shows pending AWS without a login or deployment action', () => {
     mount('/aws');
-    expect(screen.getByText('WAITING FOR AWS VERIFICATION')).toBeVisible();
-    expect(screen.getByText('Pending / Not Connected')).toBeVisible();
-    expect(screen.getByText('NOT VERIFIED')).toBeVisible();
-    expect(screen.getByText('NOT EXECUTED')).toBeVisible();
+    expect(screen.getByText('LIVE CONNECTIVITY UNVERIFIED')).toBeVisible();
+    expect(screen.getByText('No live connection in this dashboard')).toBeVisible();
+    expect(screen.getByText('NOT INDEPENDENTLY VERIFIED')).toBeVisible();
+    expect(screen.getByText('NOT SUPPLIED')).toBeVisible();
     expect(screen.getByText('DISABLED')).toBeVisible();
     expect(screen.queryByRole('button', { name: /connect|deploy|login/i })).not.toBeInTheDocument();
   });
