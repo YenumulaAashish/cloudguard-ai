@@ -1,3 +1,5 @@
+> Phase 6 offline MVP: [operator workflow and drift testing](docs/phase6-offline-mvp.md). No separate deployment reviewer workflow; Deploy authorizes the exact gated mock plan. AWS deployment remains disabled, and Phase 1-5 controls are preserved.
+
 > Phase 5 final hardening: [release/verification](docs/phase5-release.md), [bounded planning authorization (inactive)](docs/planning-authorization.md), and [Phase 6 roadmap (design only)](docs/phase6-roadmap.md). Historical authentication and planning passed; the real-plan security verdict failed and remains recorded. No fresh authenticated verification is claimed.
 
 > **Current execution update**

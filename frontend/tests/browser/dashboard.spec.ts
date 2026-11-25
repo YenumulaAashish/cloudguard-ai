@@ -61,3 +61,25 @@ test('authenticated-origin import retains warnings and renders safe failed reaso
   await expect(page.getByText('LIVE CONNECTIVITY UNVERIFIED')).toBeVisible();
   await page.goto('/#/scans');await expect(page.getByText(/UNRESOLVED_SECURITY_FIELD/)).toBeVisible();
 });
+
+
+test('Phase 6 operator preview, exact mock Deploy and drift alerts stay local',async({page})=>{
+ const job={kind:'JOB',id:'00000000-0000-0000-0000-000000000001',purpose:'CONFIG',mode:'MOCK_ONLY',changes:{create:1,update:0,delete:0},gates:Object.fromEntries(['terraform_validate','checkov','opa','conftest','cost'].map(k=>[k,{status:'PASS',reason:k==='cost'?'WITHIN_MOCK_BUDGET':'MOCK_TEST_EVIDENCE'}])),cost:{status:'PASS',estimate_usd:'1.00',limit_usd:'5.00',mode:'MOCK_ONLY',reason:'WITHIN_MOCK_BUDGET'},created_at:Date.now()/1000,expires_at:Date.now()/1000+600,confirmation:'',context_reason:'KNOWN_MOCK_CONTEXT',status:'READY',can_deploy:true};
+ let deployed=false;
+ await page.route('**/api/phase6/**',async route=>{
+  const action=route.request().url().split('/').pop();let data:unknown;
+  if(action==='login')data={kind:'SESSION',authenticated:true,csrf:'csrf-fixture'};
+  else if(action==='preview')data=job;
+  else if(action==='deploy'){
+   const body=route.request().postDataJSON();expect(Object.keys(body).sort()).toEqual(['confirmation','plan_id','request_id']);expect(body.plan_id).toBe(job.id);deployed=true;
+   data={...job,status:'MOCK_SUCCEEDED',can_deploy:false};
+  }else if(action==='status')data={kind:'STATUS',mode:'MOCK_ONLY',inventory:[],history:[{...job,status:'MOCK_SUCCEEDED',can_deploy:false}],audit:[],state_serial:1,busy:false,budget_limit_usd:'20.00'};
+  else data={kind:'DRIFT',mode:'MOCK_ONLY',status:action==='simulate-drift'?'DRIFTED':'IN_SYNC',reason:'CONFIGURATION_COMPARISON_ONLY',changes:[],alerts:action==='simulate-drift'?[{id:'alert-1',kind:'DRIFTED',status:'OPEN'}]:[]};
+  await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({mode:'MOCK_ONLY',ok:true,data})});
+ });
+ await page.goto('/#/provisioning');await expect(page.getByText(/MOCK ONLY/)).toBeVisible();
+ await page.getByLabel('Operator secret').fill('synthetic-operator-secret-for-tests');await page.getByText('Sign in locally').click();
+ await page.getByText('Generate and preview').click();await expect(page.getByText('Deploy mock plan')).toBeEnabled();await page.getByText('Deploy mock plan').click();
+ await expect(page.getByText('MOCK_SUCCEEDED').first()).toBeVisible();expect(deployed).toBe(true);
+ await page.getByText('Simulate changed control').click();await expect(page.getByText(/1 open alerts/)).toBeVisible();
+});

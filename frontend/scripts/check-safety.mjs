@@ -9,6 +9,7 @@ const read = name => readFileSync(resolve(root, name), 'utf8');
 const schemas = JSON.parse(read('src/data/contracts.json'));
 assert.deepEqual(JSON.parse(read('src/data/public-findings.schema.json')), JSON.parse(read('../security/public-findings.schema.json')), 'Public finding schema must match engine contract');
 assert.deepEqual(JSON.parse(read('src/data/control-descriptions.json')),JSON.parse(read('../security/control-descriptions.json')),'Reviewed control catalog parity');
+assert.deepEqual(JSON.parse(read('src/data/phase6-public.schema.json')),JSON.parse(read('../security/phase6-public.schema.json')),'Phase 6 public contract parity');
 const names = { pr: 'pr-summary', phase3: 'phase3-evidence', posture: 'cloud-posture-summary', phase4: 'phase4-completion' };
 for (const [key, name] of Object.entries(names)) {
   assert.deepEqual(schemas[key], JSON.parse(read(`../security/${name}.schema.json`)), 'Public schema must match the engine contract');
@@ -52,7 +53,7 @@ function scan(folder) {
     for (const pattern of forbiddenContent) assert(!pattern.test(text), `Sensitive marker in ${relative(root, path)} (value withheld)`);
     if (path.includes(`${process.platform === 'win32' ? '\\' : '/'}src`) && /\.(ts|tsx)$/.test(path)) {
       const transport = /\b(?:fetch|XMLHttpRequest|WebSocket|EventSource)\s*\(/.test(text);
-      assert(!transport || relative(root, path).replaceAll('\\', '/') === 'src/components/LiveAdvisory.tsx' && text.includes("fetch(explain ? '/api/ai/advisory' : '/api/ai/catalog'") && (text.match(/\bfetch\s*\(/g) ?? []).length === 1 && !/https?:|XMLHttpRequest|WebSocket|EventSource/.test(text), 'Only reviewed local advisory transport allowed');
+      assert(!transport || (relative(root,path).replaceAll('\\','/')==='src/services/provisioning.ts' && text.includes("fetch('/api/phase6/' + action") && (text.match(/\bfetch\s*\(/g) ?? []).length===1 && !/https?:|XMLHttpRequest|WebSocket|EventSource/.test(text)) || relative(root, path).replaceAll('\\', '/') === 'src/components/LiveAdvisory.tsx' && text.includes("fetch(explain ? '/api/ai/advisory' : '/api/ai/catalog'") && (text.match(/\bfetch\s*\(/g) ?? []).length === 1 && !/https?:|XMLHttpRequest|WebSocket|EventSource/.test(text), 'Only reviewed loopback transports allowed');
       assert(!/import\.meta\.env|process\.env|dangerouslySetInnerHTML/.test(text), 'No environment or raw HTML injection allowed');
       assert(!/(?:from\s*|import\s*)['"](?:\.\.\/){3}/.test(text), 'Source import escapes frontend');
     }

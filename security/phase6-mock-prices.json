@@ -1,0 +1,5 @@
+{
+ "mode":"MOCK_ONLY","currency":"USD","as_of":"2026-11-25T00:00:00Z","expires_at":"2026-12-02T00:00:00Z",
+ "notice":"Illustrative test prices, not AWS prices or a billing quote. 30-day storage/monitoring horizon; compute uses configured hours.",
+ "unit_prices":{"t3.micro":"0.01","t3.small":"0.02","ebs_gb_month":"0.10","monitoring_month":"1.00","s3_gb_month":"0.025","s3_request":"0.000005","transfer_gb":"0.10"}
+}
