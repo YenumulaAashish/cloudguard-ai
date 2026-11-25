@@ -1,6 +1,6 @@
 # Phase 6 offline MVP: run and verify
 
-All operations are MOCK_ONLY. The single operator's Deploy action authorizes the
+This guide runs the MOCK_ONLY adapter. An inactive native AWS adapter is now available; see [owner setup](phase6-live-setup.md). The single operator's Deploy action authorizes the
 exact gated mock plan, with no reviewer account or approval-management dashboard.
 The architecture and roadmap documents define the updated requirements. FR-4/O4
 mapping is based on the owner's instruction; original specification text is not
@@ -33,7 +33,7 @@ passing authenticated Terraform plan. New-source Checkov has zero accepted skips
 If all mandatory gates pass, Deploy mock plan simulates only local state changes.
 For tests, an explicitly injected gate test double exercises successful worker
 transitions; the shipped server exposes no option to select that test double or
-bypass real checks. Default templates can legitimately remain blocked by Checkov.
+bypass real checks. The all-enabled secure generated template passes Checkov without exceptions; missing tools or invalid context still block deployment.
 
 ## Drift, inventory and recovery
 
@@ -50,9 +50,7 @@ exact deletion count phrase; there is no force-empty or automatic data-loss path
 Faults/interruptions require fresh recovery previews and exact-plan authorization.
 
 State, artifacts and private logs remain ignored under reports/private/phase6-mock.
-Keep this local development store private. Production authentication, encrypted
-remote state, AWS refresh/deployment, real pricing and external alerts are NOT RUN
-or not implemented. No claim of current AWS connectivity or production readiness.
+Keep this local development store private. Live installation, encrypted remote state, AWS refresh/deployment and real account pricing are NOT RUN. External alert delivery is not implemented. No claim of current AWS connectivity or production readiness.
 
 Run regression with the existing offline runner, frontend unit/build/browser tests,
 backend loopback tests and the new tests/unit/test_phase6.py suite. Those tests use
@@ -73,7 +71,7 @@ task does not create, log or publish a real operator secret. A normal reviewed
 Python 3.12 environment with the existing backend requirements also works. Do not
 use this local mock authentication/store as a production deployment service.
 
-## Executed local validation
+## Historical checkpoint validation (64a66fa)
 
 | Scope | Result |
 |---|---|
@@ -94,13 +92,13 @@ use this local mock authentication/store as a production deployment service.
 | Generated synthetic plan OPA / Conftest evaluation | PASS / PASS |
 | Real AWS planning, deployment, inventory refresh and drift scan | NOT RUN |
 
-The six generated-source failures are real blockers. No skips were introduced and
-the shipped server keeps Deploy disabled for this fixture. Successful execution,
-reconciliation, deletion and fault-recovery tests use explicit gate test doubles;
-those results do NOT establish real template security compliance. The shipped CLI
-has no switch to select the test doubles or skip checks.
+At checkpoint 64a66fa the six generated-source failures blocked the shipped
+fixture. Those failures are now resolved by the [secure template](phase6-generated-security.md).
+The table above preserves the historical checkpoint. Successful mock worker tests
+use explicit gate doubles and do not claim AWS verification. The shipped CLI has
+no option to select a test double or skip checks.
 
-Generated-source blocking rule IDs:
+Historical generated-source blocking rule IDs:
 
 - CKV2_AWS_11
 - CKV2_AWS_41
@@ -110,8 +108,7 @@ Generated-source blocking rule IDs:
 - CKV_AWS_18
 
 These cover missing flow logs, an EC2 instance profile, S3 logging, replication,
-customer-managed encryption and event notification controls. Supporting resources,
-least-privilege permissions and real costs need a reviewed future architecture.
+customer-managed encryption and event notification controls. Supporting resources, least-privilege permissions and costs are now covered by the inactive live architecture and owner setup guide.
 Existing Phase 1 exceptions are not silently extended to the new source.
 
 Inspection also verified a generator compatibility issue: Checkov 3.2.471 directory

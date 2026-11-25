@@ -76,7 +76,7 @@ class DriftTests(unittest.TestCase):
 class CostTests(unittest.TestCase):
     def setUp(self):self.catalog=json.loads((ROOT/'security/phase6-mock-prices.json').read_text())
     def test_decimal_estimate_budget_and_explicit_mock_basis(self):
-        r=estimate(configuration(),self.catalog,'20.00',NOW);self.assertEqual(r['status'],'PASS');self.assertEqual(r['estimate_usd'],'2.07');self.assertEqual(r['mode'],'MOCK_ONLY')
+        r=estimate(configuration(),self.catalog,'20.00',NOW);self.assertEqual(r['status'],'PASS');self.assertEqual(r['estimate_usd'],'4.62');self.assertEqual(r['mode'],'MOCK_ONLY')
         self.assertEqual(estimate(configuration(),self.catalog,'1.00',NOW)['status'],'FAIL')
     def test_missing_stale_negative_or_invalid_prices_never_zero(self):
         for mutate in [lambda p:p['unit_prices'].pop('t3.micro'),lambda p:p.update(expires_at='2026-11-25T00:00:00Z'),lambda p:p['unit_prices'].update(t3_micro='NaN'),lambda p:p['unit_prices'].update(t3_micro='-1')]:

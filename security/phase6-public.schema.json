@@ -7,7 +7,9 @@
       "properties": {
         "mode": {
           "enum": [
-            "MOCK_ONLY"
+            "MOCK_ONLY",
+            "LIVE_UNVERIFIED",
+            "LIVE_VERIFIED"
           ]
         },
         "ok": {
@@ -40,7 +42,9 @@
                 },
                 "mode": {
                   "enum": [
-                    "MOCK_ONLY"
+                    "MOCK_ONLY",
+                    "LIVE_UNVERIFIED",
+                    "LIVE_VERIFIED"
                   ]
                 },
                 "changes": {
@@ -94,7 +98,10 @@
                             "WITHIN_MOCK_BUDGET",
                             "BUDGET_EXCEEDED",
                             "COST_UNKNOWN_OR_STALE",
-                            "MOCK_TEST_EVIDENCE"
+                            "MOCK_TEST_EVIDENCE",
+                            "WITHIN_LIVE_BUDGET",
+                            "NATIVE_PROVIDER_SCHEMA",
+                            "REAL_PLAN_POLICY"
                           ]
                         },
                         "passed": {
@@ -164,7 +171,10 @@
                             "WITHIN_MOCK_BUDGET",
                             "BUDGET_EXCEEDED",
                             "COST_UNKNOWN_OR_STALE",
-                            "MOCK_TEST_EVIDENCE"
+                            "MOCK_TEST_EVIDENCE",
+                            "WITHIN_LIVE_BUDGET",
+                            "NATIVE_PROVIDER_SCHEMA",
+                            "REAL_PLAN_POLICY"
                           ]
                         },
                         "passed": {
@@ -234,7 +244,10 @@
                             "WITHIN_MOCK_BUDGET",
                             "BUDGET_EXCEEDED",
                             "COST_UNKNOWN_OR_STALE",
-                            "MOCK_TEST_EVIDENCE"
+                            "MOCK_TEST_EVIDENCE",
+                            "WITHIN_LIVE_BUDGET",
+                            "NATIVE_PROVIDER_SCHEMA",
+                            "REAL_PLAN_POLICY"
                           ]
                         },
                         "passed": {
@@ -304,7 +317,10 @@
                             "WITHIN_MOCK_BUDGET",
                             "BUDGET_EXCEEDED",
                             "COST_UNKNOWN_OR_STALE",
-                            "MOCK_TEST_EVIDENCE"
+                            "MOCK_TEST_EVIDENCE",
+                            "WITHIN_LIVE_BUDGET",
+                            "NATIVE_PROVIDER_SCHEMA",
+                            "REAL_PLAN_POLICY"
                           ]
                         },
                         "passed": {
@@ -374,7 +390,10 @@
                             "WITHIN_MOCK_BUDGET",
                             "BUDGET_EXCEEDED",
                             "COST_UNKNOWN_OR_STALE",
-                            "MOCK_TEST_EVIDENCE"
+                            "MOCK_TEST_EVIDENCE",
+                            "WITHIN_LIVE_BUDGET",
+                            "NATIVE_PROVIDER_SCHEMA",
+                            "REAL_PLAN_POLICY"
                           ]
                         },
                         "passed": {
@@ -456,14 +475,17 @@
                     },
                     "mode": {
                       "enum": [
-                        "MOCK_ONLY"
+                        "MOCK_ONLY",
+                        "LIVE_UNVERIFIED",
+                        "LIVE_VERIFIED"
                       ]
                     },
                     "reason": {
                       "enum": [
                         "WITHIN_MOCK_BUDGET",
                         "BUDGET_EXCEEDED",
-                        "COST_UNKNOWN_OR_STALE"
+                        "COST_UNKNOWN_OR_STALE",
+                        "WITHIN_LIVE_BUDGET"
                       ]
                     },
                     "expires_at": {
@@ -489,7 +511,7 @@
                 },
                 "confirmation": {
                   "type": "string",
-                  "pattern": "^(?:DELETE [0-9]+ MOCK RESOURCES)?$"
+                  "pattern": "^(?:DELETE [0-9]+ (?:MOCK|LIVE) RESOURCES)?$"
                 },
                 "context_reason": {
                   "enum": [
@@ -498,7 +520,8 @@
                     "DRIFT_REQUIRES_RECONCILIATION",
                     "UNMANAGED_RESOURCES",
                     "DRIFT_UNKNOWN",
-                    "DATA_RETENTION_REVIEW"
+                    "DATA_RETENTION_REVIEW",
+                    "VERIFIED_LIVE_CONTEXT"
                   ]
                 },
                 "status": {
@@ -507,7 +530,8 @@
                     "BLOCKED",
                     "EXECUTING",
                     "MOCK_SUCCEEDED",
-                    "RECOVERY_REQUIRED"
+                    "RECOVERY_REQUIRED",
+                    "SUCCEEDED"
                   ]
                 },
                 "can_deploy": {
@@ -541,7 +565,9 @@
                 },
                 "mode": {
                   "enum": [
-                    "MOCK_ONLY"
+                    "MOCK_ONLY",
+                    "LIVE_UNVERIFIED",
+                    "LIVE_VERIFIED"
                   ]
                 },
                 "status": {
@@ -554,7 +580,8 @@
                 "reason": {
                   "enum": [
                     "OBSERVATION_UNAVAILABLE_OR_STALE",
-                    "CONFIGURATION_COMPARISON_ONLY"
+                    "CONFIGURATION_COMPARISON_ONLY",
+                    "NATIVE_REFRESH_ONLY"
                   ]
                 },
                 "changes": {
@@ -569,21 +596,25 @@
                       },
                       "resource_type": {
                         "enum": [
-                          "unsupported",
-                          "aws_vpc",
-                          "aws_subnet",
-                          "aws_security_group",
                           "aws_default_security_group",
+                          "aws_flow_log",
+                          "aws_instance",
                           "aws_route_table",
                           "aws_route_table_association",
-                          "aws_instance",
                           "aws_s3_bucket",
+                          "aws_s3_bucket_lifecycle_configuration",
+                          "aws_s3_bucket_logging",
+                          "aws_s3_bucket_notification",
+                          "aws_s3_bucket_ownership_controls",
+                          "aws_s3_bucket_policy",
                           "aws_s3_bucket_public_access_block",
+                          "aws_s3_bucket_replication_configuration",
                           "aws_s3_bucket_server_side_encryption_configuration",
                           "aws_s3_bucket_versioning",
-                          "aws_s3_bucket_ownership_controls",
-                          "aws_s3_bucket_lifecycle_configuration",
-                          "aws_s3_bucket_policy"
+                          "aws_security_group",
+                          "aws_subnet",
+                          "aws_vpc",
+                          "unsupported"
                         ]
                       },
                       "kind": {
@@ -664,7 +695,9 @@
                 },
                 "mode": {
                   "enum": [
-                    "MOCK_ONLY"
+                    "MOCK_ONLY",
+                    "LIVE_UNVERIFIED",
+                    "LIVE_VERIFIED"
                   ]
                 },
                 "inventory": {
@@ -679,27 +712,32 @@
                       },
                       "resource_type": {
                         "enum": [
-                          "unsupported",
-                          "aws_vpc",
-                          "aws_subnet",
-                          "aws_security_group",
                           "aws_default_security_group",
+                          "aws_flow_log",
+                          "aws_instance",
                           "aws_route_table",
                           "aws_route_table_association",
-                          "aws_instance",
                           "aws_s3_bucket",
+                          "aws_s3_bucket_lifecycle_configuration",
+                          "aws_s3_bucket_logging",
+                          "aws_s3_bucket_notification",
+                          "aws_s3_bucket_ownership_controls",
+                          "aws_s3_bucket_policy",
                           "aws_s3_bucket_public_access_block",
+                          "aws_s3_bucket_replication_configuration",
                           "aws_s3_bucket_server_side_encryption_configuration",
                           "aws_s3_bucket_versioning",
-                          "aws_s3_bucket_ownership_controls",
-                          "aws_s3_bucket_lifecycle_configuration",
-                          "aws_s3_bucket_policy"
+                          "aws_security_group",
+                          "aws_subnet",
+                          "aws_vpc",
+                          "unsupported"
                         ]
                       },
                       "status": {
                         "enum": [
                           "OBSERVED_MOCK",
-                          "UNKNOWN"
+                          "UNKNOWN",
+                          "OBSERVED_LIVE"
                         ]
                       },
                       "owned": {
@@ -740,7 +778,9 @@
                       },
                       "mode": {
                         "enum": [
-                          "MOCK_ONLY"
+                          "MOCK_ONLY",
+                          "LIVE_UNVERIFIED",
+                          "LIVE_VERIFIED"
                         ]
                       },
                       "changes": {
@@ -794,7 +834,10 @@
                                   "WITHIN_MOCK_BUDGET",
                                   "BUDGET_EXCEEDED",
                                   "COST_UNKNOWN_OR_STALE",
-                                  "MOCK_TEST_EVIDENCE"
+                                  "MOCK_TEST_EVIDENCE",
+                                  "WITHIN_LIVE_BUDGET",
+                                  "NATIVE_PROVIDER_SCHEMA",
+                                  "REAL_PLAN_POLICY"
                                 ]
                               },
                               "passed": {
@@ -864,7 +907,10 @@
                                   "WITHIN_MOCK_BUDGET",
                                   "BUDGET_EXCEEDED",
                                   "COST_UNKNOWN_OR_STALE",
-                                  "MOCK_TEST_EVIDENCE"
+                                  "MOCK_TEST_EVIDENCE",
+                                  "WITHIN_LIVE_BUDGET",
+                                  "NATIVE_PROVIDER_SCHEMA",
+                                  "REAL_PLAN_POLICY"
                                 ]
                               },
                               "passed": {
@@ -934,7 +980,10 @@
                                   "WITHIN_MOCK_BUDGET",
                                   "BUDGET_EXCEEDED",
                                   "COST_UNKNOWN_OR_STALE",
-                                  "MOCK_TEST_EVIDENCE"
+                                  "MOCK_TEST_EVIDENCE",
+                                  "WITHIN_LIVE_BUDGET",
+                                  "NATIVE_PROVIDER_SCHEMA",
+                                  "REAL_PLAN_POLICY"
                                 ]
                               },
                               "passed": {
@@ -1004,7 +1053,10 @@
                                   "WITHIN_MOCK_BUDGET",
                                   "BUDGET_EXCEEDED",
                                   "COST_UNKNOWN_OR_STALE",
-                                  "MOCK_TEST_EVIDENCE"
+                                  "MOCK_TEST_EVIDENCE",
+                                  "WITHIN_LIVE_BUDGET",
+                                  "NATIVE_PROVIDER_SCHEMA",
+                                  "REAL_PLAN_POLICY"
                                 ]
                               },
                               "passed": {
@@ -1074,7 +1126,10 @@
                                   "WITHIN_MOCK_BUDGET",
                                   "BUDGET_EXCEEDED",
                                   "COST_UNKNOWN_OR_STALE",
-                                  "MOCK_TEST_EVIDENCE"
+                                  "MOCK_TEST_EVIDENCE",
+                                  "WITHIN_LIVE_BUDGET",
+                                  "NATIVE_PROVIDER_SCHEMA",
+                                  "REAL_PLAN_POLICY"
                                 ]
                               },
                               "passed": {
@@ -1156,14 +1211,17 @@
                           },
                           "mode": {
                             "enum": [
-                              "MOCK_ONLY"
+                              "MOCK_ONLY",
+                              "LIVE_UNVERIFIED",
+                              "LIVE_VERIFIED"
                             ]
                           },
                           "reason": {
                             "enum": [
                               "WITHIN_MOCK_BUDGET",
                               "BUDGET_EXCEEDED",
-                              "COST_UNKNOWN_OR_STALE"
+                              "COST_UNKNOWN_OR_STALE",
+                              "WITHIN_LIVE_BUDGET"
                             ]
                           },
                           "expires_at": {
@@ -1189,7 +1247,7 @@
                       },
                       "confirmation": {
                         "type": "string",
-                        "pattern": "^(?:DELETE [0-9]+ MOCK RESOURCES)?$"
+                        "pattern": "^(?:DELETE [0-9]+ (?:MOCK|LIVE) RESOURCES)?$"
                       },
                       "context_reason": {
                         "enum": [
@@ -1198,7 +1256,8 @@
                           "DRIFT_REQUIRES_RECONCILIATION",
                           "UNMANAGED_RESOURCES",
                           "DRIFT_UNKNOWN",
-                          "DATA_RETENTION_REVIEW"
+                          "DATA_RETENTION_REVIEW",
+                          "VERIFIED_LIVE_CONTEXT"
                         ]
                       },
                       "status": {
@@ -1207,7 +1266,8 @@
                           "BLOCKED",
                           "EXECUTING",
                           "MOCK_SUCCEEDED",
-                          "RECOVERY_REQUIRED"
+                          "RECOVERY_REQUIRED",
+                          "SUCCEEDED"
                         ]
                       },
                       "can_deploy": {
@@ -1331,6 +1391,38 @@
               "required": [
                 "kind"
               ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "kind": {
+                  "const": "CONNECTION"
+                },
+                "status": {
+                  "enum": [
+                    "VERIFIED",
+                    "UNVERIFIED"
+                  ]
+                },
+                "reason": {
+                  "enum": [
+                    "MOCK_MODE_NO_AWS",
+                    "LIVE_IDENTITY_AND_SUPPORT_VERIFIED",
+                    "LIVE_AUTHORIZATION_OR_SUPPORT_UNAVAILABLE"
+                  ]
+                },
+                "checked_at": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "kind",
+                "status",
+                "reason",
+                "checked_at"
+              ]
             }
           ]
         }
@@ -1347,7 +1439,9 @@
       "properties": {
         "mode": {
           "enum": [
-            "MOCK_ONLY"
+            "MOCK_ONLY",
+            "LIVE_UNVERIFIED",
+            "LIVE_VERIFIED"
           ]
         },
         "ok": {

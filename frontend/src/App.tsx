@@ -17,7 +17,7 @@ import { Provisioning } from './pages/Provisioning';
 import { Aws } from './pages/Aws';
 
 const navigation = [
-  { path: '/provisioning', title: 'Provisioning (Mock)', icon: Layers },
+  { path: '/provisioning', title: 'Provisioning', icon: Layers },
   { path: '/', title: 'Overview', icon: LayoutDashboard }, { path: '/findings', title: 'Findings', icon: ListFilter },
   { path: '/posture', title: 'Cloud Posture', icon: Layers }, { path: '/risk', title: 'Risk Analysis', icon: ChartNoAxesCombined },
   { path: '/graph', title: 'Security Graph', icon: GitBranch }, { path: '/advisory', title: 'AI Advisory', icon: Sparkles },

@@ -5,7 +5,7 @@ import ipaddress
 import json
 import re
 
-TEMPLATE_VERSION='phase6-mock-1'
+TEMPLATE_VERSION='phase6-secure-2'
 REGION='ap-south-1'
 
 def require(ok,code='INVALID_CONFIGURATION'):
@@ -36,29 +36,35 @@ def validate(c):
     require(float(c['budget_usd'])>0)
     return deepcopy(c)
 
-def generate(config):
+def generate(config,support=None):
     c=validate(config);resources={};tags={'Project':c['project'],'Environment':'sandbox','ManagedBy':'Terraform'}
+    support=support or {'kms_key':'arn:aws:kms:ap-south-1:111122223333:key/00000000-0000-0000-0000-000000000001','replica_kms_key':'arn:aws:kms:ap-south-2:111122223333:key/00000000-0000-0000-0000-000000000002','audit_bucket':'cg-mock-audit','replica_bucket':'cg-mock-replica','replication_role':'arn:aws:iam::111122223333:role/cg-mock-replication','instance_profile':'cg-mock-no-permissions','account_id':'111122223333','bucket_prefix':'cg-mock-'}
     def add(kind,values):resources[kind+'.this']={'type':kind,'values':values}
     if c['vpc']['enabled']:
         add('aws_vpc',{'cidr_block':c['vpc']['cidr'],'enable_dns_support':True,'enable_dns_hostnames':True,'tags':tags})
         add('aws_subnet',{'vpc_id':'${aws_vpc.this.id}','cidr_block':c['vpc']['subnet_cidr'],'availability_zone':REGION+'a','map_public_ip_on_launch':False,'tags':tags})
-        add('aws_security_group',{'name_prefix':'cg-mock-','description':'Private mock workload boundary','vpc_id':'${aws_vpc.this.id}','ingress':[],'egress':[],'tags':tags})
+        add('aws_security_group',{'name_prefix':support['bucket_prefix'],'description':'Private sandbox workload boundary','vpc_id':'${aws_vpc.this.id}','ingress':[],'egress':[],'tags':tags})
         add('aws_default_security_group',{'vpc_id':'${aws_vpc.this.id}','ingress':[],'egress':[],'tags':tags})
         add('aws_route_table',{'vpc_id':'${aws_vpc.this.id}','tags':tags})
+        if not c['ec2']['enabled']:resources.pop('aws_security_group.this')
+        add('aws_flow_log',{'vpc_id':'${aws_vpc.this.id}','traffic_type':'ALL','log_destination_type':'s3','log_destination':'arn:aws:s3:::'+support['audit_bucket']+'/vpc/','max_aggregation_interval':600,'tags':tags})
         add('aws_route_table_association',{'subnet_id':'${aws_subnet.this.id}','route_table_id':'${aws_route_table.this.id}'})
     if c['ec2']['enabled']:
-        add('aws_instance',{'ami':'ami-00000000000000000','instance_type':c['ec2']['instance_type'],'subnet_id':'${aws_subnet.this.id}',
-          'vpc_security_group_ids':['${aws_security_group.this.id}'],'associate_public_ip_address':False,'monitoring':True,'ebs_optimized':True,
+        add('aws_instance',{'ami':support.get('ami','ami-00000000000000000'),'instance_type':c['ec2']['instance_type'],'subnet_id':'${aws_subnet.this.id}',
+          'vpc_security_group_ids':['${aws_security_group.this.id}'],'associate_public_ip_address':False,'iam_instance_profile':support['instance_profile'],'credit_specification':[{'cpu_credits':'standard'}],'monitoring':True,'ebs_optimized':True,
           'metadata_options':[{'http_endpoint':'enabled','http_tokens':'required','http_put_response_hop_limit':1}],
           'root_block_device':[{'encrypted':True,'volume_type':'gp3','volume_size':c['ec2']['root_gb']}],'tags':tags})
     if c['s3']['enabled']:
-        bucket='cg-mock-'+c['project']+'-'+digest(c['project'])[:8]
+        bucket=support['bucket_prefix']+c['project']+'-'+digest(c['project'])[:8]
         add('aws_s3_bucket',{'bucket':bucket,'force_destroy':False,'tags':tags})
         add('aws_s3_bucket_public_access_block',dict(bucket=bucket,block_public_acls=True,block_public_policy=True,ignore_public_acls=True,restrict_public_buckets=True))
-        add('aws_s3_bucket_server_side_encryption_configuration',{'bucket':bucket,'rule':[{'apply_server_side_encryption_by_default':[{'sse_algorithm':'AES256'}]}]})
+        add('aws_s3_bucket_server_side_encryption_configuration',{'bucket':bucket,'rule':[{'bucket_key_enabled':True,'blocked_encryption_types':['SSE-C'],'apply_server_side_encryption_by_default':[{'sse_algorithm':'aws:kms','kms_master_key_id':support['kms_key']}]}]})
         add('aws_s3_bucket_versioning',{'bucket':bucket,'versioning_configuration':[{'status':'Enabled'}]})
         add('aws_s3_bucket_ownership_controls',{'bucket':bucket,'rule':[{'object_ownership':'BucketOwnerEnforced'}]})
         add('aws_s3_bucket_lifecycle_configuration',{'bucket':bucket,'rule':[{'id':'abort-incomplete','status':'Enabled','filter':[{}],'abort_incomplete_multipart_upload':[{'days_after_initiation':7}]}]})
+        add('aws_s3_bucket_logging',{'bucket':bucket,'target_bucket':support['audit_bucket'],'target_prefix':'access/'+c['project']+'/'})
+        add('aws_s3_bucket_notification',{'bucket':bucket,'eventbridge':True})
+        add('aws_s3_bucket_replication_configuration',{'bucket':bucket,'role':support['replication_role'],'depends_on':['aws_s3_bucket_versioning.this'],'rule':[{'id':'cross-region-sandbox','priority':1,'status':'Enabled','filter':[{'prefix':''}],'delete_marker_replication':[{'status':'Disabled'}],'source_selection_criteria':[{'sse_kms_encrypted_objects':[{'status':'Enabled'}]}],'destination':[{'bucket':'arn:aws:s3:::'+support['replica_bucket'],'storage_class':'STANDARD','encryption_configuration':[{'replica_kms_key_id':support['replica_kms_key']}]}]}]})
         policy={'Version':'2012-10-17','Statement':[{'Effect':'Deny','Principal':'*','Action':'s3:*','Resource':['${aws_s3_bucket.this.arn}','${aws_s3_bucket.this.arn}/*'],'Condition':{'Bool':{'aws:SecureTransport':'false'}}}]}
         add('aws_s3_bucket_policy',{'bucket':bucket,'policy':json.dumps(policy,sort_keys=True)})
     tf={'terraform':{'required_version':'= 1.9.8','required_providers':{'aws':{'source':'hashicorp/aws','version':'= 6.65.0'}}},'provider':{'aws':{'region':REGION}},'resource':{}}
@@ -82,17 +88,18 @@ def mock_plan(resources,before):
     return {'format_version':'1.2','terraform_version':'1.9.8','mock_only':True,'planned_values':{'root_module':{'resources':values}},'resource_changes':changes}
 
 
-BLOCK_FIELDS={'metadata_options','root_block_device','versioning_configuration','rule','apply_server_side_encryption_by_default','filter','abort_incomplete_multipart_upload'}
+BLOCK_FIELDS={'credit_specification','destination','encryption_configuration','source_selection_criteria','sse_kms_encrypted_objects','delete_marker_replication','metadata_options','root_block_device','versioning_configuration','rule','apply_server_side_encryption_by_default','filter','abort_incomplete_multipart_upload'}
 def render_hcl(tf):
     """Render only the closed generated structure; never parse caller-supplied HCL."""
     def fields(values,depth):
         lines=[];pad='  '*depth
         for key,value in sorted(values.items()):
-            if key in BLOCK_FIELDS:
+            if key=='depends_on':lines.append(pad+'depends_on = ['+', '.join(value)+']')
+            elif key in BLOCK_FIELDS:
                 for block in value:lines += [pad+key+' {',*fields(block,depth+1),pad+'}']
             else:lines.append(pad+key+' = '+json.dumps(value,sort_keys=True))
         return lines
-    lines=['terraform {','  required_version = "= 1.9.8"','  required_providers {','    aws = { source = "hashicorp/aws", version = "= 6.65.0" }','  }','}', 'provider "aws" {','  region = "ap-south-1"','}']
+    lines=['terraform {','  required_version = '+json.dumps(tf['terraform']['required_version']),'  required_providers {','    aws = { source = "hashicorp/aws", version = "= 6.65.0" }','  }','}', 'provider "aws" {','  region = "ap-south-1"','}']
     for kind,labels in sorted(tf['resource'].items()):
         for label,values in sorted(labels.items()):lines += ['resource '+json.dumps(kind)+' '+json.dumps(label)+' {',*fields(values,1),'}']
     return '\n'.join(lines)+'\n'

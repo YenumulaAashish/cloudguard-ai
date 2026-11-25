@@ -1,0 +1,28 @@
+{
+  "account_id": "REPLACE_12_DIGITS",
+  "role_name": "cloudguard-phase6-operator",
+  "workspace": "sandbox",
+  "project": "capstone",
+  "region": "ap-south-1",
+  "state_bucket": "REPLACE_PRIVATE_STATE_BUCKET",
+  "state_key": "phase6/sandbox/terraform.tfstate",
+  "lock_table": "REPLACE_STATE_LOCK_TABLE",
+  "state_kms_key": "REPLACE_MUMBAI_CMK_ARN",
+  "budget_usd": "20.00",
+  "price_digest": "REPLACE_REVIEWED_PRICE_DIGEST",
+  "isolation_digest": "REPLACE_REVIEWED_HOST_ISOLATION_DIGEST",
+  "support": {
+    "account_id": "REPLACE_12_DIGITS",
+    "bucket_prefix": "cg-live-sandbox-",
+    "audit_bucket": "REPLACE_MUMBAI_SSE_S3_LOG_BUCKET",
+    "replica_bucket": "REPLACE_HYDERABAD_KMS_REPLICA_BUCKET",
+    "kms_key": "REPLACE_MUMBAI_WORKLOAD_CMK_ARN",
+    "replica_kms_key": "REPLACE_HYDERABAD_CMK_ARN",
+    "replication_role": "REPLACE_EXISTING_S3_REPLICATION_ROLE_ARN",
+    "instance_profile": "REPLACE_EXISTING_ZERO_PERMISSION_INSTANCE_PROFILE",
+    "instance_role": "REPLACE_EXISTING_ZERO_PERMISSION_INSTANCE_ROLE",
+    "boundary_arn": "REPLACE_UNCONDITIONAL_DENY_ALL_BOUNDARY_ARN",
+    "ami": "REPLACE_APPROVED_X86_64_AMI",
+    "ami_owner": "REPLACE_IMAGE_OWNER"
+  }
+}

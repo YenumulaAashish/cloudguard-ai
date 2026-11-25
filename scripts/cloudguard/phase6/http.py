@@ -43,6 +43,7 @@ class Service:
         if action in ('status','drift','reconcile','delete-preview'):
             keys(body,());fn={'status':self.engine.status,'drift':self.engine.drift,'reconcile':self.engine.reconcile,'delete-preview':self.engine.delete_preview}[action]
             return fn(),None
+        if action=='connectivity':keys(body,());return self.engine.connectivity(),None
         if action=='preview':keys(body,('configuration',));return self.engine.preview(body['configuration']),None
         if action=='deploy':keys(body,('plan_id','confirmation','request_id'));return self.engine.execute(body['plan_id'],body['confirmation'],body['request_id']),None
         if action=='recover':keys(body,('plan_id',));return self.engine.recover(body['plan_id']),None
@@ -71,9 +72,9 @@ def handler(service):
                     return value
                 body=json.loads(self.rfile.read(size),object_pairs_hook=unique);require(type(body) is dict,'REQUEST_DENIED')
                 data,token=service.dispatch(self.path[len('/api/phase6/'):],body,self.headers.get('Cookie'),self.headers.get('X-CSRF-Token'))
-                value=valid_response({'mode':'MOCK_ONLY','ok':True,'data':data});status=200
+                value=valid_response({'mode':service.engine.mode,'ok':True,'data':data});status=200
             except Exception:
-                value={'mode':'MOCK_ONLY','ok':False,'error':'REQUEST_DENIED'};status=400;token=None
+                value={'mode':service.engine.mode,'ok':False,'error':'REQUEST_DENIED'};status=400;token=None
             raw=json.dumps(value).encode();self.send_response(status)
             self.send_header('Content-Type','application/json');self.send_header('Cache-Control','no-store');self.send_header('X-Content-Type-Options','nosniff')
             if token is not None:self.send_header('Set-Cookie','cg_phase6='+token+'; HttpOnly; SameSite=Strict; Path=/api/phase6/; Max-Age='+('900' if token else '0'))

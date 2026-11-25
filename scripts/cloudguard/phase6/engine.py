@@ -15,7 +15,7 @@ from .gates import ToolGates,MANDATORY
 from ..runtime import ROOT
 from ..evidence import fingerprint
 
-RESOURCE_TYPES={'aws_vpc','aws_subnet','aws_security_group','aws_default_security_group','aws_route_table','aws_route_table_association','aws_instance','aws_s3_bucket','aws_s3_bucket_public_access_block','aws_s3_bucket_server_side_encryption_configuration','aws_s3_bucket_versioning','aws_s3_bucket_ownership_controls','aws_s3_bucket_lifecycle_configuration','aws_s3_bucket_policy'}
+RESOURCE_TYPES={'aws_flow_log','aws_s3_bucket_logging','aws_s3_bucket_notification','aws_s3_bucket_replication_configuration','aws_vpc','aws_subnet','aws_security_group','aws_default_security_group','aws_route_table','aws_route_table_association','aws_instance','aws_s3_bucket','aws_s3_bucket_public_access_block','aws_s3_bucket_server_side_encryption_configuration','aws_s3_bucket_versioning','aws_s3_bucket_ownership_controls','aws_s3_bucket_lifecycle_configuration','aws_s3_bucket_policy'}
 
 class Engine:
     mode='MOCK_ONLY'
@@ -46,7 +46,11 @@ class Engine:
         jid=str(uuid.uuid4());folder=self.store.folder/jid;folder.mkdir(mode=0o700)
         plan=mock_plan(target,self.clean_observed(baseline))
         (folder/'main.tf').write_text(render_hcl(tf));(folder/'mock-plan.json').write_text(canonical(plan))
-        initial={n:hashlib.sha256((folder/n).read_bytes()).hexdigest() for n in ('main.tf','mock-plan.json')}
+        retained=[]
+        if not target and baseline['desired'] is not None:
+            extra=folder/'deletion-security-source';extra.mkdir()
+            (extra/'main.tf').write_text(render_hcl(generate(baseline['desired'])[0]),encoding='utf-8');retained=['deletion-security-source/main.tf']
+        initial={n:hashlib.sha256((folder/n).read_bytes()).hexdigest() for n in ('main.tf','mock-plan.json',*retained)}
         start_source=self.source()
         gates=self.runner.run(folder)
         require(self.source()==start_source and all(hashlib.sha256((folder/n).read_bytes()).hexdigest()==h for n,h in initial.items()),'GATE_INPUT_CHANGED')
@@ -70,7 +74,7 @@ class Engine:
         status='READY' if all(g['status']=='PASS' for g in gates.values()) and context=='KNOWN_MOCK_CONTEXT' else 'BLOCKED'
         evidence={'gates':gates,'source':self.source(),'template':TEMPLATE_VERSION,'mode':'MOCK_ONLY'}
         (folder/'gate-evidence.json').write_text(canonical(evidence))
-        hashes={name:hashlib.sha256((folder/name).read_bytes()).hexdigest() for name in ('main.tf','mock-plan.json','gate-evidence.json')}
+        hashes={name:hashlib.sha256((folder/name).read_bytes()).hexdigest() for name in ('main.tf','mock-plan.json','gate-evidence.json',*retained)}
         job={'id':jid,'purpose':purpose,'mode':'MOCK_ONLY','config':c,'target':target,'gates':gates,'cost':cost,'created_at':now,'expires_at':now+600,
           'source':self.source(),'template':TEMPLATE_VERSION,'hashes':hashes,'lineage':baseline['lineage'],'serial':baseline['serial'],
           'observed_revision':baseline['observed_revision'],'observed_digest':digest(baseline['observed']),'changes':changes,'confirmation':confirmation,'context_reason':context,'cap':self.cap}
@@ -154,6 +158,7 @@ class Engine:
                 else:s['observed'][address]['values']['tags']={'ManagedBy':'ChangedByMockScenario'}
             s['observed_revision']+=1;self.store.save(db,s,'MOCK_DRIFT_SCENARIO')
         return self.drift()
+    def connectivity(self):return {'kind':'CONNECTION','status':'UNVERIFIED','reason':'MOCK_MODE_NO_AWS','checked_at':0}
     def status(self):
         with self.store.transaction() as (db,s):
             inventory=[{'id':s['inventory_ids'].get(a,'unmanaged'),'resource_type':r['type'] if r['type'] in RESOURCE_TYPES else 'unsupported','status':'OBSERVED_MOCK' if s['complete'] else 'UNKNOWN','owned':r.get('owned') is True} for a,r in sorted(s['observed'].items())]

@@ -1,140 +1,102 @@
-# Phase 6 — single-operator offline MVP architecture
+# Phase 6: single-operator AWS integration architecture
 
-This replaces the proposed separate deployment-review workflow. The MVP has one
-authenticated operator: their Deploy action explicitly authorizes the exact saved,
-validated plan. There are no separate reviewer accounts, approval queue, multi-user
-approval protocol or approval-management dashboard. The existing Phase 5 planning
-authorization, independent-review default, exceptions, IAM and OIDC restrictions
-remain unchanged and are not reused to authorize Phase 6.
+The platform now has two execution adapters: the existing deterministic mock engine
+and a native AWS backend in `backend/cloudguard_live`. The live backend is CODED,
+not CONFIGURED or AWS VERIFIED. Repository activation templates are NOT_APPROVED.
+No AWS account API, authenticated planning, deployment or remote state change was
+performed during implementation. Offline SDK/process doubles are not live proof.
 
-CURRENT IMPLEMENTATION: MOCK_ONLY. No AWS execution adapter, SDK, credentials,
-real provisioning, live inventory scan or live drift refresh is implemented here.
-No native Terraform deployment command is constructed or executed. Terraform
-configuration validation and security tools run offline; their plan input is a
-clearly marked deterministic synthetic fixture, not an authenticated Terraform plan.
+There is one authenticated operator. Their Deploy action authorizes one exact
+saved, validated plan. There are no reviewer accounts or approval-management UI.
+Owner review of infrastructure/host configuration before first live activation is
+a platform installation boundary, not a separate per-deployment reviewer workflow.
+Phase 5 OIDC, IAM, planning approvals/ledger and deterministic policies are intact.
 
-## FR-4 / O4: drift detection first
-
-The owner's instruction identifies drift as mandatory under FR-4 and O4 of KL
-University CLOUD-08. This mapping is recorded from the owner; the original
-specification document is not in this repository and has not been independently
-quoted or verified. The implementation compares declared configuration against a
-separate observed mock infrastructure snapshot, not the form or planned intent.
-
-The detector distinguishes IN_SYNC, CHANGED, MISSING, UNMANAGED and UNKNOWN.
-Incomplete/unavailable/stale observations, wrong state lineage/serial, unresolved
-fields, unowned expected resources and unsupported observed attributes remain
-UNKNOWN. Known computed identity fields are excluded from managed-attribute
-comparison; this is not runtime reachability or effective-access proof.
-
-Changes create persistent deduplicated alerts. UNKNOWN does not clear an alert or
-mean no drift. Alerts resolve only after a complete comparison finds the declared
-and observed configurations in sync. Alerts are local dashboard records; no email,
-Slack, AWS alarm or external notification is sent.
-
-Reconciliation uses the saved declared configuration as its target and generates
-a fresh plan with all gates/cost/state checks. The operator explicitly deploys
-that exact plan. No automatic reconciliation, silent acceptance of drift or
-deletion of unmanaged resources is allowed. Missing observations block mutation.
-Native AWS refresh adapters and scheduled live drift detection require future,
-separately authorized work; current fixtures must never be labeled actual AWS.
-
-## Architecture and authority
+## Native execution path
 
 ```text
-Authenticated operator -> closed EC2/S3/VPC configuration -> deterministic HCL
- -> offline Terraform validation + Checkov source scan + OPA/Conftest fixture checks
- -> cost fixture/budget checks + private immutable plan artifacts
- -> READY or BLOCKED preview -> operator Deploy action on that exact plan
- -> transactional mock worker -> observed mock inventory + deployment history
- -> drift comparison -> alerts -> new gated reconciliation preview
+Explicit operator connectivity verification -> private owner-bound configuration
+ -> temporary credentials, exact STS account/role, support-resource checks
+ -> deterministic HCL -> native Terraform remote-backend plan (exit 0 or 2)
+ -> private binary plan and show JSON -> Checkov + OPA + Conftest + reviewed cost
+ -> immutable, expiring READY preview -> authenticated operator Deploy action
+ -> atomic one-use job + remote state lineage/serial/content check
+ -> saved binary plan execution with Terraform backend locking
+ -> native state observation, live inventory, private history and audit chain
+ -> refresh-only drift -> local alerts -> fresh gated reconciliation/deletion
 ```
 
-The new loopback service is separate from AI advisory. It has no AI endpoint and
-never submits configurations, state, identities or policy contents to OpenAI.
-Model output cannot reach configuration, gates, cost limits, job state or workers.
+The AWS worker is outside CI command surfaces. No workflow imports or runs it;
+the reviewed CI contract pins its code as well as the unchanged CI workflows.
+Offline tests inject every AWS/process boundary. The credential-free policy-tool
+environment remains stripped of operator, AWS and AI secrets. The native worker's
+allowlisted child environment contains temporary AWS credentials only. Raw plans,
+state, source, identities, IAM/policy documents and subprocess errors stay private.
+Only closed-schema reason codes, opaque inventory IDs and gate summaries reach UI.
+This service never calls an AI model or forwards configuration to advisory.
 
-## Operator authorization without a reviewer workflow
+## FR-4 / O4: actual drift before reconciliation
 
-A server-side operator secret establishes a 15-minute HttpOnly/SameSite session.
-The secret never enters source, logs, browser storage or child-tool environments.
-State-changing POSTs require the session, exact allowed origin/host, a custom
-client header and session-bound CSRF token. Login is rate-limited; errors are fixed
-and do not echo input. This is loopback development authentication, not production
-OIDC login or a claim that plain local HTTP protects a remote deployment service.
+The live adapter plans with `-refresh-only` against the declared configuration;
+it does not apply refresh or write refreshed state. Native `resource_drift` gives
+changed/missing resources, while unresolved values, refresh errors or concurrent
+state change give UNKNOWN. It never interprets a failed observation as IN_SYNC.
+Alerts stay open until a successful in-sync comparison. This is explicit on-demand
+detection, not a scheduled monitoring service or a resource reachability test.
+Live EC2/VPC tag discovery labels resources outside native state as unowned; tags
+never authorize deletion. S3 inventory targets state-owned buckets rather than
+listing an entire account. Inventory failure returns UNKNOWN. Unmanaged discovery
+is displayed separately; refresh-only drift covers Terraform-managed resources.
 
-Every preview binds configuration, template/source revision, exact artifact bytes,
-gate evidence, mock price catalog/limit, state lineage/serial, observation revision,
-expiry and an opaque single-use plan ID. The browser receives counts, gate results,
-mock estimates and opaque IDs, never raw plans/state/policies or private fingerprints.
-The operator's Deploy action is the authorization; there is no second approval step.
+Reconciliation produces a new normal native plan. Normal configuration plans with
+known drift are blocked until explicit reconciliation. Unknown drift blocks even
+reconciliation. Deletion uses a new gated plan against disabled configuration,
+never a direct destroy command. Source security checks on final deletion examine
+the retained declared source; native validation and OPA/Conftest examine the actual
+deleting target/plan. The retained source is hashed and cannot reintroduce resources
+into the native target. Versioned objects, delete markers and multipart uploads
+block deletion; the worker never empties a bucket. A typed live deletion phrase and
+a separate installation-level deletion permission are required.
 
-The server revalidates all bindings under a workspace transaction before consuming
-the job. A stale, changed, expired, failed, UNKNOWN or missing input is denied.
-Idempotent delivery of the same completed request returns the same result; a new
-request cannot replay the consumed plan. Changing configuration requires a fresh
-preview. No silent replanning occurs during Deploy.
+## Authorization, concurrency and recovery
 
-States: READY / BLOCKED -> EXECUTING -> MOCK_SUCCEEDED or RECOVERY_REQUIRED.
-A persistent short execution lease prevents overlapping mutations. Interrupted jobs
-need explicit operator recovery after lease expiry; they are not silently unlocked.
+The original Host/Origin checks, loopback-only bind, HttpOnly SameSite session,
+CSRF token, login throttling and 15-minute session remain. No requests start on
+page load. A successful connection is not deployment authorization. UI warnings
+age out after five minutes; the backend independently rechecks grants/credentials.
 
-## Configuration, gates, costs and deletion
+Private installation grants bind exact source and configuration digests, reviewed
+host-isolation digest and at most seven days. Read access, remote-lock writes,
+deployment and deletion are distinct permissions. Grant changes/expiry/revocation,
+source or price changes and stale state invalidate plans. Repository templates and
+missing grants fail closed. Short-lived session credentials are mandatory; the
+AWS SDK uses an explicit session, no default profile/metadata chain, and no retries.
+Credential changes invalidate the verified connection. Native provider and backend
+both pin the allowed account. Credentials must outlive the operation; uncertain
+expiry/timeouts require recovery and never count as success.
 
-Closed typed input covers Mumbai-only VPC/private subnet, EC2 size/hours/encrypted
-root disk and S3 storage/request/transfer assumptions. Only approved mock AMI and
-instance-type choices are accepted. No arbitrary HCL, IAM roles, credentials,
-provider endpoints, user data, profiles, public admin access or external modules.
-Terraform/provider versions remain 1.9.8 / 6.65.0. Generation uses reviewed static
-structure with validated scalar input, and deterministic native HCL so Checkov
-3.2.471 discovers source resources. JSON-only directory input is not treated as a
-successful empty source scan. S3 companion references are explicit source links.
+An exclusive service lock prevents two service processes; private SQLite immediate
+transactions serialize workspace consumption. Each saved plan expires in ten
+minutes. A unique request ID makes delivery idempotent without re-executing a
+completed or failed attempt. Remote Terraform locks protect against other clients;
+no force-unlock or lock disable exists. Every execution attempt advances the workspace generation and invalidates other saved plans. Native execution failures become RECOVERY_REQUIRED, never an automatic retry/rollback. Inventory remains UNKNOWN while execution or recovery is uncertain. Recovery requires a fresh owner/operator grant after incident inspection, then a newly gated plan; no additional reviewer account is introduced. A crashed EXECUTING worker
+remains blocked until an owner checks its process/backend lock/state manually.
+Recovery generates another plan and requires another operator Deploy action.
 
-Mandatory gates: offline Terraform schema validation, Checkov, OPA, Conftest and
-cost/budget checks. The generated source gets NO resource-scoped exemptions and
-must have nonempty successful coverage, zero failures, zero skips and zero parsing
-errors. Phase 1's six accepted exceptions remain confined to their original scope.
-Actual generated-source findings block Deploy; they are not waived to make a demo.
+The hash chain detects accidental edits, not a malicious host administrator who
+can rewrite all files. The host and private directory are a trusted installation
+boundary. Windows ACLs, encryption and backup integrity require owner verification;
+POSIX mode bits do not establish Windows isolation. See [owner setup](phase6-live-setup.md).
 
-Prices are explicitly illustrative MOCK_ONLY fixtures, not current AWS prices or
-billing promises. Decimal arithmetic, configurable operator ceiling, requested
-budget, usage bounds, price expiry and missing/invalid-price rejection are enforced.
-Real regional pricing, billing alerts and complete production cost coverage are
-NOT IMPLEMENTED. Unknown cost never becomes zero or enables Deploy.
+## State and reproducibility
 
-Removing an EC2/S3 component uses a fresh preview; dependent network deletion is
-rejected unless its compute dependency is removed. A whole-workspace deletion
-preview is also available. Any deletes/replacements require typing the exact
-server-generated resource-count confirmation before Deploy. Nonempty mock buckets
-require data-retention review and cannot be emptied/force-deleted by this API.
-Unmanaged/unowned resources cannot be reconciled or deleted.
+Terraform 1.9.8 and AWS provider 6.65.0 remain pinned, with the committed provider
+lock copied into each private working directory. Native init uses the verified
+local provider mirror only. S3 state requires a Mumbai versioned, private TLS-only
+KMS bucket plus a dedicated DynamoDB LockID table. This preserves the existing
+Terraform toolchain. DynamoDB locking is deprecated by current HashiCorp guidance,
+so a separately tested Terraform upgrade and migration to S3 native lockfiles is
+required before removing that table; this implementation does not pretend 1.9.8
+supports newer lockfile options. No state migrations run automatically.
 
-## State, audit and fault recovery
-
-Mock SQLite state and artifacts live only under ignored reports/private/phase6-mock.
-Native artifacts/logs are not served by Vite or returned by the API. SQLite FULL
-synchronous transactions, state serials, sealed immutable jobs, artifact hashes
-and chained audit events detect ordinary corruption/substitution. History records
-server-derived operator identity, action, sequence, time, job and state serial.
-
-This local store is not encrypted, externally anchored or administrator-tamper-proof.
-An administrator can rewrite/restore the complete database/history. It is not a
-production state backend or multi-host/cloud-sync locking design. Real state needs
-separately provisioned encryption, locking, backups and immutable audit retention.
-Do not add unsupported S3 lockfile arguments to Terraform 1.9.8. Future backend
-selection must use a separately tested version and reviewed state permissions.
-
-Partial mock failures retain the observed partial result and mark RECOVERY_REQUIRED,
-never success or automatic rollback. Recovery creates a fresh gated plan against
-current observed state and needs a new explicit Deploy action. Failed jobs and
-their audit history remain visible; old plan consumption is not undone.
-
-## Future AWS boundary
-
-No expansion of cloudguard-ai-plan, live IAM change, planning-variable enablement
-or Phase 5 authorization activation occurs. A future AWS worker needs separate
-least-privilege provisioning/deletion/state permissions, exact workspace ownership,
-isolation, reviewed price/AMI sources and real saved-plan/state bindings. Existing
-read-only permissions cannot provision resources. Future AWS activation requires
-separate owner authorization; that operational restriction is not an MVP reviewer
-workflow or approval dashboard.
+[HashiCorp S3 backend and locking reference](https://developer.hashicorp.com/terraform/language/backend/s3).
