@@ -2,6 +2,9 @@
 from copy import deepcopy
 import importlib.util
 import json
+import os
+import shutil
+import subprocess
 from pathlib import Path
 import sys
 import tempfile
@@ -111,6 +114,57 @@ class CiSecurityTests(unittest.TestCase):
         self.assertIn('Local workflow validation does not prove successful execution on a GitHub-hosted runner.',text)
         self.assertIn('NOT RUN / PENDING USER',text)
         self.assertRegex(text.lower(),r'release\s+tags')
+
+
+    def plugin_step(self):
+        return next(s for s in self.load('setup')['runs']['steps'] if 'tflint --init' in s.get('run',''))
+    def test_plugin_authentication_is_step_scoped_and_ephemeral(self):
+        setup=self.load('setup');step=self.plugin_step()
+        self.assertEqual(step['env'],{'GITHUB_TOKEN':'${{ github.token }}'})
+        self.assertNotIn('env',setup)
+        for other in setup['runs']['steps']:
+            if 'tflint --init' not in other.get('run',''):
+                self.assertNotIn('GITHUB_TOKEN',other.get('env',{}))
+        self.assertEqual(self.load()['permissions'],{'contents':'read'})
+        self.assertNotIn('permissions',self.load()['jobs']['offline'])
+        self.assertNotIn('secrets.',json.dumps(step))
+    def test_plugin_install_retains_pinned_native_verification(self):
+        step=self.plugin_step();self.assertEqual(step['shell'],'bash')
+        self.assertEqual(step['run'].splitlines(),['set -euo pipefail',': "${GITHUB_TOKEN:?GitHub token required for plugin installation}"','tflint --init --config="$GITHUB_WORKSPACE/.tflint.hcl"'])
+        config=(ROOT/'.tflint.hcl').read_text()
+        self.assertIn('version = "0.40.0"',config)
+        self.assertIn('source  = "github.com/terraform-linters/tflint-ruleset-aws"',config)
+        self.assertIn('0.59.1',json.dumps(self.load('setup')))
+    def plugin_shell(self,token='synthetic-install-token',code=0):
+        git_bash=Path('C:/Program Files/Git/bin/bash.exe')
+        bash=str(git_bash) if os.name=='nt' and git_bash.exists() else shutil.which('bash')
+        if not bash:self.skipTest('Bash unavailable; shell behavior NOT RUN')
+        # No real installer or token: check argv, environment and error propagation.
+        stub='tflint() { [ "$GITHUB_TOKEN" = "synthetic-install-token" ] && [ "$#" -eq 2 ] && [ "$1" = "--init" ] && [ "$2" = "--config=/synthetic workspace/.tflint.hcl" ] || return 29; printf INSTALL_STUB_INVOKED; return '+str(code)+'; };'+chr(10)
+        env={k:os.environ[k] for k in ('PATH','SystemRoot','WINDIR','TEMP','TMP') if k in os.environ}
+        env['GITHUB_WORKSPACE']='/synthetic workspace'
+        if token is not None:env['GITHUB_TOKEN']=token
+        result=subprocess.run([bash,'--noprofile','--norc','-c',stub+self.plugin_step()['run']],env=env,capture_output=True,text=True,timeout=15)
+        self.assertNotIn('synthetic-install-token',result.stdout+result.stderr)
+        return result
+    def test_authenticated_install_shell_forwards_token_without_printing_it(self):
+        result=self.plugin_shell();self.assertEqual(result.returncode,0)
+        self.assertIn('INSTALL_STUB_INVOKED',result.stdout)
+    def test_missing_or_empty_install_token_fails_before_installer(self):
+        for token in (None,''):
+            with self.subTest(token=token):
+                result=self.plugin_shell(token);self.assertNotEqual(result.returncode,0)
+                self.assertNotIn('INSTALL_STUB_INVOKED',result.stdout)
+    def test_installer_failure_remains_failure(self):
+        result=self.plugin_shell(code=23);self.assertEqual(result.returncode,23)
+    def test_changed_plugin_token_or_global_scope_fails_reviewed_contract(self):
+        original=self.load('setup')
+        for mutation in ('missing','personal_secret','global_scope'):
+            flow=deepcopy(original);step=next(s for s in flow['runs']['steps'] if 'tflint --init' in s.get('run',''))
+            if mutation=='missing':step.pop('env')
+            elif mutation=='personal_secret':step['env']['GITHUB_TOKEN']='${{ secrets.PERSONAL_TOKEN }}'
+            else:flow['env']=step.pop('env')
+            with self.subTest(mutation=mutation):self.save(flow,'setup');self.bad()
 
 
 def mutation(name,change):

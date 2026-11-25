@@ -16,11 +16,18 @@ runs:
     - uses: open-policy-agent/setup-opa@v2.4.0
       with:
         version: 1.0.1
-    - name: Install Checkov and AWS lint plugin
+    - name: Install Checkov
       shell: bash
       run: |
         set -euo pipefail
         python -m pip install checkov==3.2.471
+    - name: Install pinned AWS lint plugin with authenticated release verification
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        set -euo pipefail
+        : "${GITHUB_TOKEN:?GitHub token required for plugin installation}"
         tflint --init --config="$GITHUB_WORKSPACE/.tflint.hcl"
     - name: Install checksum-verified Conftest
       shell: bash
